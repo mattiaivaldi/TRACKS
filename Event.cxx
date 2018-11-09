@@ -1,5 +1,5 @@
-//Class used in order to generate the event and its related multiplicity 
-
+//Class used in order to generate the event and its related multiplicity
+#include <TRandom2.h>
 #include <TRandom3.h>
 #include <Riostream.h>
 #include <TFile.h>
@@ -19,18 +19,18 @@ fMult(0.)
     //Default constructor
 }
 
-//Generate event coordinates and multiplicity 
+//Generate event coordinates and multiplicity
 Event::Event(double meanv, double sigmaxy, double sigmaz, const char *distr): Hit(),
 fX0(gRandom->Gaus(meanv,sigmaxy)), //generates random values according to given data
 fY0(gRandom->Gaus(meanv,sigmaxy)),
 fZ0(gRandom->Gaus(meanv,sigmaz)),
 fMult(0)
-									      
+
 {
   //Standard constructor
   TFile hfile(distr); //opens file
-  TH1F *multiplicity = (TH1F*)hfile.Get("hmul"); //assign to TH1F multiplicity the histogram in the .root file 
-  fMult=multiplicity->GetRandom(); //get a random value from assigned distribution 
+  TH1F *multiplicity = (TH1F*)hfile.Get("hmul"); //assign to TH1F multiplicity the histogram in the .root file
+  fMult=multiplicity->GetRandom(); //get a random value from assigned distribution
 }
 
 Event::~Event() {
@@ -54,7 +54,6 @@ Double_t Event::GetZ() const {
 
 
 Float_t Event::GetMult() const {
-    //Returns multiplicity 
+    //Returns multiplicity
     return fMult;
 }
-
