@@ -49,6 +49,9 @@ void test(bool PrintParticles, bool multiscatman) {
 
   //calcolo i valori casauali per theta e phi, phi è uniforme tra 0 e 2 pi mentre theta segue la distribuzione ricavata nel caso del flusso
   //isootropo
+
+  bool bBP = false, bL1 = false, bL2 = false; //variable used in order to see if there is an interesction of the particle with the beam
+
   for (int i = 0; i < mult; i++) {
 
     Particle *part = new Particle("kinem.root");
@@ -63,44 +66,40 @@ void test(bool PrintParticles, bool multiscatman) {
     hit_buffer_BP=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],BP->GetRadius());
 
     if(*(hit_buffer_BP+2) >= -(BP->GetWidth()/2.) && *(hit_buffer_BP+2) <= (BP->GetWidth()/2.)) {
+      bBP = true; //there has been an interesction
       Hit *hit_BP = new Hit(*(hit_buffer_BP+0),*(hit_buffer_BP+1),*(hit_buffer_BP+2));
       ciccioBP.push_back(hit_BP);
       if (PrintParticles==true) {
-	printf("Hit with BP at (%f, %f, %f)\n",ciccioBP[j]->GetX(),ciccioBP[j]->GetY(),ciccioBP[j]->GetZ());
+	       printf("Hit with BP at (%f, %f, %f)\n",ciccioBP[j]->GetX(),ciccioBP[j]->GetY(),ciccioBP[j]->GetZ());
+      }
+      cout << "Angoli prima " << phi[i] << " " << theta[i] << endl;
+      if (bBP == true && multiscatman == true) {
+        part->Rotate(BP->GetRMS()); //using the member function GetRMS of the class layer.cxx
+        phi[i] = part->GetPhi();
+        theta[i] = part->GetTheta();
       }
       j++;
+      cout << "Angoli dopo " <<phi[i] << " " << theta[i] << endl;
     }
-
-    cout << "Angoli prima " << theta[i] << " " << phi[i] << endl;
-
-    if (multiscatman == false) {;} //if multiscattering is off -> do nothing
-
-    else {
-      part->Rotate(BP->GetRMS()); //using the member function GetRMS of the class layer.cxx
-      phi[i] = part->GetPhi();
-      theta[i] = part->GetTheta();
-    }
-
-    cout << "Angoli dopo " << theta[i] << " " << phi[i] << endl;
 
     //intersection with L1
     hit_buffer_L1=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],L1->GetRadius());
 
     if(*(hit_buffer_L1+2) >= -(L1->GetWidth()/2.) && *(hit_buffer_L1+2) <= (L1->GetWidth()/2.)) {
+      bL1 = true;
       Hit *hit_L1 = new Hit(*(hit_buffer_L1+0),*(hit_buffer_L1+1),*(hit_buffer_L1+2));
       ciccioL1.push_back(hit_L1);
       if (PrintParticles==true) {
-	printf("Hit with L1 at (%f, %f, %f)\n",ciccioL1[k]->GetX(),ciccioL1[k]->GetY(),ciccioL1[k]->GetZ());
+	       printf("Hit with L1 at (%f, %f, %f)\n",ciccioL1[k]->GetX(),ciccioL1[k]->GetY(),ciccioL1[k]->GetZ());
+      }
+      cout << "Angoli prima " << phi[i] << " " << theta[i] << endl;
+      if (bL1 == true && multiscatman == true) {
+        part->Rotate(L1->GetRMS()); //using the member function GetRMS of the class layer.cxx
+        phi[i] = part->GetPhi();
+        theta[i] = part->GetTheta();
       }
       k++;
-    }
-
-    if (multiscatman == false) {;} //if multiscattering is off -> do nothing
-
-    else {
-      part->Rotate(L1->GetRMS()); //using the member function GetRMS of the class layer.cxx
-      phi[i] = part->GetPhi();
-      theta[i] = part->GetTheta();
+      cout << "Angoli dopo " << phi[i] << " " << theta[i] << endl;
     }
 
     //intersection with L2
