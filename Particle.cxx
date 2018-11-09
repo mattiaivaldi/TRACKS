@@ -20,19 +20,19 @@ Particle::Particle():TObject(),
   //Default constructor
 }
 
-//Initialize to values given by the user 
+//Initialize to values given by the user
 Particle::Particle(const char *distr): TObject(),
 fTheta(0),
 fPhi(gRandom->Uniform(2*Pi())),
-fRape(0)								      
+fRape(0)
 {
   //Standard constructor
   TFile hfile(distr); //opens file
-  TH1F *pseudorape = (TH1F*)hfile.Get("heta"); //assign to TH1F pseudorape the histogram in the .root file 
-  fRape = pseudorape->GetRandom(); //get a random value from assigned distribution 
-  fTheta = 2*ATan(Exp(-(double)fRape)); //get theta from the pseudorapidity distribution  
+  TH1F *pseudorape = (TH1F*)hfile.Get("heta"); //assign to TH1F pseudorape the histogram in the .root file
+  fRape = pseudorape->GetRandom(); //get a random value from assigned distribution
+  fTheta = 2*ATan(Exp(-(double)fRape)); //get theta from the pseudorapidity distribution
 }
- 
+
 Particle::~Particle() {
   // Default destructor
 }
@@ -54,9 +54,11 @@ Float_t Particle::GetRaped() const {
 }
 
 void Particle::Rotate(double rms) {
+  gRandom->SetSeed(0);
   //Calculation for multiple scattering
-  double thetap = rms/Sqrt(2); //angle of multiple scattering
-  double phip = gRandom->Uniform(2*Pi()); //random phi for multiple scattering 
+  double theta0 = rms/Sqrt(2); //angle of multiple scattering
+  double thetap = gRandom->Gaus(0.,theta0);
+  double phip = gRandom->Uniform(2*Pi()); //random phi for multiple scattering
 
   double mr[3][3]; //rotation matrix
   mr[0][0] = -Sin(fPhi);
@@ -69,15 +71,15 @@ void Particle::Rotate(double rms) {
   mr[1][2] = Sin(fTheta)*Sin(fPhi);
   mr[2][2] = Sin(fTheta);
 
-  double pol[3]; //column vector for rotation 
+  double pol[3]; //column vector for rotation
   pol[0] = Sin(thetap)*Cos(phip);
   pol[1] = Sin(thetap)*Sin(phip);
   pol[2] = Cos(thetap);
 
   double rot[3]; //rotated vector
 
-  //row by column multiplication 
-  for (int i = 0; i < 3; i++) { 
+  //row by column multiplication
+  for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
       rot[i] += mr[i][j] * pol[j];
     }
@@ -89,26 +91,22 @@ void Particle::Rotate(double rms) {
   if(ATan(rot[2]/r) >= 0) {
     if(double x = gRandom->Rndm() < 0.5){
       fTheta = ATan(rot[2]/r);
+      fPhi = ATan(rot[1]/rot[0]);
     }
     else {
       fTheta = ATan(rot[2]/r)+Pi();
+      fPhi = ATan(rot[1]/rot[0])+Pi();
     }
   }
-    
+
   else if (ATan(rot[2]/r) < 0) {
     if(double x = gRandom->Rndm() < 0.5){
-      fTheta = ATan(rot[2]/r)+2*Pi();
+      fTheta = ATan(rot[2]/r) + 2*Pi();
+      fPhi = ATan(rot[1]/rot[0]) + 2*Pi();
     }
     else {
-      fTheta = ATan(rot[2]/r)+Pi();
+      fTheta = ATan(rot[2]/r) + Pi();
+      fPhi = ATan(rot[1]/rot[0]) + Pi();
     }
   }
 }
-      
-      
-  
-  
-      
-
-
-
