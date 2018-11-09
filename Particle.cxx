@@ -87,25 +87,40 @@ void Particle::Rotate(double rms) {
   //value of the radius in polar coordinates (we don't know if it's needed)
   double r = Sqrt(rot[0]*rot[0] + rot[1]*rot[1] + rot[2]*rot[2]);
 
-  //calculation of new angles after multiple scattering
+  //Theta
   if(ATan(rot[2]/r) >= 0) {
     if(double x = gRandom->Rndm() < 0.5){
       fTheta = ATan(rot[2]/r);
-      fPhi = ATan(rot[1]/rot[0]);
     }
     else {
       fTheta = ATan(rot[2]/r)+Pi();
-      fPhi = ATan(rot[1]/rot[0])+Pi();
     }
   }
 
   else if (ATan(rot[2]/r) < 0) {
     if(double x = gRandom->Rndm() < 0.5){
       fTheta = ATan(rot[2]/r) + 2*Pi();
-      fPhi = ATan(rot[1]/rot[0]) + 2*Pi();
     }
     else {
       fTheta = ATan(rot[2]/r) + Pi();
+    }
+  }
+
+//Phi
+  if(ATan(rot[1]/rot[0]) >= 0) {
+    if(double x = gRandom->Rndm() < 0.5){
+      fPhi = ATan(rot[1]/rot[0]);
+    }
+    else {
+      fPhi = ATan(rot[1]/rot[0])+Pi();
+    }
+  }
+
+  else if (ATan(rot[1]/rot[0]) < 0) {
+    if(double x = gRandom->Rndm() < 0.5){
+      fPhi = ATan(rot[1]/rot[0]) + 2*Pi();
+    }
+    else {
       fPhi = ATan(rot[1]/rot[0]) + Pi();
     }
   }
