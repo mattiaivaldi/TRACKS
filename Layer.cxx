@@ -1,4 +1,4 @@
-//Class used in order to define the different layers in our detector system 
+//Class used in order to define the different layers in our detector system
 
 #include <Riostream.h>
 #include "Layer.h"
@@ -39,7 +39,7 @@ Double_t Layer::GetRadius() const {
     return fRadius;
 }
 
-Double_t Layer::GetThick() const {
+Double_t Layer::GetRMS() const {
     //Returns Thickness
-    return fThick;
+    return fRMS;
 }
