@@ -34,7 +34,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
     return hit;
 }
 
-void detect(Event *vtx, double &theta, double &phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter){
+void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter){
 
   double *hit_buffer;
   bool b_cross=false;
