@@ -40,7 +40,7 @@ vector<Hit> detect(Event vtx, double &theta, double &phi, Layer L, Particle part
   bool b_cross=false;
   vector<Hit> cross;
 
-  hit_buffer_BP=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
+  hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
 
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
 
