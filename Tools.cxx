@@ -39,9 +39,9 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
   double *hit_buffer;
   bool b_cross=false;
 
-  hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
+  hit_buffer=hit_point(vtx.GetX(),vtx.GetY(),vtx.GetZ(),theta,phi,L.GetRadius());
 
-  if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
+  if(*(hit_buffer+2) >= -(L.GetWidth()/2.) && *(hit_buffer+2) <= (L.GetWidth()/2.)) {
 
     b_cross = true;
 
