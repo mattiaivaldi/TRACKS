@@ -56,7 +56,7 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
     //cout << "Before beam pipe, phi = " << phi << " theta = " << theta << endl;
 
     if (b_cross == true && b_multiscatter == true) {
-      part->Rotate(L.GetRMS());
+      part.Rotate(L.GetRMS());
       phi = part.GetPhi();
       theta = part.GetTheta();
     }
