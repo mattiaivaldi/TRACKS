@@ -20,6 +20,8 @@
 
 using namespace TMath;
 
+void detect(Event vtx, double theta, double phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter);
+
 //PrintParticles is a variable used in order to decide wheter or not to print all the info about a particle (verbose)
 //multiscatman is used in order to toogle on or off the multiscattering
 void test(bool PrintParticles, bool multiscatman) {
@@ -88,3 +90,40 @@ void test(bool PrintParticles, bool multiscatman) {
   printf("\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\n",cpu_time,real_time, cpu_efficiency);
 
 } //END
+
+void detect(Event vtx, double theta, double phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter){
+
+  double *hit_buffer;
+  bool b_cross=false;
+
+  hit_buffer=hit_point(vtx.GetX(),vtx.GetY(),vtx.GetZ(),theta,phi,L.GetRadius());
+
+  if(*(hit_buffer+2) >= -(L.GetWidth()/2.) && *(hit_buffer+2) <= (L.GetWidth()/2.)) {
+
+    b_cross = true;
+
+    Hit *hit = new Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
+
+    cross.push_back(hit);
+
+    /*if (b_verbose==true) {
+      printf("Hit with BP at (%f, %f, %f)\n",cross[j]->GetX(),cross[j]->GetY(),cross[j]->GetZ());
+    }*/
+
+    //cout << "Before beam pipe, phi = " << phi << " theta = " << theta << endl;
+
+    if (b_cross == true && b_multiscatter == true) {
+      part.Rotate(L.GetRMS());
+      phi = part.GetPhi();
+      theta = part.GetTheta();
+    }
+
+    //j++;
+
+    //cout << "After beam pipe, phi = " << phi << " theta = " << theta << endl;
+
+  }
+
+  //return cross;
+
+}
