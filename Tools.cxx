@@ -34,11 +34,10 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
     return hit;
 }
 
-vector<Hit> detect(Event vtx, double &theta, double &phi, Layer L, Particle part, b_verbose, bool b_multiscatter){
+void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vector<Hit> cross, b_verbose, bool b_multiscatter){
 
   double *hit_buffer;
   bool b_cross=false;
-  vector<Hit> cross;
 
   hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
 
@@ -50,9 +49,9 @@ vector<Hit> detect(Event vtx, double &theta, double &phi, Layer L, Particle part
 
     cross.push_back(hit);
 
-    if (b_verbose==true) {
+    /*if (b_verbose==true) {
       printf("Hit with BP at (%f, %f, %f)\n",cross[j]->GetX(),cross[j]->GetY(),cross[j]->GetZ());
-    }
+    }*/
 
     cout << "Before beam pipe, phi = " << phi << " theta = " << theta << endl;
 
