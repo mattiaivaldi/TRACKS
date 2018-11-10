@@ -10,7 +10,6 @@
 #include "Hit.h"
 #include "Event.h"
 #include "Particle.h"
-#include "TMath.h"
 
 //x0, y0, z0 = generated vertex coordinates; theta, phi = generated angles; R = radius of the detector
 double *hit_point(double x0, double y0, double z0, double theta, double phi, double R);
