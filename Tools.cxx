@@ -61,12 +61,12 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
       theta = part->GetTheta();
     }
 
-    j++;
+    //j++;
 
-    cout << "After beam pipe, phi = " << phi << " theta = " << theta << endl;
+    //cout << "After beam pipe, phi = " << phi << " theta = " << theta << endl;
 
   }
 
-  return cross;
+  //return cross;
 
 }
