@@ -53,12 +53,12 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
       printf("Hit with BP at (%f, %f, %f)\n",cross[j]->GetX(),cross[j]->GetY(),cross[j]->GetZ());
     }*/
 
-    cout << "Before beam pipe, phi = " << phi << " theta = " << theta << endl;
+    //cout << "Before beam pipe, phi = " << phi << " theta = " << theta << endl;
 
     if (b_cross == true && b_multiscatter == true) {
-      part->Rotate(L->GetRMS());
-      phi = part->GetPhi();
-      theta = part->GetTheta();
+      part->Rotate(L.GetRMS());
+      phi = part.GetPhi();
+      theta = part.GetTheta();
     }
 
     //j++;
