@@ -75,6 +75,8 @@ void test(bool PrintParticles, bool multiscatman) {
 
     delete part;
 
+  }
+
   //pronted out how many particles have crossed which layer
   printf("\n\nOut of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L1.size());
 
