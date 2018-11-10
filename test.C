@@ -67,13 +67,15 @@ void test(bool PrintParticles, bool multiscatman) {
       printf("Particle %i: phi %f - theta %f\n",i,phi[i],theta[i]);
     }
 
-    cross_BP=detect(vgen, &theta[i], &phi[i], BP, part, PrintParticles, multiscatman);
+    detect(vgen, &theta[i], &phi[i], BP, part, cross_BP, PrintParticles, multiscatman);
 
-    cross_L1=detect(vgen, &theta[i], &phi[i], L1, part, PrintParticles, multiscatman);
+    detect(vgen, &theta[i], &phi[i], L1, part, cross_L1, PrintParticles, multiscatman);
 
-    cross_L2=detect(vgen, &theta[i], &phi[i], L2, part, PrintParticles, multiscatman);
+    detect(vgen, &theta[i], &phi[i], L2, part, cross_L2, PrintParticles, multiscatman);
 
     delete part;
+
+  }
 
   //pronted out how many particles have crossed which layer
   printf("\n\nOut of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L1.size());
