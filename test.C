@@ -64,7 +64,7 @@ void test(bool PrintParticles, bool multiscatman) {
     theta[i] = part->GetTheta();
     //print them out only if verbose is on
     if (PrintParticles==true) {
-      printf("Particle %i: phi %f - theta %f\n",i,phi[i],theta[i]);
+      printf("Particle %i: theta %f - phi %f\n",i,theta[i],phi[i]);
     }
 
     detect(*vgen, &theta[i], &phi[i], BP, part, cross_BP, PrintParticles, multiscatman);
@@ -108,7 +108,7 @@ void detect(Event vtx, double theta, double phi, Layer L, Particle part, vector<
       printf("Hit with BP at (%f, %f, %f)\n",cross[j]->GetX(),cross[j]->GetY(),cross[j]->GetZ());
     }*/
 
-    //cout << "Before beam pipe, phi = " << phi << " theta = " << theta << endl;
+    printf("PRIMA: theta %f - phi %f\n",theta,phi);
 
     if (b_cross == true && b_multiscatter == true) {
       part.Rotate(L.GetRMS());
@@ -118,7 +118,7 @@ void detect(Event vtx, double theta, double phi, Layer L, Particle part, vector<
 
     //j++;
 
-    //cout << "After beam pipe, phi = " << phi << " theta = " << theta << endl;
+    printf("DOPO: theta %f - phi %f\n",theta,phi);
 
   }
 
