@@ -21,8 +21,6 @@
 
 using namespace TMath;
 
-void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char const *detector);
-
 //PrintParticles is a variable used in order to decide wheter or not to print all the info about a particle (verbose)
 //multiscatman is used in order to toogle on or off the multiscattering
 void test(bool PrintParticles, bool multiscatman) {
@@ -90,34 +88,3 @@ void test(bool PrintParticles, bool multiscatman) {
   printf("\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\n",cpu_time,real_time, cpu_efficiency);
 
 } //END
-
-void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char const *detector){
-
-  double *hit_buffer;
-  bool b_cross=false;
-
-  hit_buffer=hit_point(vtx.GetX(),vtx.GetY(),vtx.GetZ(),part.GetTheta(),part.GetPhi(),L.GetRadius());
-
-  if(*(hit_buffer+2) >= -(L.GetWidth()/2.) && *(hit_buffer+2) <= (L.GetWidth()/2.)) {
-
-    b_cross = true;
-
-    Hit *hit = new Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
-
-    cross.push_back(hit);
-
-    if (b_verbose==true) {
-      printf("Hit with %s at (%f, %f, %f)\n\n",detector,*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
-    }
-
-    if (b_cross == true && b_multiscatter == true) {
-      part.Rotate(0.001);
-    }
-
-    if (b_multiscatter == true) {
-    printf("Angles after multiple scattering: theta %f - phi %f\n\n",part.GetTheta(),part.GetPhi());
-    }
-
-  }
-
-}
