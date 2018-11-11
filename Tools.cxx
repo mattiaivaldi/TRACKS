@@ -38,7 +38,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
 
   double *hit_buffer;
   bool b_cross=false;
-  double rms=part.GetRMS();
+  double rms=L.GetRMS();
 
   hit_buffer=hit_point(vtx.GetX(),vtx.GetY(),vtx.GetZ(),part.GetTheta(),part.GetPhi(),L.GetRadius());
 
