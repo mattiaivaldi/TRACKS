@@ -53,11 +53,11 @@ void test(bool PrintParticles, bool multiscatman) {
   //arrays which contain the values of the randomly generated theta and phi angles
   double theta[mult], phi[mult];
 
-  //variables used in order to see if there is an effective intersection between a particle and a piece of the detector
-  bool bBP = false, bL1 = false, bL2 = false; //they are all set to false and changed to true if we have an intersection
-
   //cycle over all the particles in current event
   for (int i = 0; i < mult; i++) {
+
+    //variables used in order to see if there is an effective intersection between a particle and a piece of the detector
+    bool bBP = false, bL1 = false, bL2 = false; //they are all set to false and changed to true if we have an intersection
 
     //create an object of the class particle
     Particle *part = new Particle("kinem.root");
@@ -113,14 +113,14 @@ void test(bool PrintParticles, bool multiscatman) {
       if (PrintParticles==true) {
 	       printf("Hit with L1 at (%f, %f, %f)\n",ciccioL1[k]->GetX(),ciccioL1[k]->GetY(),ciccioL1[k]->GetZ());
       }
-      cout << "Angoli prima " << phi[i] << " " << theta[i] << endl;
+      cout << "Before layer1, phi = " << phi[i] << " theta = " << theta[i] << endl;
       if (bL1 == true && multiscatman == true) {
         part->Rotate(L1->GetRMS());
         phi[i] = part->GetPhi();
         theta[i] = part->GetTheta();
       }
       k++;
-      cout << "Angoli dopo " << phi[i] << " " << theta[i] << endl;
+      cout << "After layer1 phi = " << phi[i] << " theta = " << theta[i] << endl;
     }
 
     //---intersection with L2, here there is no multiple scattering for now (we don't care about what happens after layer 2)---//
