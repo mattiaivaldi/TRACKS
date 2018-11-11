@@ -78,7 +78,7 @@ void test(bool PrintParticles, bool multiscatman) {
   }
 
   //pronted out how many particles have crossed which layer
-  printf("\n\nOut of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L1.size());
+  printf("\n\nOut of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
 
   //random info on the cpu usage
   timer.Stop();
@@ -108,7 +108,7 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
       printf("Hit with BP at (%f, %f, %f)\n",cross[j]->GetX(),cross[j]->GetY(),cross[j]->GetZ());
     }*/
 
-    printf("PRIMA: theta %f - phi %f\n",theta,phi);
+    printf("PRIMA: theta %f - phi %f\n\n",theta,phi);
 
     if (b_cross == true && b_multiscatter == true) {
       part.Rotate(0.001);
@@ -118,7 +118,7 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
 
     //j++;
 
-    printf("DOPO: theta %f - phi %f\n",theta,phi);
+    printf("DOPO: theta %f - phi %f\n\n",theta,phi);
 
   }
 
