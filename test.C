@@ -1,5 +1,6 @@
 //
 //TRACKS - generation and recontruction of particle tracks in a detector
+//with multiple scattering and noise
 //developed by Luca Quaglia and Mattia Ivaldi, 2018
 //
 //START
@@ -110,7 +111,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
     }
 
     if (b_cross == true && b_multiscatter == true) {
-      part.Rotate(L.GetRMS());
+      part.Rotate(0.001);
     }
 
     if (b_multiscatter == true) {
