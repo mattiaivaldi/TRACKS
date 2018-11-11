@@ -26,6 +26,8 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
 //multiscatman is used in order to toogle on or off the multiscattering
 void test(bool PrintParticles, bool multiscatman) {
 
+  printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
+
   TStopwatch timer; //declared a timer to perform cpu efficiency measurements
 
   timer.Start(true); //start the timer
@@ -42,13 +44,15 @@ void test(bool PrintParticles, bool multiscatman) {
   //j, k and l are counters used later on and mult is the cast of the multiplicity (float) to an int value
   int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
 
-  //print out some info for the user
-  printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
-  printf("Generated vertex with coordinates (%f, %f, %f)\nEvent multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
-
   if (PrintParticles==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
   }else{printf("Printing vertex and hit coordinates: OFF\n\n");}
+
+  if (multiscatman==true) {
+    printf("Applying multiple scattering: ON\n\n");
+  }else{printf("Applying multiple scattering: OFF\n\n");}
+
+  printf("Generated vertex with coordinates (%f, %f, %f)\nEvent multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
   //arrays which contain the values of the randomly generated theta and phi angles
   double theta[mult], phi[mult];
