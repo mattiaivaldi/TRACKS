@@ -20,7 +20,7 @@
 
 using namespace TMath;
 
-void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char[] detector);
+void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char const *detector);
 
 //PrintParticles is a variable used in order to decide wheter or not to print all the info about a particle (verbose)
 //multiscatman is used in order to toogle on or off the multiscattering
@@ -90,7 +90,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
 } //END
 
-void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char[] detector){
+void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char const *detector){
 
   double *hit_buffer;
   bool b_cross=false;
