@@ -6,6 +6,7 @@
 //START
 
 #include "TCanvas.h"
+#include "TH2F.h"
 #include "TGraphPolar.h"
 #include "Riostream.h"
 #include "TRandom3.h"
@@ -78,7 +79,7 @@ void test(bool PrintParticles, bool multiscatman) {
   //pronted out how many particles have crossed which layer
   printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
 
-  TCanvas * CPol = new TCanvas("CPol","TGraphPolar Example",500,500);
+  /*TCanvas * CPol = new TCanvas("CPol","TGraphPolar Example",500,500);
 
   Double_t theta[8];
   Double_t radius[8];
@@ -100,7 +101,24 @@ void test(bool PrintParticles, bool multiscatman) {
   grP1->SetMarkerColor(4);
   grP1->SetLineColor(2);
   grP1->SetLineWidth(3);
-  grP1->Draw("PE");
+  grP1->Draw("PE");*/
+
+  TCanvas *c4 = new TCanvas("c4","c4",600,400);
+   c4->Divide(2,2);
+   TH2F *hscc = new TH2F("hscc","Cylindrical coordinates",20,-4,4,20,-20,20);
+   Float_t px, py;
+   for (Int_t i = 0; i < 25000; i++) {
+      gRandom->Rannor(px,py);
+      hscc->Fill(px-1,5*py);
+      hscc->Fill(2+0.5*px,2*py-10.,0.1);
+   }
+   c4->cd(1); hscc->Draw("SURF1 CYL");
+   c4->cd(2); TH2F *hspc = (TH2F*) hscc->DrawClone("SURF1 POL");
+   hspc->SetTitle("Polar coordinates");
+   c4->cd(3); TH2F *hssc = (TH2F*) hscc->DrawClone("SURF1 SPH");
+   hssc->SetTitle("Spherical coordinates");
+   c4->cd(4); TH2F *hsprpc = (TH2F*) hscc->DrawClone("SURF1 PSR");
+   hsprpc->SetTitle("PseudoRapidity/Phi coordinates");
 
   //random info on the cpu usage
   timer.Stop();
