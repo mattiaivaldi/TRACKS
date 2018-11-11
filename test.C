@@ -108,6 +108,10 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
 
     cross.push_back(hit);
 
+    if (b_verbose==true) {
+      printf("Hit with BP at (%f, %f, %f)\n",*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
+    }
+
     /*if (b_verbose==true) {
       printf("Hit with BP at (%f, %f, %f)\n",cross[j]->GetX(),cross[j]->GetY(),cross[j]->GetZ());
     }*/
