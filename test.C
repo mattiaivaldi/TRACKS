@@ -20,7 +20,7 @@
 
 using namespace TMath;
 
-void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter);
+void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char detector);
 
 //PrintParticles is a variable used in order to decide wheter or not to print all the info about a particle (verbose)
 //multiscatman is used in order to toogle on or off the multiscattering
@@ -68,11 +68,11 @@ void test(bool PrintParticles, bool multiscatman) {
       printf("Particle %i: theta %f - phi %f\n",i,part->GetTheta(),part->GetPhi());
     }
 
-    detect(*vgen, *BP, *part, cross_BP, PrintParticles, multiscatman);
+    detect(*vgen, *BP, *part, cross_BP, PrintParticles, multiscatman, "BP");
 
-    detect(*vgen, *L1, *part, cross_L1, PrintParticles, multiscatman);
+    detect(*vgen, *L1, *part, cross_L1, PrintParticles, multiscatman, "L1");
 
-    detect(*vgen, *L2, *part, cross_L2, PrintParticles, multiscatman);
+    detect(*vgen, *L2, *part, cross_L2, PrintParticles, multiscatman, "L2");
 
     delete part;
 
@@ -90,7 +90,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
 } //END
 
-void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter){
+void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char detector){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -106,7 +106,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
     cross.push_back(hit);
 
     if (b_verbose==true) {
-      printf("Hit with BP at (%f, %f, %f)\n",*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
+      printf("Hit with %s at (%f, %f, %f)\n",detector,*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
     }
 
     if (b_cross == true && b_multiscatter == true) {
