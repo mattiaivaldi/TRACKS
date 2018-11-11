@@ -110,7 +110,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
     }
 
     if (b_cross == true && b_multiscatter == true) {
-      part.Rotate(0.001);
+      part.Rotate(L.GetRMS());
     }
 
     if (b_multiscatter == true) {
