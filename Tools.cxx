@@ -50,7 +50,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
     cross.push_back(hit);
 
     if (b_verbose==true) {
-      printf("Hit with %s at (%f, %f, %f)\n\n",detector,*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
+      printf("Hit with %s at (%f, %f, %f)\n",detector,*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
     }
 
     if (b_cross == true && b_multiscatter == true) {
