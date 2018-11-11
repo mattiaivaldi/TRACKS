@@ -112,24 +112,16 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
       printf("Hit with BP at (%f, %f, %f)\n",*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
     }
 
-    /*if (b_verbose==true) {
-      printf("Hit with BP at (%f, %f, %f)\n",cross[j]->GetX(),cross[j]->GetY(),cross[j]->GetZ());
-    }*/
-
-    printf("PRIMA: theta %f - phi %f\n\n",theta,phi);
-
     if (b_cross == true && b_multiscatter == true) {
       part.Rotate(0.001);
       phi = part.GetPhi();
       theta = part.GetTheta();
     }
 
-    //j++;
-
-    printf("DOPO: theta %f - phi %f\n\n",theta,phi);
+    if (b_multiscatter == true) {
+    printf("Angles after multiple scattering: theta %f - phi %f\n\n",theta,phi);
+    }
 
   }
-
-  //return cross;
 
 }
