@@ -89,7 +89,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
 } //END
 
-void detect(Event vtx, double theta, double phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter){
+void detect(Event vtx, double* theta, double* phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -112,8 +112,8 @@ void detect(Event vtx, double theta, double phi, Layer L, Particle part, vector<
 
     if (b_cross == true && b_multiscatter == true) {
       part.Rotate(L.GetRMS());
-      phi = part.GetPhi();
-      theta = part.GetTheta();
+      *phi = part.GetPhi();
+      *theta = part.GetTheta();
     }
 
     //j++;
