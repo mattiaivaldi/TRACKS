@@ -42,7 +42,7 @@ void test(bool PrintParticles, bool multiscatman) {
   //vectors of the class hit used in order to memorize all the coordinates of all the intersections
   vector <Hit*> cross_BP, cross_L1, cross_L2;
   //j, k and l are counters used later on and mult is the cast of the multiplicity (float) to an int value
-  int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
+  int mult = (int)vgen->GetMult();
 
   if (PrintParticles==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
@@ -63,12 +63,9 @@ void test(bool PrintParticles, bool multiscatman) {
     //create an object of the class particle
     Particle *part = new Particle("kinem.root");
 
-    //get the values of theta and phi
-    phi[i] = part->GetPhi();
-    theta[i] = part->GetTheta();
     //print them out only if verbose is on
     if (PrintParticles==true) {
-      printf("Particle %i: theta %f - phi %f\n",i,theta[i],phi[i]);
+      printf("Particle %i: theta %f - phi %f\n",i,part->GetTheta(),part->GetPhi());
     }
 
     detect(*vgen, *BP, *part, cross_BP, PrintParticles, multiscatman);
