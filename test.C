@@ -93,7 +93,7 @@ void test(bool PrintParticles, bool multiscatman) {
   }
 
   TGraphPolar * grP1 = new TGraphPolar(8, theta, radius, etheta, eradius);
-  grP1->SetTitle("TGraphPolar Example");
+  grP1->SetTitle("#theta - MC data");
 
   grP1->SetMarkerStyle(20);
   grP1->SetMarkerSize(2.);

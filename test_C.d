@@ -55,6 +55,13 @@
 ./test_C.so: /Applications/root_v6.14.04/include/TPoint.h
 ./test_C.so: /Applications/root_v6.14.04/include/TAttCanvas.h
 ./test_C.so: /Applications/root_v6.14.04/include/TCanvasImp.h
+./test_C.so: /Applications/root_v6.14.04/include/TGraphPolar.h
+./test_C.so: /Applications/root_v6.14.04/include/TGraphErrors.h
+./test_C.so: /Applications/root_v6.14.04/include/TGraph.h
+./test_C.so: /Applications/root_v6.14.04/include/TVectorFfwd.h
+./test_C.so: /Applications/root_v6.14.04/include/TVectorDfwd.h
+./test_C.so: /Applications/root_v6.14.04/include/TFitResultPtr.h
+./test_C.so: /Applications/root_v6.14.04/include/TGraphPolargram.h
 ./test_C.so: /Applications/root_v6.14.04/include/Riostream.h
 ./test_C.so: /Applications/root_v6.14.04/include/TRandom3.h
 ./test_C.so: /Applications/root_v6.14.04/include/TRandom.h
