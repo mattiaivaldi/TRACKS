@@ -37,8 +37,6 @@ void test(bool PrintParticles, bool multiscatman) {
 
   //object of class event
   Event *vgen = new Event(0, 0.001, 5.3, "kinem.root");
-  //pointers to 3 arrays which keep track of the intersection point between the particle and the beam pipe/detectors
-  double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
   //vectors of the class hit used in order to memorize all the coordinates of all the intersections
   vector <Hit*> cross_BP, cross_L1, cross_L2;
   //j, k and l are counters used later on and mult is the cast of the multiplicity (float) to an int value
