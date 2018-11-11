@@ -38,6 +38,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
 
   double *hit_buffer;
   bool b_cross=false;
+  double rms=part.GetRMS();
 
   hit_buffer=hit_point(vtx.GetX(),vtx.GetY(),vtx.GetZ(),part.GetTheta(),part.GetPhi(),L.GetRadius());
 
@@ -54,7 +55,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
     }
 
     if (b_cross == true && b_multiscatter == true) {
-      part.Rotate(0.001);
+      part.Rotate(rms);
     }
 
     if (b_multiscatter == true) {
