@@ -79,7 +79,7 @@ void test(bool PrintParticles, bool multiscatman) {
   }
 
   //pronted out how many particles have crossed which layer
-  printf("\n\nOut of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
+  printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
 
   //random info on the cpu usage
   timer.Stop();
@@ -106,7 +106,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
     cross.push_back(hit);
 
     if (b_verbose==true) {
-      printf("Hit with %s at (%f, %f, %f)\n",detector,*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
+      printf("Hit with %s at (%f, %f, %f)\n\n",detector,*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
     }
 
     if (b_cross == true && b_multiscatter == true) {
