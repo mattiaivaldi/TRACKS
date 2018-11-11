@@ -65,7 +65,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
     //print them out only if verbose is on
     if (PrintParticles==true) {
-      printf(">>> Particle %i: theta %f - phi %f <<<\n",i,part->GetTheta(),part->GetPhi());
+      printf(">>> Particle %i: theta %f - phi %f <<<\n\n",i,part->GetTheta(),part->GetPhi());
     }
 
     detect(*vgen, *BP, *part, cross_BP, PrintParticles, multiscatman, "BP");
