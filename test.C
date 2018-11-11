@@ -111,7 +111,7 @@ void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vecto
     printf("PRIMA: theta %f - phi %f\n",theta,phi);
 
     if (b_cross == true && b_multiscatter == true) {
-      part.Rotate(L.GetRMS());
+      part.Rotate(0.001);
       phi = part.GetPhi();
       theta = part.GetTheta();
     }
