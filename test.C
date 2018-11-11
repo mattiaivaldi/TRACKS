@@ -52,7 +52,7 @@ void test(bool PrintParticles, bool multiscatman) {
     printf("Applying multiple scattering: ON\n\n");
   }else{printf("Applying multiple scattering: OFF\n\n");}
 
-  printf("Generated vertex with coordinates (%f, %f, %f)\nEvent multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
+  printf("All distances are in cm, all angles are in rad.\n\nGenerated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
   //arrays which contain the values of the randomly generated theta and phi angles
   double theta[mult], phi[mult];
