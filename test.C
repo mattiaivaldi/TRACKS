@@ -20,7 +20,7 @@
 
 using namespace TMath;
 
-void detect(Event vtx, double* theta, double* phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter);
+void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter);
 
 //PrintParticles is a variable used in order to decide wheter or not to print all the info about a particle (verbose)
 //multiscatman is used in order to toogle on or off the multiscattering
@@ -67,11 +67,11 @@ void test(bool PrintParticles, bool multiscatman) {
       printf("Particle %i: theta %f - phi %f\n",i,theta[i],phi[i]);
     }
 
-    detect(*vgen, &theta[i], &phi[i], BP, part, cross_BP, PrintParticles, multiscatman);
+    detect(*vgen, theta[i], phi[i], BP, part, cross_BP, PrintParticles, multiscatman);
 
-    detect(*vgen, &theta[i], &phi[i], L1, part, cross_L1, PrintParticles, multiscatman);
+    detect(*vgen, theta[i], phi[i], L1, part, cross_L1, PrintParticles, multiscatman);
 
-    detect(*vgen, &theta[i], &phi[i], L2, part, cross_L2, PrintParticles, multiscatman);
+    detect(*vgen, theta[i], phi[i], L2, part, cross_L2, PrintParticles, multiscatman);
 
     delete part;
 
@@ -89,7 +89,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
 } //END
 
-void detect(Event vtx, double* theta, double* phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter){
+void detect(Event vtx, double &theta, double &phi, Layer L, Particle part, vector<Hit*> cross, bool b_verbose, bool b_multiscatter){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -112,8 +112,8 @@ void detect(Event vtx, double* theta, double* phi, Layer L, Particle part, vecto
 
     if (b_cross == true && b_multiscatter == true) {
       part.Rotate(L.GetRMS());
-      *phi = part.GetPhi();
-      *theta = part.GetTheta();
+      phi = part.GetPhi();
+      theta = part.GetTheta();
     }
 
     //j++;
