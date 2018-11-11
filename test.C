@@ -116,7 +116,7 @@ void detect(Event vtx, Layer L, Particle part, vector<Hit*> &cross, bool b_verbo
     }
 
     if (b_multiscatter == true) {
-    printf("Angles after multiple scattering: theta %f - phi %f\n\n",theta,phi);
+    printf("Angles after multiple scattering: theta %f - phi %f\n\n",part.GetTheta(),part.GetPhi());
     }
 
   }
