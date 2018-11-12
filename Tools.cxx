@@ -41,8 +41,6 @@ void detect(Event* vtx, Layer* L, double theta, double phi, Particle* part, vect
 
   hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
 
-  printf("(%f, %f, %f)\n",vtx->GetX(),vtx->GetY(),vtx->GetZ());
-
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
 
     b_cross = true;
@@ -52,18 +50,14 @@ void detect(Event* vtx, Layer* L, double theta, double phi, Particle* part, vect
     cross.push_back(hit);
 
     if (b_verbose==true) {
-      printf("Hit with %s at (%f, %f, %f)\n",detector,*(hit_buffer+0),*(hit_buffer+0),*(hit_buffer+0));
+      printf("Hit with %s at (%f, %f, %f)\n",detector,*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
     }
 
-    part->Rotate(L->GetRMS());
-    theta=part->GetTheta();
-    phi=part->GetPhi();
-
-    /*if (b_cross == true && b_multiscatter == true) {
+    if (b_cross == true && b_multiscatter == true) {
       part->Rotate(L->GetRMS());
       theta=part->GetTheta();
       phi=part->GetPhi();
-    }*/
+    }
 
     if (b_multiscatter == true || b_multiscatter==false) {
       printf("Angles after: theta %f - phi %f\n\n",theta, phi);
