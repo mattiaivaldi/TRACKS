@@ -40,6 +40,8 @@ void detect(Event vtx, Layer L, Particle &part, vector<Hit*> &cross, bool b_verb
   bool b_cross=false;
   //double rms=L.GetRMS();
 
+  double zio;
+
   hit_buffer=hit_point(vtx.GetX(),vtx.GetY(),vtx.GetZ(),part.GetTheta(),part.GetPhi(),L.GetRadius());
 
   if(*(hit_buffer+2) >= -(L.GetWidth()/2.) && *(hit_buffer+2) <= (L.GetWidth()/2.)) {
@@ -56,10 +58,11 @@ void detect(Event vtx, Layer L, Particle &part, vector<Hit*> &cross, bool b_verb
 
     if (b_cross == true && b_multiscatter == true) {
       part.Rotate(L.GetRMS());
+      zio=part.GetTheta();
     }
 
     if (b_multiscatter == true || b_multiscatter==false) {
-    printf("Angles after multiple scattering: theta %f - phi %f\n\n",part.GetTheta(),part.GetPhi());
+    printf("Angles after multiple scattering: theta %f\n\n",zio);
     }
 
   }
