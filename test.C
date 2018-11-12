@@ -42,7 +42,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
   //vertex mean, sigmaxy, sigmaz, kinematics file
   Event *vgen = new Event(0, 0.001, 5.3, "kinem.root");
-  mult = (int)vgen->GetMult();
+  int mult = (int)vgen->GetMult();
 
   double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
   vector <Hit*> cross_BP, cross_L1, cross_L2;
