@@ -38,12 +38,12 @@ void test(bool PrintParticles, bool multiscatman) {
   Layer *L1 = new Layer(27.,4.,0.2,0.001);
   Layer *L2 = new Layer(27.,7.,0.2,0.001);
 
-  //object of class event
-  Event *vgen = new Event(0, 0.001, 5.3, "kinem.root");
-  //vectors of the class hit used in order to memorize all the coordinates of all the intersections
-  vector <Hit*> cross_BP, cross_L1, cross_L2;
-  //j, k and l are counters used later on and mult is the cast of the multiplicity (float) to an int value
-  int mult = (int)vgen->GetMult();
+  Event *vgen = new Event(0, 0.001, 5.3, "kinem.root"); //dichiarato oggetto della struct event
+  double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
+  vector <Hit*> ciccioBP, ciccioL1, ciccioL2;
+  int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
+
+  double theta[mult], phi[mult];
 
   if (PrintParticles==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
@@ -56,7 +56,7 @@ void test(bool PrintParticles, bool multiscatman) {
   printf("All distances are in cm, all angles are in rad.\n\nGenerated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
   //cycle over all the particles in current event
-  for (int i = 0; i < mult; i++) {
+  /*for (int i = 0; i < mult; i++) {
 
     //create an object of the class particle
     Particle *part = new Particle("kinem.root");
@@ -74,12 +74,82 @@ void test(bool PrintParticles, bool multiscatman) {
 
     delete part;
 
-  }
+  }*/
+
+  bool bBP = false, bL1 = false, bL2 = false; //variable used in order to see if there is an interesction of the particle with the beam
+
+  for (int i = 0; i < mult; i++) {
+
+    Particle *part = new Particle("kinem.root");
+
+    phi[i] = part->GetPhi();
+    theta[i] = part->GetTheta(); //moltiplico per 2 per avere angoli tra 0 e 2 pi anche per theta
+    if (PrintParticles==true) {
+      printf("Particle %i: phi %f - theta %f\n",i,phi[i],theta[i]);
+    }
+
+    //calcolo intersezioni tracce con la beam pipe
+    hit_buffer_BP=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],BP->GetRadius());
+
+    if(*(hit_buffer_BP+2) >= -(BP->GetWidth()/2.) && *(hit_buffer_BP+2) <= (BP->GetWidth()/2.)) {
+      bBP = true; //there has been an interesction
+      Hit *hit_BP = new Hit(*(hit_buffer_BP+0),*(hit_buffer_BP+1),*(hit_buffer_BP+2));
+      ciccioBP.push_back(hit_BP);
+      if (PrintParticles==true) {
+	       printf("Hit with BP at (%f, %f, %f)\n",ciccioBP[j]->GetX(),ciccioBP[j]->GetY(),ciccioBP[j]->GetZ());
+      }
+      cout << "Angoli prima " << phi[i] << " " << theta[i] << endl;
+      if (bBP == true && multiscatman == true) {
+        part->Rotate(BP->GetRMS()); //using the member function GetRMS of the class layer.cxx
+        phi[i] = part->GetPhi();
+        theta[i] = part->GetTheta();
+      }
+      j++;
+      cout << "Angoli dopo " <<phi[i] << " " << theta[i] << endl;
+    }
+
+    //intersection with L1
+    hit_buffer_L1=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],L1->GetRadius());
+
+    if(*(hit_buffer_L1+2) >= -(L1->GetWidth()/2.) && *(hit_buffer_L1+2) <= (L1->GetWidth()/2.)) {
+      bL1 = true;
+      Hit *hit_L1 = new Hit(*(hit_buffer_L1+0),*(hit_buffer_L1+1),*(hit_buffer_L1+2));
+      ciccioL1.push_back(hit_L1);
+      if (PrintParticles==true) {
+	       printf("Hit with L1 at (%f, %f, %f)\n",ciccioL1[k]->GetX(),ciccioL1[k]->GetY(),ciccioL1[k]->GetZ());
+      }
+      cout << "Angoli prima " << phi[i] << " " << theta[i] << endl;
+      if (bL1 == true && multiscatman == true) {
+        part->Rotate(L1->GetRMS()); //using the member function GetRMS of the class layer.cxx
+        phi[i] = part->GetPhi();
+        theta[i] = part->GetTheta();
+      }
+      k++;
+      cout << "Angoli dopo " << phi[i] << " " << theta[i] << endl;
+    }
+
+    //intersection with L2
+    hit_buffer_L2=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],L2->GetRadius());
+
+    if(*(hit_buffer_L2+2) >= -(L2->GetWidth()/2.) && *(hit_buffer_L2+2) <= (L2->GetWidth()/2.)) {
+      Hit *hit_L2 = new Hit(*(hit_buffer_L2+0),*(hit_buffer_L2+1),*(hit_buffer_L2+2));
+      ciccioL2.push_back(hit_L2);
+      if (PrintParticles==true) {
+	printf("Hit with L2 at (%f, %f, %f)\n",ciccioL2[l]->GetX(),ciccioL2[l]->GetY(),ciccioL2[l]->GetZ());
+      }
+      l++;
+    }
+
+    if (PrintParticles==true){printf("\n");}
+
+    delete part; //deleting the object at the end of the for cycle
+
+  }//fine for
 
   //pronted out how many particles have crossed which layer
   printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
 
-  TCanvas * CPol = new TCanvas("CPol","TGraphPolar Example",500,500);
+  /*TCanvas * CPol = new TCanvas("CPol","TGraphPolar Example",500,500);
 
   Double_t theta[8];
   Double_t radius[8];
@@ -112,7 +182,7 @@ void test(bool PrintParticles, bool multiscatman) {
       hscc->Fill(2+0.5*px,2*py-10.,0.1);
    }
    hscc->Draw("SURF1 PSR");
-   hscc->SetTitle("PseudoRapidity/Phi coordinates");
+   hscc->SetTitle("PseudoRapidity/Phi coordinates");*/
 
   //random info on the cpu usage
   timer.Stop();
