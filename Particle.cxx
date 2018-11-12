@@ -49,7 +49,7 @@ Double_t Particle::GetPhi() const {
 }
 
 Float_t Particle::GetRaped() const {
-  //Returns pseudorapidity
+  //Returns peudorapidity
   return fRape;
 }
 
@@ -61,7 +61,7 @@ void Particle::Rotate(double rms) {
   double phip = gRandom->Uniform(2*Pi()); //random phi for multiple scattering
 
   //Debug info (to be deleted or commented)
-  cout << endl << "Multiple scattering angle (fThetap) = " << thetap << endl << endl;
+  //cout << endl << "Multiple scattering angle (fThetap) = " << thetap << endl << endl;
 
   double mr[3][3]; //rotation matrix
   mr[0][0] = -Sin(fPhi);
@@ -92,25 +92,9 @@ void Particle::Rotate(double rms) {
   double r = Sqrt(rot[0]*rot[0] + rot[1]*rot[1] + rot[2]*rot[2]);
 
   //Theta
-  if(ATan(rot[2]/r) >= 0) {
-    //if(double x = gRandom->Rndm() < 0.5){
-      fTheta = ATan(rot[2]/r);
-    }
-    /*else {
-      fTheta = ATan(rot[2]/r)+Pi();
-    }
-  }*/
+  fTheta=ACos(rot[2]/r);
 
-  else if (ATan(rot[2]/r) < 0) {
-    /*if(double x = gRandom->Rndm() < 0.5){
-      fTheta = ATan(rot[2]/r) + 2*Pi();
-    }
-    else {*/
-      fTheta = ATan(rot[2]/r) + Pi();
-    }
-  //}
-
-//Phi
+  //Phi
   if(ATan(rot[1]/rot[0]) >= 0) {
     if(double x = gRandom->Rndm() < 0.5){
       fPhi = ATan(rot[1]/rot[0]);
