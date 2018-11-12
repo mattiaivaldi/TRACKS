@@ -112,3 +112,9 @@ void Particle::Rotate(double rms) {
     }
   }
 }
+
+void Particle::Cazzone() {
+  
+  fTheta *= 2;
+
+}

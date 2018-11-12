@@ -10,24 +10,25 @@ class Particle : public TObject {
 public:
 
 	Particle(); //default constructor
-	Particle(const char *distr); //custom constructor 
-	virtual ~Particle(); //destructor 
+	Particle(const char *distr); //custom constructor
+	virtual ~Particle(); //destructor
 
 //member functions
 
 	double GetTheta() const; //getters
 	double GetPhi() const;
-	float GetRaped() const; 
+	float GetRaped() const;
 	void Rotate(double rms);
+	void Cazzone();
 
 private:
 
-//data members 	
+//data members
 
 	double fTheta; //theta
-	double fPhi; //phi 
-	float fRape; //pseudorapidity	
-	
+	double fPhi; //phi
+	float fRape; //pseudorapidity
+
 	ClassDef(Particle,1)
 
 };
