@@ -39,8 +39,6 @@ void detect(Event* vtx, Layer* L, Particle* part, vector<Hit*> &cross, bool b_ve
   double *hit_buffer;
   bool b_cross=false;
 
-  double zio;
-
   hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),part->GetTheta(),part->GetPhi(),L->GetRadius());
 
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
@@ -59,11 +57,9 @@ void detect(Event* vtx, Layer* L, Particle* part, vector<Hit*> &cross, bool b_ve
       part->Rotate(L->GetRMS());
     }
 
-    zio=part->GetTheta();
-
-    /*if (b_multiscatter == true || b_multiscatter==false) {
-    printf("Angles after: theta %f\n\n",zio);
-  }*/
+    if (b_multiscatter == true || b_multiscatter==false) {
+      printf("Angles after: theta %f - phi %f\n\n",part->GetTheta(), part->GetPhi());
+    }
 
   }
 
