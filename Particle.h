@@ -17,7 +17,7 @@ public:
 
 	double GetTheta() const; //getters
 	double GetPhi() const;
-	float GetRaped() const;
+	float GetRap() const;
 	void Rotate(double rms);//multiple scattering setter
 
 private:
