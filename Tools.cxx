@@ -63,19 +63,19 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
 
       double mr[3][3], pol[3], rot[3], r;
 
-      mr[0][0]=-Sin(fPhi);
-      mr[1][0]=Cos(fPhi);
+      mr[0][0]=-TMath::Sin(fPhi);
+      mr[1][0]=TMath::Cos(fPhi);
       mr[2][0]=0;
-      mr[0][1]=-Cos(fPhi)*Cos(fTheta);
-      mr[1][1]=-Cos(fTheta)*Sin(fPhi);
-      mr[2][1]=Sin(fTheta);
-      mr[0][2]=Sin(fTheta)*Cos(fPhi);
-      mr[1][2]=Sin(fTheta)*Sin(fPhi);
-      mr[2][2]=Cos(fTheta);
+      mr[0][1]=-TMath::Cos(fPhi)*TMath::Cos(fTheta);
+      mr[1][1]=-TMath::Cos(fTheta)*TMath::Sin(fPhi);
+      mr[2][1]=TMath::Sin(fTheta);
+      mr[0][2]=TMath::Sin(fTheta)*TMath::Cos(fPhi);
+      mr[1][2]=TMath::Sin(fTheta)*TMath::Sin(fPhi);
+      mr[2][2]=TMath::Cos(fTheta);
 
-      pol[0]=Sin(thetap)*Cos(phip);
-      pol[1]=Sin(thetap)*Sin(phip);
-      pol[2]=Cos(thetap);
+      pol[0]=TMath::Sin(thetap)*TMath::Cos(phip);
+      pol[1]=TMath::Sin(thetap)*TMath::Sin(phip);
+      pol[2]=TMath::Cos(thetap);
 
       for(int i=0; i<3; i++){
         for(int j=0; j<3; j++){
@@ -83,9 +83,9 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
         }
       }
 
-      r=Sqrt(rot[0]*rot[0]+rot[1]*rot[1]+rot[2]*rot[2]);
+      r=TMath::Sqrt(rot[0]*rot[0]+rot[1]*rot[1]+rot[2]*rot[2]);
 
-      part->SetTheta(ACos(rot[2]/r));
+      part->SetTheta(TMath::ACos(rot[2]/r));
       part->SetPhi(phip);
       //part->Rotate(0.001);
       theta=part->GetTheta();
