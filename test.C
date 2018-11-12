@@ -34,14 +34,14 @@ void test(bool PrintParticles, bool multiscatman) {
   timer.Start(true); //start the timer
 
   //3 objects of the class layer which represent the beam pipe, first layer and second layer
-  Layer *BP = new Layer(27.,3.,0.8,0.001); //length, radius, thickness and multiscattering RMS
-  Layer *L1 = new Layer(27.,4.,0.2,0.001);
-  Layer *L2 = new Layer(27.,7.,0.2,0.001);
+  Layer BP = new Layer(27.,3.,0.8,0.001); //length, radius, thickness and multiscattering RMS
+  Layer L1 = new Layer(27.,4.,0.2,0.001);
+  Layer L2 = new Layer(27.,7.,0.2,0.001);
 
-  Event *vgen = new Event(0, 0.001, 5.3, "kinem.root"); //dichiarato oggetto della struct event
+  Event vgen = new Event(0, 0.001, 5.3, "kinem.root"); //dichiarato oggetto della struct event
   double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
-  vector <Hit*> ciccioBP, ciccioL1, ciccioL2;
-  vector <Hit*> cross_BP, cross_L1, cross_L2;
+  vector <Hit> ciccioBP, ciccioL1, ciccioL2;
+  vector <Hit> cross_BP, cross_L1, cross_L2;
   int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
 
   double theta[mult], phi[mult];
@@ -67,11 +67,11 @@ void test(bool PrintParticles, bool multiscatman) {
       printf(">>> Particle %i: theta %f - phi %f <<<\n\n",i+1,part->GetTheta(),part->GetPhi());
     }
 
-    detect(*vgen, *BP, *part, cross_BP, PrintParticles, multiscatman, "BP");
+    detect(vgen, BP, part, cross_BP, PrintParticles, multiscatman, "BP");
 
-    detect(*vgen, *L1, *part, cross_L1, PrintParticles, multiscatman, "L1");
+    detect(vgen, L1, part, cross_L1, PrintParticles, multiscatman, "L1");
 
-    detect(*vgen, *L2, *part, cross_L2, PrintParticles, multiscatman, "L2");
+    detect(vgen, L2, part, cross_L2, PrintParticles, multiscatman, "L2");
 
     delete part;
 
