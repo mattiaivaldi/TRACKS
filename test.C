@@ -100,26 +100,24 @@ void test(bool PrintParticles, bool multiscatman) {
     }
 
     //intersection with beam pipe
-    hit_buffer_BP=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],BP->GetRadius());
+    hit_buffer_BP=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),part->GetTheta(),part->GetPhi(),BP->GetRadius());
 
     if(*(hit_buffer_BP+2) >= -(BP->GetWidth()/2.) && *(hit_buffer_BP+2) <= (BP->GetWidth()/2.)) {
       bBP = true;
       Hit *hit_BP = new Hit(*(hit_buffer_BP+0),*(hit_buffer_BP+1),*(hit_buffer_BP+2));
       cross_BP.push_back(hit_BP);
       if (PrintParticles==true) {
-	       printf("Hit with BP at (%f, %f, %f)\n",cross_BP[j]->GetX(),cross_BP[j]->GetY(),cross_BP[j]->GetZ());
+	       printf("Hit with BP at (%f, %f, %f)\n",*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
       }
-      cout << "Angoli prima " << phi[i] << " " << theta[i] << endl;
+      cout << "Angoli prima " << part->GetTheta() << " " << part->GetPhi() << endl;
       if (bBP == true && multiscatman == true) {
         part->Rotate(BP->GetRMS());
-        phi[i] = part->GetPhi();
-        theta[i] = part->GetTheta();
       }
       j++;
-      cout << "Angoli dopo " <<phi[i] << " " << theta[i] << endl;
+      cout << "Angoli dopo " << part->GetTheta() << " " << part->GetPhi() << endl;
     }else{bBP=false;}
 
-    //intersection with L1
+    /*//intersection with L1
     hit_buffer_L1=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],L1->GetRadius());
 
     if(*(hit_buffer_L1+2) >= -(L1->GetWidth()/2.) && *(hit_buffer_L1+2) <= (L1->GetWidth()/2.)) {
@@ -149,7 +147,7 @@ void test(bool PrintParticles, bool multiscatman) {
 	printf("Hit with L2 at (%f, %f, %f)\n",cross_L2[l]->GetX(),cross_L2[l]->GetY(),cross_L2[l]->GetZ());
       }
       l++;
-    }else{bL2=false;}
+    }else{bL2=false;}*/
 
     if (PrintParticles==true){printf("\n");}
 
