@@ -91,10 +91,10 @@ void Particle::Rotate(double rms) {
   //value of the radius in polar coordinates (we don't know if it's needed)
   double r = Sqrt(rot[0]*rot[0] + rot[1]*rot[1] + rot[2]*rot[2]);
 
-  fTheta = ACos(rot[2]/r);
+  //fTheta = ACos(rot[2]/r);
 
 //Phi
-  if(ATan(rot[1]/rot[0]) >= 0) {
+  /*if(ATan(rot[1]/rot[0]) >= 0) {
     if(double x = gRandom->Rndm() < 0.5){
       fPhi = ATan(rot[1]/rot[0]);
     }
@@ -110,7 +110,10 @@ void Particle::Rotate(double rms) {
     else {
       fPhi = ATan(rot[1]/rot[0]) + Pi();
     }
-  }
+  }*/
+
+  fTheta+=thetap;
+  fPhi=phip;
 }
 
 void Particle::Cazzone(double rms) {
