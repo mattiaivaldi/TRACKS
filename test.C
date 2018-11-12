@@ -72,14 +72,14 @@ void test(bool PrintParticles, bool multiscatman) {
 
     detect(vgen, BP, theta[i], phi[i], part, cross_BP, PrintParticles, multiscatman, "BP");
 
-    printf("Angles after: theta %f - phi %f\n\n",theta[i], phi[i]);
+    printf("Angles after check: theta %f - phi %f\n\n",theta[i], phi[i]);
 
     theta[i]=part->GetTheta();
     phi[i]=part->GetPhi();
 
     detect(vgen, L1, theta[i], phi[i], part, cross_L1, PrintParticles, multiscatman, "L1");
 
-    printf("Angles after: theta %f - phi %f\n\n",theta[i], phi[i]);
+    printf("Angles after check: theta %f - phi %f\n\n",theta[i], phi[i]);
 
     theta[i]=part->GetTheta();
     phi[i]=part->GetPhi();
