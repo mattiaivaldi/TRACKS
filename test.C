@@ -72,7 +72,13 @@ void test(bool PrintParticles, bool multiscatman) {
 
     detect(vgen, BP, theta[i], phi[i], part, cross_BP, PrintParticles, multiscatman, "BP");
 
+    theta[i]=part->GetTheta();
+    phi[i]=part->GetPhi();
+
     detect(vgen, L1, theta[i], phi[i], part, cross_L1, PrintParticles, multiscatman, "L1");
+
+    theta[i]=part->GetTheta();
+    phi[i]=part->GetPhi();
 
     detect(vgen, L2, theta[i], phi[i], part, cross_L2, PrintParticles, multiscatman, "L2");
 
