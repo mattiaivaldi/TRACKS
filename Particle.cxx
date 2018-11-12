@@ -26,9 +26,9 @@ fRape(0)
 {
   //Standard constructor
   TFile hfile(distr); //opens file
-  TH1F *pseudorape = (TH1F*)hfile.Get("heta"); //assign to TH1F pseudorape the histogram in the .root file
-  fRape = pseudorape->GetRandom(); //get a random value from assigned distribution
-  fTheta = 2*ATan(Exp(-(double)fRape)); //get theta from the pseudorapidity distribution
+  TH1F *pseudorap = (TH1F*)hfile.Get("heta"); //assign to TH1F pseudorape the histogram in the .root file
+  fRap = pseudorap->GetRandom(); //get a random value from assigned distribution
+  fTheta = 2*ATan(Exp(-(double)fRap)); //get theta from the pseudorapidity distribution
 }
 
 Particle::~Particle() {
