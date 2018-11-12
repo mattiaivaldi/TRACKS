@@ -19,7 +19,7 @@ public:
 	double GetPhi() const;
 	float GetRaped() const;
 	void Rotate(double rms);
-	void Cazzone();
+	void Cazzone(double rms);
 
 private:
 

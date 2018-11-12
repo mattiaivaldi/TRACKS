@@ -55,7 +55,7 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
     }
 
     if (b_cross == true && b_multiscatter == true) {
-      part->Cazzone();
+      part->Cazzone(0.001);
       theta=part->GetTheta();
       phi=part->GetPhi();
     }

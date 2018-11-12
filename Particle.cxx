@@ -113,11 +113,11 @@ void Particle::Rotate(double rms) {
   }
 }
 
-void Particle::Cazzone() {
+void Particle::Cazzone(double rms) {
 
   gRandom->SetSeed(0);
   //Calculation for multiple scattering
-  double theta0 = 0.001/Sqrt(2); //sigma of the gaussian distribution for the scattered angle
+  double theta0 = rms/Sqrt(2); //sigma of the gaussian distribution for the scattered angle
   double thetap = gRandom->Gaus(0.,theta0); //angle of multiple scattering
   double phip = gRandom->Uniform(2*Pi());
 
