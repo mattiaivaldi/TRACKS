@@ -54,14 +54,14 @@ Float_t Particle::GetRaped() const {
 }
 
 void Particle::Rotate(double rms) {
-  //gRandom->SetSeed(0);
+  gRandom->SetSeed(0);
   //Calculation for multiple scattering
   double theta0 = rms/Sqrt(2); //sigma of the gaussian distribution for the scattered angle
   double thetap = gRandom->Gaus(0.,theta0); //angle of multiple scattering
   double phip = gRandom->Uniform(2*Pi()); //random phi for multiple scattering
 
   //Debug info (to be deleted or commented)
-  //cout << endl << "Multiple scattering angle (fThetap) = " << thetap << endl << endl;
+  cout << endl << "Multiple scattering angle (fThetap) = " << thetap << endl << endl;
 
   double mr[3][3]; //rotation matrix
   mr[0][0] = -Sin(fPhi);
