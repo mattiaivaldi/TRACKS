@@ -56,6 +56,9 @@ void test(bool PrintParticles, bool multiscatman) {
   //cycle over all the particles in current event
   for (int i = 0; i < mult; i++) {
 
+    //variables used in order to see if there is an effective intersection between a particle and a piece of the detector
+    bool bBP = false, bL1 = false, bL2 = false; //they are all set to false and changed to true if we have an intersection
+
     //create an object of the class particle
     Particle *part = new Particle("kinem.root");
 
@@ -66,7 +69,7 @@ void test(bool PrintParticles, bool multiscatman) {
     if (PrintParticles==true) {
       printf("Particle %i: phi %f - theta %f\n",i,phi[i],theta[i]);
     }
-
+    
     detect(vgen, &theta[i], &phi[i], BP, part, cross_BP, PrintParticles, multiscatman);
 
     detect(vgen, &theta[i], &phi[i], L1, part, cross_L1, PrintParticles, multiscatman);
