@@ -29,5 +29,9 @@ Tools_cxx.so: /Applications/root_v6.14.04/include/ROOT/span.hxx Tools.h
 Tools_cxx.so: Layer.h Particle.h /Applications/root_v6.14.04/include/TMath.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/TError.h
 Tools_cxx.so: /usr/include/float.h /usr/include/math.h
+Tools_cxx.so: /Applications/root_v6.14.04/include/TRandom3.h
+Tools_cxx.so: /Applications/root_v6.14.04/include/TRandom.h
+Tools_cxx.so: /Applications/root_v6.14.04/include/Math/TRandomEngine.h
+Tools_cxx.so: /Applications/root_v6.14.04/include/TNamed.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/RVersion.h /Applications/root_v6.14.04/include/RConfig.h /Applications/root_v6.14.04/include/TClass.h /Applications/root_v6.14.04/include/TDictAttributeMap.h /Applications/root_v6.14.04/include/TInterpreter.h /Applications/root_v6.14.04/include/TROOT.h /Applications/root_v6.14.04/include/TBuffer.h /Applications/root_v6.14.04/include/TMemberInspector.h /Applications/root_v6.14.04/include/TError.h /Applications/root_v6.14.04/include/RtypesImp.h /Applications/root_v6.14.04/include/TIsAProxy.h /Applications/root_v6.14.04/include/TFileMergeInfo.h /Applications/root_v6.14.04/include/TCollectionProxyInfo.h /Applications/root_v6.14.04/bin/rootcling
 Tools_cxx__ROOTBUILDVERSION= 6.14/04

@@ -6,6 +6,7 @@
 #include "Event.h"
 #include "Particle.h"
 #include "TMath.h"
+#include "TRandom3.h"
 
 //using namespace TMath;
 
@@ -38,7 +39,6 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
 
   double *hit_buffer;
   bool b_cross=false;
-  double Charles=0.001;
 
   hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
 
@@ -55,39 +55,7 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
     }
 
     if (b_cross == true && b_multiscatter == true) {
-      gRandom->SetSeed(0);
-
-      double theta0=rms/Sqrt(2);
-      double thetap=gRandom->Gaus(0,theta0);
-      double phip=gRandom->Uniform(2*Pi());
-
-      double mr[3][3], pol[3], rot[3], r;
-
-      mr[0][0]=-TMath::Sin(phi);
-      mr[1][0]=TMath::Cos(phi);
-      mr[2][0]=0;
-      mr[0][1]=-TMath::Cos(phi)*TMath::Cos(theta);
-      mr[1][1]=-TMath::Cos(theta)*TMath::Sin(phi);
-      mr[2][1]=TMath::Sin(theta);
-      mr[0][2]=TMath::Sin(theta)*TMath::Cos(phi);
-      mr[1][2]=TMath::Sin(theta)*TMath::Sin(phi);
-      mr[2][2]=TMath::Cos(theta);
-
-      pol[0]=TMath::Sin(thetap)*TMath::Cos(phip);
-      pol[1]=TMath::Sin(thetap)*TMath::Sin(phip);
-      pol[2]=TMath::Cos(thetap);
-
-      for(int i=0; i<3; i++){
-        for(int j=0; j<3; j++){
-          rot[i]+=mr[i][j]*pol[j];
-        }
-      }
-
-      r=TMath::Sqrt(rot[0]*rot[0]+rot[1]*rot[1]+rot[2]*rot[2]);
-
-      part->SetTheta(TMath::ACos(rot[2]/r));
-      part->SetPhi(phip);
-      //part->Rotate(0.001);
+      part->Rotate(L->GetRMS());
       theta=part->GetTheta();
       phi=part->GetPhi();
     }

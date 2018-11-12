@@ -11,7 +11,6 @@ using namespace TMath;
 
 ClassImp(Particle)
 
-//Initialize all data members to 0
 Particle::Particle():TObject(),
   fTheta(0.),
   fPhi(0.),
@@ -20,7 +19,6 @@ Particle::Particle():TObject(),
   //Default constructor
 }
 
-//Initialize to values given by the user
 Particle::Particle(const char *distr): TObject(),
 fTheta(0),
 fPhi(gRandom->Uniform(2*Pi())),
@@ -48,9 +46,9 @@ Double_t Particle::GetPhi() const {
   return fPhi;
 }
 
-Float_t Particle::GetRaped() const {
+Float_t Particle::GetRap() const {
   //Returns pseudorapidity
-  return fRape;
+  return fRap;
 }
 
 void Particle::Rotate(double rms){
@@ -86,6 +84,23 @@ void Particle::Rotate(double rms){
   r=Sqrt(rot[0]*rot[0]+rot[1]*rot[1]+rot[2]*rot[2]);
 
   fTheta=ACos(rot[2]/r);
-  fPhi=phip;
+
+  if(ATan(rot[1]/rot[0]) >= 0) {
+    if(double x = gRandom->Rndm() < 0.5){
+      fPhi = ATan(rot[1]/rot[0]);
+    }
+    else {
+      fPhi = ATan(rot[1]/rot[0])+Pi();
+    }
+  }
+
+  else if (ATan(rot[1]/rot[0]) < 0) {
+    if(double x = gRandom->Rndm() < 0.5){
+      fPhi = ATan(rot[1]/rot[0]) + 2*Pi();
+    }
+    else {
+      fPhi = ATan(rot[1]/rot[0]) + Pi();
+    }
+  }
 
 }
