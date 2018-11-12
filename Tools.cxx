@@ -41,6 +41,8 @@ void detect(Event* vtx, Layer* L, double theta, double phi, Particle* part, vect
 
   hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
 
+  printf("(%f, %f, %f)\n",vtx->GetX(),vtx->GetY(),vtx->GetZ());
+
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
 
     b_cross = true;
