@@ -57,7 +57,7 @@ void test(bool PrintParticles, bool multiscatman) {
   printf("All distances are in cm, all angles are in rad.\n\nGenerated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
   //cycle over all the particles in current event
-  /*for (int i = 0; i < mult; i++) {
+  for (int i = 0; i < mult; i++) {
 
     //create an object of the class particle
     Particle *part = new Particle("kinem.root");
@@ -88,9 +88,9 @@ void test(bool PrintParticles, bool multiscatman) {
 
     delete part;
 
-  }*/
+  }
 
-  bool bBP = false, bL1 = false, bL2 = false; //variable used in order to see if there is an interesction of the particle with the beam
+  /*bool bBP = false, bL1 = false, bL2 = false; //variable used in order to see if there is an interesction of the particle with the beam
 
   for (int i = 0; i < mult; i++) {
 
@@ -158,7 +158,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
     delete part; //deleting the object at the end of the for cycle
 
-  }//fine for
+  }//fine for*/
 
   //pronted out how many particles have crossed which layer
   //printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
