@@ -27,21 +27,26 @@ using namespace TMath;
 //multiscatman is used in order to toogle on or off the multiscattering
 void test(bool PrintParticles, bool multiscatman) {
 
+  //PrintParticles activates verbose mode
+  //multiscatman activates multiple scattering
+
   printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
 
-  TStopwatch timer; //declared a timer to perform cpu efficiency measurements
+  TStopwatch timer;
+  timer.Start(true);
 
-  timer.Start(true); //start the timer
-
-  //3 objects of the class layer which represent the beam pipe, first layer and second layer
-  Layer *BP = new Layer(27.,3.,0.8,0.001); //length, radius, thickness and multiscattering RMS
+  ////length, radius, thickness and multiscattering RMS
+  Layer *BP = new Layer(27.,3.,0.8,0.001);
   Layer *L1 = new Layer(27.,4.,0.2,0.001);
   Layer *L2 = new Layer(27.,7.,0.2,0.001);
 
-  Event *vgen = new Event(0, 0.001, 5.3, "kinem.root"); //dichiarato oggetto della struct event
+  //vertex mean, sigmaxy, sigmaz, kinematics file
+  Event *vgen = new Event(0, 0.001, 5.3, "kinem.root");
+  mult = (int)vgen->GetMult();
+
   double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
   vector <Hit*> cross_BP, cross_L1, cross_L2;
-  int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
+  int j = 0, k = 0, l = 0,
 
   if (PrintParticles==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
@@ -53,14 +58,10 @@ void test(bool PrintParticles, bool multiscatman) {
 
   printf("All distances are in cm, all angles are in rad.\n\nGenerated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
-  //cycle over all the particles in current event
-
   for (int i = 0; i < mult; i++) {
 
-    //create an object of the class particle
     Particle *part = new Particle("kinem.root");
 
-    //print them out only if verbose is on
     if (PrintParticles==true) {
       printf(">>> Particle %i: theta %f - phi %f <<<\n\n",i+1,part->GetTheta(),part->GetPhi());
     }
