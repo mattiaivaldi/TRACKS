@@ -60,6 +60,9 @@ void Particle::Rotate(double rms) {
   double thetap = gRandom->Gaus(0.,theta0); //angle of multiple scattering
   double phip = gRandom->Uniform(2*Pi()); //random phi for multiple scattering
 
+  //Debug info (to be deleted or commented)
+  cout << endl << "Multiple scattering angle (fThetap) = " << thetap << endl << endl;
+
   double mr[3][3]; //rotation matrix
   mr[0][0] = -Sin(fPhi);
   mr[1][0] = Cos(fPhi);
@@ -69,7 +72,7 @@ void Particle::Rotate(double rms) {
   mr[2][1] = Sin(fTheta);
   mr[0][2] = Sin(fTheta)*Cos(fPhi);
   mr[1][2] = Sin(fTheta)*Sin(fPhi);
-  mr[2][2] = Sin(fTheta);
+  mr[2][2] = Cos(fTheta);
 
   double pol[3]; //column vector for rotation
   pol[0] = Sin(thetap)*Cos(phip);
@@ -90,22 +93,22 @@ void Particle::Rotate(double rms) {
 
   //Theta
   if(ATan(rot[2]/r) >= 0) {
-    if(double x = gRandom->Rndm() < 0.5){
+    //if(double x = gRandom->Rndm() < 0.5){
       fTheta = ATan(rot[2]/r);
     }
-    else {
+    /*else {
       fTheta = ATan(rot[2]/r)+Pi();
     }
-  }
+  }*/
 
   else if (ATan(rot[2]/r) < 0) {
-    if(double x = gRandom->Rndm() < 0.5){
+    /*if(double x = gRandom->Rndm() < 0.5){
       fTheta = ATan(rot[2]/r) + 2*Pi();
     }
-    else {
+    else {*/
       fTheta = ATan(rot[2]/r) + Pi();
     }
-  }
+  //}
 
 //Phi
   if(ATan(rot[1]/rot[0]) >= 0) {
