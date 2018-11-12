@@ -41,6 +41,7 @@ void test(bool PrintParticles, bool multiscatman) {
   Event *vgen = new Event(0, 0.001, 5.3, "kinem.root"); //dichiarato oggetto della struct event
   double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
   vector <Hit*> ciccioBP, ciccioL1, ciccioL2;
+  vector <Hit*> cross_BP, cross_L1, cross_L2;
   int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
 
   double theta[mult], phi[mult];
@@ -56,7 +57,7 @@ void test(bool PrintParticles, bool multiscatman) {
   printf("All distances are in cm, all angles are in rad.\n\nGenerated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
   //cycle over all the particles in current event
-  /*for (int i = 0; i < mult; i++) {
+  for (int i = 0; i < mult; i++) {
 
     //create an object of the class particle
     Particle *part = new Particle("kinem.root");
@@ -74,9 +75,9 @@ void test(bool PrintParticles, bool multiscatman) {
 
     delete part;
 
-  }*/
+  }
 
-  bool bBP = false, bL1 = false, bL2 = false; //variable used in order to see if there is an interesction of the particle with the beam
+  /*bool bBP = false, bL1 = false, bL2 = false; //variable used in order to see if there is an interesction of the particle with the beam
 
   for (int i = 0; i < mult; i++) {
 
@@ -144,7 +145,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
     delete part; //deleting the object at the end of the for cycle
 
-  }//fine for
+  }//fine for*/
 
   //pronted out how many particles have crossed which layer
   //printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
