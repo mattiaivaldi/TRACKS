@@ -55,7 +55,39 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
     }
 
     if (b_cross == true && b_multiscatter == true) {
-      part->Rotate(0.001);
+      gRandom->SetSeed(0);
+
+      double theta0=rms/Sqrt(2);
+      double thetap=gRandom->Gaus(0,theta0);
+      double phip=gRandom->Uniform(2*Pi());
+
+      double mr[3][3], pol[3], rot[3], r;
+
+      mr[0][0]=-Sin(fPhi);
+      mr[1][0]=Cos(fPhi);
+      mr[2][0]=0;
+      mr[0][1]=-Cos(fPhi)*Cos(fTheta);
+      mr[1][1]=-Cos(fTheta)*Sin(fPhi);
+      mr[2][1]=Sin(fTheta);
+      mr[0][2]=Sin(fTheta)*Cos(fPhi);
+      mr[1][2]=Sin(fTheta)*Sin(fPhi);
+      mr[2][2]=Cos(fTheta);
+
+      pol[0]=Sin(thetap)*Cos(phip);
+      pol[1]=Sin(thetap)*Sin(phip);
+      pol[2]=Cos(thetap);
+
+      for(int i=0; i<3; i++){
+        for(int j=0; j<3; j++){
+          rot[i]+=mr[i][j]*pol[j];
+        }
+      }
+
+      r=Sqrt(rot[0]*rot[0]+rot[1]*rot[1]+rot[2]*rot[2]);
+
+      part->SetTheta(ACos(rot[2]/r));
+      part->SetPhi(phip);
+      //part->Rotate(0.001);
       theta=part->GetTheta();
       phi=part->GetPhi();
     }

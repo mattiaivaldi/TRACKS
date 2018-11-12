@@ -18,6 +18,8 @@ public:
 	double GetTheta() const; //getters
 	double GetPhi() const;
 	float GetRaped() const;
+	void SetTheta(double newtheta){fTheta=newtheta;}
+	void SetPhi(double newphi){fPhi=newphi;}
 	void Rotate(double rms);
 	void Cazzone(double rms);
 
