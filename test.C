@@ -67,7 +67,11 @@ void test(bool PrintParticles, bool multiscatman) {
 
     detect(vgen, BP, part, cross_BP, PrintParticles, multiscatman, "BP");
 
+    printf("Check after detect: theta %f - phi %f\n\n",part->GetTheta(),part->GetPhi());
+
     detect(vgen, L1, part, cross_L1, PrintParticles, multiscatman, "L1");
+
+    printf("Check after detect: theta %f - phi %f\n\n",part->GetTheta(),part->GetPhi());
 
     detect(vgen, L2, part, cross_L2, PrintParticles, multiscatman, "L2");
 
