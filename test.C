@@ -92,11 +92,8 @@ void test(bool PrintParticles, bool multiscatman) {
 
     Particle *part = new Particle("kinem.root");
 
-    phi[i] = part->GetPhi();
-    theta[i] = part->GetTheta();
-
     if (PrintParticles==true) {
-      printf("Particle %i: phi %f - theta %f\n",i,phi[i],theta[i]);
+      printf("Particle %i: theta %f - phi %f\n",i+1,part->GetTheta(),part->GetPhi());
     }
 
     //intersection with beam pipe
