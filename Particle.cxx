@@ -104,6 +104,6 @@ void Particle::Rotate(double rms){
   }*/
 
   fTheta+=thetap;
-  fPhi+=phip;
+  fPhi=phip;
 
 }

@@ -44,7 +44,11 @@ void test(bool PrintParticles, bool multiscatman) {
 
   double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
   vector <Hit*> cross_BP, cross_L1, cross_L2;
+
   int j = 0, k = 0, l = 0;
+  double theta[multi], phi[mult];
+
+  //verbosities
 
   if (PrintParticles==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
@@ -56,7 +60,9 @@ void test(bool PrintParticles, bool multiscatman) {
 
   printf("All distances are in cm, all angles are in rad.\n\nGenerated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
-  for (int i = 0; i < mult; i++) {
+  //start tracks generation
+
+  /*for (int i = 0; i < mult; i++) {
 
     Particle *part = new Particle("kinem.root");
 
@@ -78,33 +84,34 @@ void test(bool PrintParticles, bool multiscatman) {
 
     cout<<endl;
 
-  }
+  }*/
 
-  /*bool bBP = false, bL1 = false, bL2 = false; //variable used in order to see if there is an interesction of the particle with the beam
+  bool bBP = false, bL1 = false, bL2 = false;
 
   for (int i = 0; i < mult; i++) {
 
     Particle *part = new Particle("kinem.root");
 
     phi[i] = part->GetPhi();
-    theta[i] = part->GetTheta(); //moltiplico per 2 per avere angoli tra 0 e 2 pi anche per theta
+    theta[i] = part->GetTheta();
+
     if (PrintParticles==true) {
       printf("Particle %i: phi %f - theta %f\n",i,phi[i],theta[i]);
     }
 
-    //calcolo intersezioni tracce con la beam pipe
+    //intersection with beam pipe
     hit_buffer_BP=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],BP->GetRadius());
 
     if(*(hit_buffer_BP+2) >= -(BP->GetWidth()/2.) && *(hit_buffer_BP+2) <= (BP->GetWidth()/2.)) {
-      bBP = true; //there has been an interesction
+      bBP = true;
       Hit *hit_BP = new Hit(*(hit_buffer_BP+0),*(hit_buffer_BP+1),*(hit_buffer_BP+2));
-      ciccioBP.push_back(hit_BP);
+      cross_BP.push_back(hit_BP);
       if (PrintParticles==true) {
-	       printf("Hit with BP at (%f, %f, %f)\n",ciccioBP[j]->GetX(),ciccioBP[j]->GetY(),ciccioBP[j]->GetZ());
+	       printf("Hit with BP at (%f, %f, %f)\n",cross_BP[j]->GetX(),cross_BP[j]->GetY(),cross_BP[j]->GetZ());
       }
       cout << "Angoli prima " << phi[i] << " " << theta[i] << endl;
       if (bBP == true && multiscatman == true) {
-        part->Rotate(BP->GetRMS()); //using the member function GetRMS of the class layer.cxx
+        part->Rotate(BP->GetRMS());
         phi[i] = part->GetPhi();
         theta[i] = part->GetTheta();
       }
@@ -118,13 +125,13 @@ void test(bool PrintParticles, bool multiscatman) {
     if(*(hit_buffer_L1+2) >= -(L1->GetWidth()/2.) && *(hit_buffer_L1+2) <= (L1->GetWidth()/2.)) {
       bL1 = true;
       Hit *hit_L1 = new Hit(*(hit_buffer_L1+0),*(hit_buffer_L1+1),*(hit_buffer_L1+2));
-      ciccioL1.push_back(hit_L1);
+      cross_L1.push_back(hit_L1);
       if (PrintParticles==true) {
-	       printf("Hit with L1 at (%f, %f, %f)\n",ciccioL1[k]->GetX(),ciccioL1[k]->GetY(),ciccioL1[k]->GetZ());
+	       printf("Hit with L1 at (%f, %f, %f)\n",cross_L1[k]->GetX(),cross_L1[k]->GetY(),cross_L1[k]->GetZ());
       }
       cout << "Angoli prima " << phi[i] << " " << theta[i] << endl;
       if (bL1 == true && multiscatman == true) {
-        part->Rotate(L1->GetRMS()); //using the member function GetRMS of the class layer.cxx
+        part->Rotate(L1->GetRMS());
         phi[i] = part->GetPhi();
         theta[i] = part->GetTheta();
       }
@@ -137,9 +144,9 @@ void test(bool PrintParticles, bool multiscatman) {
 
     if(*(hit_buffer_L2+2) >= -(L2->GetWidth()/2.) && *(hit_buffer_L2+2) <= (L2->GetWidth()/2.)) {
       Hit *hit_L2 = new Hit(*(hit_buffer_L2+0),*(hit_buffer_L2+1),*(hit_buffer_L2+2));
-      ciccioL2.push_back(hit_L2);
+      cross_L2.push_back(hit_L2);
       if (PrintParticles==true) {
-	printf("Hit with L2 at (%f, %f, %f)\n",ciccioL2[l]->GetX(),ciccioL2[l]->GetY(),ciccioL2[l]->GetZ());
+	printf("Hit with L2 at (%f, %f, %f)\n",cross_L2[l]->GetX(),cross_L2[l]->GetY(),cross_L2[l]->GetZ());
       }
       l++;
     }
@@ -148,7 +155,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
     delete part; //deleting the object at the end of the for cycle
 
-  }//fine for*/
+  }
 
   printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
 
