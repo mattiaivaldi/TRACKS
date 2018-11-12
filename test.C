@@ -43,8 +43,6 @@ void test(bool PrintParticles, bool multiscatman) {
   vector <Hit*> cross_BP, cross_L1, cross_L2;
   int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
 
-  double theta[mult], phi[mult];
-
   if (PrintParticles==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
   }else{printf("Printing vertex and hit coordinates: OFF\n\n");}
@@ -67,28 +65,11 @@ void test(bool PrintParticles, bool multiscatman) {
       printf(">>> Particle %i: theta %f - phi %f <<<\n\n",i+1,part->GetTheta(),part->GetPhi());
     }
 
-    theta[i]=part->GetTheta();
-    phi[i]=part->GetPhi();
+    detect(vgen, BP, part, cross_BP, PrintParticles, multiscatman, "BP");
 
-    printf("Angles before detection: theta %f - phi %f\n\n",theta[i], phi[i]);
+    detect(vgen, L1, part, cross_L1, PrintParticles, multiscatman, "L1");
 
-    detect(vgen, BP, theta[i], phi[i], part, cross_BP, PrintParticles, multiscatman, "BP");
-
-    printf("Angles after detect: theta %f - phi %f\n\n",theta[i], phi[i]);
-
-    theta[i]=part->GetTheta();
-    phi[i]=part->GetPhi();
-
-    printf("Angles check: theta %f - phi %f\n\n",theta[i], phi[i]);
-
-    detect(vgen, L1, theta[i], phi[i], part, cross_L1, PrintParticles, multiscatman, "L1");
-
-    printf("Angles after check: theta %f - phi %f\n\n",theta[i], phi[i]);
-
-    theta[i]=part->GetTheta();
-    phi[i]=part->GetPhi();
-
-    detect(vgen, L2, theta[i], phi[i], part, cross_L2, PrintParticles, multiscatman, "L2");
+    detect(vgen, L2, part, cross_L2, PrintParticles, multiscatman, "L2");
 
     delete part;
 
