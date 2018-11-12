@@ -58,7 +58,7 @@ void detect(Event vtx, Layer L, Particle &part, vector<Hit*> &cross, bool b_verb
       part.Rotate(0.001);
     }
 
-    if (b_multiscatter == true) {
+    if (b_multiscatter == true || b_multiscatter==false) {
     printf("Angles after multiple scattering: theta %f - phi %f\n\n",part.GetTheta(),part.GetPhi());
     }
 
