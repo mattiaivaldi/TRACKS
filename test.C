@@ -66,11 +66,11 @@ void test(bool PrintParticles, bool multiscatman) {
       printf(">>> Particle %i: theta %f - phi %f <<<\n\n",i+1,part->GetTheta(),part->GetPhi());
     }
 
-    detect(*vgen, *BP, *part, cross_BP, PrintParticles, multiscatman, "BP");
+    detect(*vgen, *BP, part, cross_BP, PrintParticles, multiscatman, "BP");
 
-    detect(*vgen, *L1, *part, cross_L1, PrintParticles, multiscatman, "L1");
+    detect(*vgen, *L1, part, cross_L1, PrintParticles, multiscatman, "L1");
 
-    detect(*vgen, *L2, *part, cross_L2, PrintParticles, multiscatman, "L2");
+    detect(*vgen, *L2, part, cross_L2, PrintParticles, multiscatman, "L2");
 
     delete part;
 
