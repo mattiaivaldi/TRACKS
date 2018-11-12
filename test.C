@@ -40,7 +40,6 @@ void test(bool PrintParticles, bool multiscatman) {
 
   Event *vgen = new Event(0, 0.001, 5.3, "kinem.root"); //dichiarato oggetto della struct event
   double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
-  vector <Hit*> ciccioBP, ciccioL1, ciccioL2;
   vector <Hit*> cross_BP, cross_L1, cross_L2;
   int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
 
@@ -92,6 +91,8 @@ void test(bool PrintParticles, bool multiscatman) {
     detect(vgen, L2, theta[i], phi[i], part, cross_L2, PrintParticles, multiscatman, "L2");
 
     delete part;
+
+    cout<<endl;
 
   }
 

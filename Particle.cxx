@@ -14,7 +14,7 @@ ClassImp(Particle)
 Particle::Particle():TObject(),
   fTheta(0.),
   fPhi(0.),
-  fRape(0.)
+  fRap(0.)
 {
   //Default constructor
 }
@@ -22,7 +22,7 @@ Particle::Particle():TObject(),
 Particle::Particle(const char *distr): TObject(),
 fTheta(0),
 fPhi(gRandom->Uniform(2*Pi())),
-fRape(0)
+fRap(0)
 {
   //Standard constructor
   TFile hfile(distr); //opens file
