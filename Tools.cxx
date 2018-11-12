@@ -55,7 +55,7 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
 
     if (b_cross == true && b_multiscatter == true) {
       //part->Rotate(0.001);
-      theta=part->GetTheta();
+      theta=part->GetTheta()+0.5;
       phi=part->GetPhi();
     }
 
