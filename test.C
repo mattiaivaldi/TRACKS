@@ -46,7 +46,7 @@ void test(bool PrintParticles, bool multiscatman) {
   vector <Hit*> cross_BP, cross_L1, cross_L2;
 
   int j = 0, k = 0, l = 0;
-  double theta[mult], phi[mul];
+  double theta[mult], phi[mult];
 
   //verbosities
 
