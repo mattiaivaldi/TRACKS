@@ -79,7 +79,7 @@ void test(bool PrintParticles, bool multiscatman) {
   //pronted out how many particles have crossed which layer
   printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
 
-  /*TCanvas * CPol = new TCanvas("CPol","TGraphPolar Example",500,500);
+  TCanvas * CPol = new TCanvas("CPol","TGraphPolar Example",500,500);
 
   Double_t theta[8];
   Double_t radius[8];
@@ -101,7 +101,7 @@ void test(bool PrintParticles, bool multiscatman) {
   grP1->SetMarkerColor(4);
   grP1->SetLineColor(2);
   grP1->SetLineWidth(3);
-  grP1->Draw("PE");*/
+  grP1->Draw("PE");
 
   TCanvas *c4 = new TCanvas("c4","c4",600,400);
   TH2F *hscc = new TH2F("hscc","Cylindrical coordinates",20,-4,4,20,-20,20);
