@@ -107,7 +107,7 @@ void test(bool PrintParticles, bool multiscatman) {
       Hit *hit_BP = new Hit(*(hit_buffer_BP+0),*(hit_buffer_BP+1),*(hit_buffer_BP+2));
       cross_BP.push_back(hit_BP);
       if (PrintParticles==true) {
-	       printf("Hit with BP at (%f, %f, %f)\n",*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
+	       printf("Hit with BP at (%f, %f, %f)\n",*(hit_buffer_BP+0),*(hit_buffer_BP+1),*(hit_buffer_BP+2));
       }
       cout << "Angoli prima " << part->GetTheta() << " " << part->GetPhi() << endl;
       if (bBP == true && multiscatman == true) {
