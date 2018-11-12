@@ -46,7 +46,7 @@ void test(bool PrintParticles, bool multiscatman) {
   vector <Hit*> cross_BP, cross_L1, cross_L2;
 
   int j = 0, k = 0, l = 0;
-  double theta[multi], phi[mult];
+  double theta[mult], phi[mul];
 
   //verbosities
 
@@ -117,7 +117,7 @@ void test(bool PrintParticles, bool multiscatman) {
       }
       j++;
       cout << "Angoli dopo " <<phi[i] << " " << theta[i] << endl;
-    }
+    }else{bBP=false;}
 
     //intersection with L1
     hit_buffer_L1=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],L1->GetRadius());
@@ -137,7 +137,7 @@ void test(bool PrintParticles, bool multiscatman) {
       }
       k++;
       cout << "Angoli dopo " << phi[i] << " " << theta[i] << endl;
-    }
+    }else{bL1=false;}
 
     //intersection with L2
     hit_buffer_L2=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],L2->GetRadius());
@@ -149,7 +149,7 @@ void test(bool PrintParticles, bool multiscatman) {
 	printf("Hit with L2 at (%f, %f, %f)\n",cross_L2[l]->GetX(),cross_L2[l]->GetY(),cross_L2[l]->GetZ());
       }
       l++;
-    }
+    }else{bL2=false;}
 
     if (PrintParticles==true){printf("\n");}
 
