@@ -58,8 +58,6 @@ void test(bool PrintParticles, bool multiscatman) {
 
   //cycle over all the particles in current event
 
-  bool b_cross=false;
-
   for (int i = 0; i < mult; i++) {
 
     //create an object of the class particle

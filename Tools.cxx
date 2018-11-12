@@ -37,7 +37,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
 void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, vector<Hit*> &cross, bool b_verbose, bool b_multiscatter, char const *detector){
 
   double *hit_buffer;
-  //bool b_cross=false;
+  bool b_cross=false;
   double Charles=0.001;
 
   hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
