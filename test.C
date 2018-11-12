@@ -62,7 +62,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
   //start tracks generation
 
-  /*for (int i = 0; i < mult; i++) {
+  for (int i = 0; i < mult; i++) {
 
     Particle *part = new Particle("kinem.root");
 
@@ -84,9 +84,9 @@ void test(bool PrintParticles, bool multiscatman) {
 
     cout<<endl;
 
-  }*/
+  }
 
-  bool bBP = false, bL1 = false, bL2 = false;
+  /*bool bBP = false, bL1 = false, bL2 = false;
 
   for (int i = 0; i < mult; i++) {
 
@@ -151,7 +151,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
     delete part; //deleting the object at the end of the for cycle
 
-  }
+  }*/
 
   printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
 
