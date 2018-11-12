@@ -38,6 +38,7 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
 
   double *hit_buffer;
   bool b_cross=false;
+  double Charles=2;
 
   hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),theta,phi,L->GetRadius());
 
@@ -54,7 +55,7 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
     }
 
     if (b_cross == true && b_multiscatter == true) {
-      part->Cazzone();
+      part->Cazzone(Charles);
       theta=part->GetTheta();
       phi=part->GetPhi();
     }
