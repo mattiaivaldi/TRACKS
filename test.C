@@ -33,7 +33,7 @@ void test(bool PrintParticles, bool multiscatman) {
   TStopwatch timer;
   timer.Start(true);
 
-  ////length, radius, thickness and multiscattering RMS
+  ////length, radius, thickness, multiscattering RMS
   Layer *BP = new Layer(27.,3.,0.8,0.001);
   Layer *L1 = new Layer(27.,4.,0.2,0.001);
   Layer *L2 = new Layer(27.,7.,0.2,0.001);

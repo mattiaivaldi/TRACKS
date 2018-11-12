@@ -60,6 +60,6 @@ void detect(Event* vtx, Layer* L, Particle &part, vector<Hit*> &cross, bool b_ve
 
     printf("Angles after: theta %f - phi %f\n\n",part.GetTheta(),part.GetPhi());
 
-  }
+  }else{printf("Do not cross next layer");}
 
 }
