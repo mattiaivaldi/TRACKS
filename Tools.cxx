@@ -63,15 +63,15 @@ void detect(Event* vtx, Layer* L, double &theta, double &phi, Particle* part, ve
 
       double mr[3][3], pol[3], rot[3], r;
 
-      mr[0][0]=-TMath::Sin(fPhi);
-      mr[1][0]=TMath::Cos(fPhi);
+      mr[0][0]=-TMath::Sin(phi);
+      mr[1][0]=TMath::Cos(phi);
       mr[2][0]=0;
-      mr[0][1]=-TMath::Cos(fPhi)*TMath::Cos(fTheta);
-      mr[1][1]=-TMath::Cos(fTheta)*TMath::Sin(fPhi);
-      mr[2][1]=TMath::Sin(fTheta);
-      mr[0][2]=TMath::Sin(fTheta)*TMath::Cos(fPhi);
-      mr[1][2]=TMath::Sin(fTheta)*TMath::Sin(fPhi);
-      mr[2][2]=TMath::Cos(fTheta);
+      mr[0][1]=-TMath::Cos(phi)*TMath::Cos(theta);
+      mr[1][1]=-TMath::Cos(theta)*TMath::Sin(phi);
+      mr[2][1]=TMath::Sin(theta);
+      mr[0][2]=TMath::Sin(theta)*TMath::Cos(phi);
+      mr[1][2]=TMath::Sin(theta)*TMath::Sin(phi);
+      mr[2][2]=TMath::Cos(theta);
 
       pol[0]=TMath::Sin(thetap)*TMath::Cos(phip);
       pol[1]=TMath::Sin(thetap)*TMath::Sin(phip);
