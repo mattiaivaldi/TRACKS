@@ -23,8 +23,6 @@
 
 using namespace TMath;
 
-//PrintParticles is a variable used in order to decide wheter or not to print all the info about a particle (verbose)
-//multiscatman is used in order to toogle on or off the multiscattering
 void test(bool PrintParticles, bool multiscatman) {
 
   //PrintParticles activates verbose mode
@@ -46,7 +44,7 @@ void test(bool PrintParticles, bool multiscatman) {
 
   double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
   vector <Hit*> cross_BP, cross_L1, cross_L2;
-  int j = 0, k = 0, l = 0,
+  int j = 0, k = 0, l = 0;
 
   if (PrintParticles==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
