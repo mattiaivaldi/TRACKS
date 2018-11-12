@@ -61,7 +61,7 @@ void Particle::Rotate(double rms) {
   double phip = gRandom->Uniform(2*Pi()); //random phi for multiple scattering
 
   //Debug info (to be deleted or commented)
-  cout << endl << "Multiple scattering angle (fThetap) = " << thetap << endl << endl;
+  //cout << endl << "Multiple scattering angle (fThetap) = " << thetap << endl << endl;
 
   double mr[3][3]; //rotation matrix
   mr[0][0] = -Sin(fPhi);
