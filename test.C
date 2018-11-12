@@ -147,7 +147,7 @@ void test(bool PrintParticles, bool multiscatman) {
   }//fine for
 
   //pronted out how many particles have crossed which layer
-  printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
+  //printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
 
   /*TCanvas * CPol = new TCanvas("CPol","TGraphPolar Example",500,500);
 
