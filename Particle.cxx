@@ -78,7 +78,7 @@ void Particle::Rotate(double rms){
   pol[2]=Cos(thetap);
 
   for(int i=0; i<3; i++){
-    for(int j=0; j<3, j++){
+    for(int j=0; j<3; j++){
       rot[i]+=mr[i][j]*pol[j];
     }
   }
