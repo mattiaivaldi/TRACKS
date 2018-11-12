@@ -57,6 +57,9 @@ void test(bool PrintParticles, bool multiscatman) {
   printf("All distances are in cm, all angles are in rad.\n\nGenerated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
   //cycle over all the particles in current event
+
+  bool b_cross=false;
+
   for (int i = 0; i < mult; i++) {
 
     //create an object of the class particle
