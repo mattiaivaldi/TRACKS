@@ -38,7 +38,7 @@ void test(bool PrintParticles, bool multiscatman) {
   //pointers to 3 arrays which keep track of the intersection point between the particle and the beam pipe/detectors
   double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
   //vectors of the class hit used in order to memorize all the coordinates of all the intersections
-  vector <Hit*> ciccioBP, ciccioL1, ciccioL2;
+  vector <Hit*> cross_BP, cross_L1, cross_L2;
   //j, k and l are counters used later on and mult is the cast of the multiplicity (float) to an int value
   int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
 
@@ -69,81 +69,19 @@ void test(bool PrintParticles, bool multiscatman) {
     if (PrintParticles==true) {
       printf("Particle %i: phi %f - theta %f\n",i,phi[i],theta[i]);
     }
+    
+    detect(vgen, &theta[i], &phi[i], BP, part, cross_BP, PrintParticles, multiscatman);
 
-    //---intersection with the beam pipe---//
+    detect(vgen, &theta[i], &phi[i], L1, part, cross_L1, PrintParticles, multiscatman);
 
-    //hit buffer is used in order to save the values of x, y and z of the current particle intersection in the event
-    hit_buffer_BP=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],BP->GetRadius());
+    detect(vgen, &theta[i], &phi[i], L2, part, cross_L2, PrintParticles, multiscatman);
 
-    //check to see if the z of the intersection is in the length of the beam pipe (27 cm)
-    if(*(hit_buffer_BP+2) >= -(BP->GetWidth()/2.) && *(hit_buffer_BP+2) <= (BP->GetWidth()/2.)) {
-      //there has been an interesction with the beam pipe
-      bBP = true;
-      //object of the class hit is created here, the values calculated for the current particle are used
-      Hit *hit_BP = new Hit(*(hit_buffer_BP+0),*(hit_buffer_BP+1),*(hit_buffer_BP+2));
-      //the object is pushed into a vector
-      ciccioBP.push_back(hit_BP);
-      //print the coordinates (x,y,z) of intersection with beam pipe usng the getter function of the hit class
-      if (PrintParticles==true) {
-	       printf("Hit with BP at (%f, %f, %f)\n",ciccioBP[j]->GetX(),ciccioBP[j]->GetY(),ciccioBP[j]->GetZ());
-      }
-      //direction before multiple scattering in the beam pipe
-      cout << "Before beam pipe, phi = " << phi[i] << " theta = " << theta[i] << endl;
-      //if there is an intersection and verbose is set to true
-      if (bBP == true && multiscatman == true) {
-        //using the member function GetRMS of the class layer.cxx the rotation is calculated
-        part->Rotate(BP->GetRMS());
-        //the angles are updated using the getter function of the class
-        phi[i] = part->GetPhi();
-        theta[i] = part->GetTheta();
-      }
-      //the counter is incremented in order to be able to read and print out the next particle intersection coordinates
-      j++;
-      //Print to video
-      cout << "After beam pipe, phi = " << phi[i] << " theta = " << theta[i] << endl;
-    }
-
-    //---intersection with L1 is the same as beam pipe (only some name changes here and there)---//
-    hit_buffer_L1=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],L1->GetRadius());
-
-    if(*(hit_buffer_L1+2) >= -(L1->GetWidth()/2.) && *(hit_buffer_L1+2) <= (L1->GetWidth()/2.)) {
-      bL1 = true;
-      Hit *hit_L1 = new Hit(*(hit_buffer_L1+0),*(hit_buffer_L1+1),*(hit_buffer_L1+2));
-      ciccioL1.push_back(hit_L1);
-      if (PrintParticles==true) {
-	       printf("Hit with L1 at (%f, %f, %f)\n",ciccioL1[k]->GetX(),ciccioL1[k]->GetY(),ciccioL1[k]->GetZ());
-      }
-      cout << "Before layer1, phi = " << phi[i] << " theta = " << theta[i] << endl;
-      if (bL1 == true && multiscatman == true) {
-        part->Rotate(L1->GetRMS());
-        phi[i] = part->GetPhi();
-        theta[i] = part->GetTheta();
-      }
-      k++;
-      cout << "After layer1 phi = " << phi[i] << " theta = " << theta[i] << endl;
-    }
-
-    //---intersection with L2, here there is no multiple scattering for now (we don't care about what happens after layer 2)---//
-    hit_buffer_L2=hit_point(vgen->GetX(),vgen->GetY(),vgen->GetZ(),theta[i],phi[i],L2->GetRadius());
-
-    if(*(hit_buffer_L2+2) >= -(L2->GetWidth()/2.) && *(hit_buffer_L2+2) <= (L2->GetWidth()/2.)) {
-      Hit *hit_L2 = new Hit(*(hit_buffer_L2+0),*(hit_buffer_L2+1),*(hit_buffer_L2+2));
-      ciccioL2.push_back(hit_L2);
-      if (PrintParticles==true) {
-	printf("Hit with L2 at (%f, %f, %f)\n",ciccioL2[l]->GetX(),ciccioL2[l]->GetY(),ciccioL2[l]->GetZ());
-      }
-      l++;
-    }
-
-    if (PrintParticles==true){printf("\n");}
-
-    //deleting the object of the class particle at the end of the for cycle
     delete part;
 
-  }//end of for cycle over all the particles in the current event
+  }
 
   //pronted out how many particles have crossed which layer
-  printf("\n\nOut of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,ciccioBP.size(),ciccioL1.size(),ciccioL1.size());
+  printf("\n\nOut of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L1.size());
 
   //random info on the cpu usage
   timer.Stop();

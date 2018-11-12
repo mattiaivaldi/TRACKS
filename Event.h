@@ -6,6 +6,7 @@
 #include "TObject.h"
 #include "Hit.h"
 #include "TString.h"
+int i=0;
 
 class Event : public Hit {
 
