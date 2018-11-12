@@ -67,11 +67,19 @@ void test(bool PrintParticles, bool multiscatman) {
       printf(">>> Particle %i: theta %f - phi %f <<<\n\n",i+1,part->GetTheta(),part->GetPhi());
     }
 
+    printf("Angoli prima di BP theta %f - phi %f <<<\n\n",part->GetTheta(),part->GetPhi());
+
     detect(vgen, BP, part, cross_BP, PrintParticles, multiscatman, "BP");
+
+    printf("Angoli dopo BP theta %f - phi %f <<<\n\n",part->GetTheta(),part->GetPhi());
 
     detect(vgen, L1, part, cross_L1, PrintParticles, multiscatman, "L1");
 
+    printf("Angoli dopo L1 theta %f - phi %f <<<\n\n",part->GetTheta(),part->GetPhi());
+
     detect(vgen, L2, part, cross_L2, PrintParticles, multiscatman, "L2");
+
+    printf("Angoli dopo L2 theta %f - phi %f <<<\n\n",part->GetTheta(),part->GetPhi());
 
     delete part;
 

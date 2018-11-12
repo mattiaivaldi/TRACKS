@@ -61,9 +61,9 @@ void detect(Event* vtx, Layer* L, Particle* part, vector<Hit*> &cross, bool b_ve
 
     zio=part->GetTheta();
 
-    if (b_multiscatter == true || b_multiscatter==false) {
+    /*if (b_multiscatter == true || b_multiscatter==false) {
     printf("Angles after: theta %f\n\n",zio);
-    }
+  }*/
 
   }
 
