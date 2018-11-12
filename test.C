@@ -1,10 +1,13 @@
 //
 //TRACKS - generation and recontruction of particle tracks in a detector
+//with multiple scattering and noise
 //developed by Luca Quaglia and Mattia Ivaldi, 2018
 //
 //START
 
 #include "TCanvas.h"
+#include "TH2F.h"
+#include "TGraphPolar.h"
 #include "Riostream.h"
 #include "TRandom3.h"
 #include "TMath.h"
@@ -24,6 +27,8 @@ using namespace TMath;
 //multiscatman is used in order to toogle on or off the multiscattering
 void test(bool PrintParticles, bool multiscatman) {
 
+  printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
+
   TStopwatch timer; //declared a timer to perform cpu efficiency measurements
 
   timer.Start(true); //start the timer
@@ -35,53 +40,79 @@ void test(bool PrintParticles, bool multiscatman) {
 
   //object of class event
   Event *vgen = new Event(0, 0.001, 5.3, "kinem.root");
-  //pointers to 3 arrays which keep track of the intersection point between the particle and the beam pipe/detectors
-  double *hit_buffer_BP, *hit_buffer_L1, *hit_buffer_L2;
   //vectors of the class hit used in order to memorize all the coordinates of all the intersections
   vector <Hit*> cross_BP, cross_L1, cross_L2;
   //j, k and l are counters used later on and mult is the cast of the multiplicity (float) to an int value
-  int j = 0, k = 0, l = 0, mult = (int)vgen->GetMult();
-
-  //print out some info for the user
-  printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
-  printf("Generated vertex with coordinates (%f, %f, %f)\nEvent multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
+  int mult = (int)vgen->GetMult();
 
   if (PrintParticles==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
   }else{printf("Printing vertex and hit coordinates: OFF\n\n");}
 
-  //arrays which contain the values of the randomly generated theta and phi angles
-  double theta[mult], phi[mult];
+  if (multiscatman==true) {
+    printf("Applying multiple scattering: ON\n\n");
+  }else{printf("Applying multiple scattering: OFF\n\n");}
+
+  printf("All distances are in cm, all angles are in rad.\n\nGenerated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
   //cycle over all the particles in current event
   for (int i = 0; i < mult; i++) {
 
-    //variables used in order to see if there is an effective intersection between a particle and a piece of the detector
-    bool bBP = false, bL1 = false, bL2 = false; //they are all set to false and changed to true if we have an intersection
-
     //create an object of the class particle
     Particle *part = new Particle("kinem.root");
 
-    //get the values of theta and phi
-    phi[i] = part->GetPhi();
-    theta[i] = part->GetTheta();
     //print them out only if verbose is on
     if (PrintParticles==true) {
-      printf("Particle %i: phi %f - theta %f\n",i,phi[i],theta[i]);
+      printf(">>> Particle %i: theta %f - phi %f <<<\n\n",i+1,part->GetTheta(),part->GetPhi());
     }
-    
-    detect(vgen, &theta[i], &phi[i], BP, part, cross_BP, PrintParticles, multiscatman);
 
-    detect(vgen, &theta[i], &phi[i], L1, part, cross_L1, PrintParticles, multiscatman);
+    detect(*vgen, *BP, *part, cross_BP, PrintParticles, multiscatman, "BP");
 
-    detect(vgen, &theta[i], &phi[i], L2, part, cross_L2, PrintParticles, multiscatman);
+    detect(*vgen, *L1, *part, cross_L1, PrintParticles, multiscatman, "L1");
+
+    detect(*vgen, *L2, *part, cross_L2, PrintParticles, multiscatman, "L2");
 
     delete part;
 
   }
 
   //pronted out how many particles have crossed which layer
-  printf("\n\nOut of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L1.size());
+  printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n+++ END generation +++",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
+
+  TCanvas * CPol = new TCanvas("CPol","TGraphPolar Example",500,500);
+
+  Double_t theta[8];
+  Double_t radius[8];
+  Double_t etheta[8];
+  Double_t eradius[8];
+
+  for (int i=0; i<8; i++) {
+     theta[i]   = (i+1)*(TMath::Pi()/4.);
+     radius[i]  = (i+1)*0.05;
+     etheta[i]  = TMath::Pi()/8.;
+     eradius[i] = 0.05;
+  }
+
+  TGraphPolar * grP1 = new TGraphPolar(8, theta, radius, etheta, eradius);
+  grP1->SetTitle("#theta - MC data");
+
+  grP1->SetMarkerStyle(20);
+  grP1->SetMarkerSize(2.);
+  grP1->SetMarkerColor(4);
+  grP1->SetLineColor(2);
+  grP1->SetLineWidth(3);
+  grP1->Draw("PE");
+
+  TCanvas *c4 = new TCanvas("c4","c4",600,400);
+  TH2F *hscc = new TH2F("hscc","Cylindrical coordinates",20,-4,4,20,-20,20);
+  Float_t px, py;
+  for (Int_t i = 0; i < 25000; i++) {
+      gRandom->Rannor(px,py);
+      hscc->Fill(px-1,5*py);
+      hscc->Fill(2+0.5*px,2*py-10.,0.1);
+   }
+   hscc->Draw("SURF1 PSR");
+   hscc->SetTitle("PseudoRapidity/Phi coordinates");
 
   //random info on the cpu usage
   timer.Stop();
