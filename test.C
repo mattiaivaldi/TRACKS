@@ -82,7 +82,7 @@ void test(bool PrintParticles, bool multiscatman, int kExp) {
 
     //vector <Hit*> cross_BP, cross_L1, cross_L2;
 
-    printf("Generated vertex with coordinates (%f, %f, %f) and multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
+    printf("Generated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
     //start tracks generation
 

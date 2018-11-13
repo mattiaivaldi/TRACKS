@@ -13,4 +13,5 @@ void classcompiler(TString myopt="fast"){
     gSystem->CompileMacro("Event.cxx",opt.Data());
     gSystem->CompileMacro("Particle.cxx",opt.Data());
     gSystem->CompileMacro("Tools.cxx",opt.Data());
+    gSystem->CompileMacro("test.C",opt.Data());
 }

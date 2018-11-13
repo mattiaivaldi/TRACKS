@@ -62,7 +62,7 @@ void detect(int index, Event* vtx, Layer* L, Particle &part, TClonesArray &cross
 
     //printf("Angles after: theta %f - phi %f\n\n",part.GetTheta(),part.GetPhi());
 
-  }
+  }else{new(cross[index])Hit();}
   //else{printf("Does not hit next layer\n\n");}
 
 }
