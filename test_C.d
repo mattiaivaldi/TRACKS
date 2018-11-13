@@ -55,6 +55,18 @@
 ./test_C.so: /Applications/root_v6.14.04/include/TPoint.h
 ./test_C.so: /Applications/root_v6.14.04/include/TAttCanvas.h
 ./test_C.so: /Applications/root_v6.14.04/include/TCanvasImp.h
+./test_C.so: /Applications/root_v6.14.04/include/TFile.h
+./test_C.so: /Applications/root_v6.14.04/include/TDirectoryFile.h
+./test_C.so: /Applications/root_v6.14.04/include/TDirectory.h
+./test_C.so: /Applications/root_v6.14.04/include/TBuffer.h
+./test_C.so: /Applications/root_v6.14.04/include/TDatime.h
+./test_C.so: /Applications/root_v6.14.04/include/TUUID.h
+./test_C.so: /Applications/root_v6.14.04/include/TMap.h
+./test_C.so: /Applications/root_v6.14.04/include/THashTable.h
+./test_C.so: /Applications/root_v6.14.04/include/TUrl.h
+./test_C.so: /Applications/root_v6.14.04/include/ROOT/TRWSpinLock.hxx
+./test_C.so: /Applications/root_v6.14.04/include/ROOT/TSpinMutex.hxx
+./test_C.so: /Applications/root_v6.14.04/include/ROOT/RConcurrentHashColl.hxx
 ./test_C.so: /Applications/root_v6.14.04/include/TH2F.h
 ./test_C.so: /Applications/root_v6.14.04/include/TH2.h
 ./test_C.so: /Applications/root_v6.14.04/include/TH1.h
@@ -74,6 +86,22 @@
 ./test_C.so: /usr/include/float.h
 ./test_C.so: /Applications/root_v6.14.04/include/TMatrixFBasefwd.h
 ./test_C.so: /Applications/root_v6.14.04/include/TMatrixDBasefwd.h
+./test_C.so: /Applications/root_v6.14.04/include/TH1F.h
+./test_C.so: /Applications/root_v6.14.04/include/TTree.h
+./test_C.so: /Applications/root_v6.14.04/include/ROOT/TIOFeatures.hxx
+./test_C.so: /Applications/root_v6.14.04/include/TBasket.h
+./test_C.so: /Applications/root_v6.14.04/include/TKey.h
+./test_C.so: /Applications/root_v6.14.04/include/TClass.h
+./test_C.so: /Applications/root_v6.14.04/include/TObjArray.h
+./test_C.so: /Applications/root_v6.14.04/include/TObjString.h
+./test_C.so: /Applications/root_v6.14.04/include/ThreadLocalStorage.h
+./test_C.so: /usr/include/pthread.h
+./test_C.so: /Applications/root_v6.14.04/include/TBranch.h
+./test_C.so: /Applications/root_v6.14.04/include/TDataType.h
+./test_C.so: /Applications/root_v6.14.04/include/TBranchCacheInfo.h
+./test_C.so: /Applications/root_v6.14.04/include/TBits.h
+./test_C.so: /Applications/root_v6.14.04/include/TVirtualTreePlayer.h
+./test_C.so: /Applications/root_v6.14.04/include/TClonesArray.h
 ./test_C.so: /Applications/root_v6.14.04/include/TGraphPolar.h
 ./test_C.so: /Applications/root_v6.14.04/include/TGraphErrors.h
 ./test_C.so: /Applications/root_v6.14.04/include/TGraph.h
@@ -85,7 +113,6 @@
 ./test_C.so: /Applications/root_v6.14.04/include/TMath.h /usr/include/math.h
 ./test_C.so: /Applications/root_v6.14.04/include/TF1.h
 ./test_C.so: /Applications/root_v6.14.04/include/TFormula.h
-./test_C.so: /Applications/root_v6.14.04/include/TObjArray.h
 ./test_C.so: /Applications/root_v6.14.04/include/TMethodCall.h
 ./test_C.so: /Applications/root_v6.14.04/include/Math/Types.h
 ./test_C.so: /Applications/root_v6.14.04/include/VecCore/VecCore
@@ -113,10 +140,6 @@
 ./test_C.so: /Applications/root_v6.14.04/include/VecCore/VecMath.h
 ./test_C.so: /Applications/root_v6.14.04/include/VecCore/Utilities.h
 ./test_C.so: /Applications/root_v6.14.04/include/TROOT.h
-./test_C.so: /Applications/root_v6.14.04/include/TDirectory.h
-./test_C.so: /Applications/root_v6.14.04/include/TBuffer.h
-./test_C.so: /Applications/root_v6.14.04/include/TDatime.h
-./test_C.so: /Applications/root_v6.14.04/include/TUUID.h
 ./test_C.so: /Applications/root_v6.14.04/include/TF1AbsComposition.h
 ./test_C.so: /Applications/root_v6.14.04/include/Math/ParamFunctor.h
 ./test_C.so: /Applications/root_v6.14.04/include/TStopwatch.h Event.h Hit.h
