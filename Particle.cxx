@@ -12,23 +12,20 @@ using namespace TMath;
 ClassImp(Particle)
 
 Particle::Particle():TObject(),
-  fTheta(0.),
-  fPhi(0.),
-  fRap(0.)
+fRap(0.),
+fTheta(Pi()/4.),
+fPhi(0.)
 {
   //Default constructor
 }
 
-Particle::Particle(const char *distr): TObject(),
-fTheta(0),
-fPhi(gRandom->Uniform(2*Pi())),
-fRap(0)
+Particle::Particle(TH1F *distr_rap): TObject(),
+fRap(distr_rap->GetRandom()),
+fTheta(2*ATan(Exp(-(double)fRap))),
+fPhi(gRandom->Uniform(2*Pi()))
 {
   //Standard constructor
-  TFile hfile(distr); //opens file
-  TH1F *pseudorap = (TH1F*)hfile.Get("heta"); //assign to TH1F pseudorape the histogram in the .root file
-  fRap = pseudorap->GetRandom(); //get a random value from assigned distribution
-  fTheta = 2*ATan(Exp(-(double)fRap)); //get theta from the pseudorapidity distribution
+    //printf("%f %f %f\n\n",fRap, fTheta, fPhi);
 }
 
 Particle::~Particle() {
@@ -76,14 +73,13 @@ void Particle::Rotate(double rms){
   pol[2]=Cos(thetap);
 
   for(int i=0; i<3; i++){
+    rot[i]=0;
     for(int j=0; j<3; j++){
       rot[i]+=mr[i][j]*pol[j];
     }
   }
 
-  r=Sqrt(rot[0]*rot[0]+rot[1]*rot[1]+rot[2]*rot[2]);
-
-  fTheta=ACos(rot[2]/r);
+  fTheta=ACos(rot[2]);
 
   if(ATan(rot[1]/rot[0]) >= 0) {
     if(double x = gRandom->Rndm() < 0.5){

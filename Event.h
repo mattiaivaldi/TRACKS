@@ -6,6 +6,7 @@
 #include "TObject.h"
 #include "Hit.h"
 #include "TString.h"
+#include "TH1F.h"
 int i=0;
 
 class Event : public Hit {
@@ -13,7 +14,7 @@ class Event : public Hit {
 public:
 
 	Event(); //default constructor
-	Event(double meanv, double sigmaxy, double sigmaz, const char *distr); //custom constructor
+	Event(double meanv, double sigmaxy, double sigmaz, TH1F *distr_mult); //custom constructor
 	//meanv is the mean of the vertex coordinates which is 0 for x, y and z, sigmaxy and sigmaz are the RMS of x, y and z
 	//distr is the name of the file in which the pseudorapidity distribution is located
 	virtual ~Event(); //destructor

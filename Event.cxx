@@ -20,17 +20,13 @@ fMult(0.)
 }
 
 //Generate event coordinates and multiplicity
-Event::Event(double meanv, double sigmaxy, double sigmaz, const char *distr): Hit(),
+Event::Event(double meanv, double sigmaxy, double sigmaz, TH1F *distr_mult): Hit(),
 fX0(gRandom->Gaus(meanv,sigmaxy)), //generates random values according to given data
 fY0(gRandom->Gaus(meanv,sigmaxy)),
 fZ0(gRandom->Gaus(meanv,sigmaz)),
-fMult(0)
-
+fMult(fMult=distr_mult->GetRandom())
 {
   //Standard constructor
-  TFile hfile(distr); //opens file
-  TH1F *multiplicity = (TH1F*)hfile.Get("hmul"); //assign to TH1F multiplicity the histogram in the .root file
-  fMult=multiplicity->GetRandom(); //get a random value from assigned distribution
 }
 
 Event::~Event() {

@@ -4,13 +4,14 @@
 #define PARTICLE_H
 
 #include "TObject.h"
+#include "TH1F.h"
 
 class Particle : public TObject {
 
 public:
 
 	Particle(); //default constructor
-	Particle(const char *distr); //custom constructor
+	Particle(TH1F *distr_rap); //custom constructors
 	virtual ~Particle(); //destructor
 
 //member functions
@@ -24,9 +25,9 @@ private:
 
 //data members
 
+    float fRap; //pseudorapidity
 	double fTheta; //theta
 	double fPhi; //phi
-	float fRap; //pseudorapidity
 
 	ClassDef(Particle,1)
 
