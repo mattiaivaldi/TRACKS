@@ -8,6 +8,7 @@
 #include "TMath.h"
 #include "TRandom3.h"
 #include "TClonesArray.h"
+#include "TSystem.h"
 
 //using namespace TMath;
 
@@ -36,7 +37,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
     return hit;
 }
 
-void detect(int index, Event* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector){
+void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -46,6 +47,7 @@ void detect(int index, Event* vtx, Layer* L, Particle &part, TClonesArray &cross
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
 
     b_cross = true;
+    gSystem->Beep(440,1);
 
     //Hit *hit = new Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
 

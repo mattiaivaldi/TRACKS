@@ -24,7 +24,6 @@
 #include "Tools.h"
 #include "Layer.h"
 #include "Hit.h"
-#include "Event.h"
 #include "Particle.h"
 
 using namespace TMath;
@@ -33,6 +32,7 @@ void test(bool PrintParticles, bool multiscatman, int kExp) {
 
   //PrintParticles activates verbose mode
   //multiscatman activates multiple scattering
+  //kExp is the number of runs
 
   printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
 
@@ -74,15 +74,12 @@ void test(bool PrintParticles, bool multiscatman, int kExp) {
 
   for(int i=0; i<kExp; i++){
 
-    printf("> RUN %d <\n\n",i+1);
-
     //vertex mean, sigmaxy, sigmaz, kinematics file
-    Event *vgen = new Event(0, 0.001, 5.3, multiplicity);
-    int mult = (int)vgen->GetMult();
-
+    Hit *vgen = new Hit(0, 0.001, 5.3, multiplicity);
+    int mult = vgen->GetMult();
     //vector <Hit*> cross_BP, cross_L1, cross_L2;
 
-    printf("Generated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
+    printf("> RUN %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
     //start tracks generation
 
@@ -114,10 +111,10 @@ void test(bool PrintParticles, bool multiscatman, int kExp) {
 
   }
 
+  printf("+++ END generation +++\n\n");
+
   h_gen.Write();
   h_gen.Close();
-
-  printf("+++ END generation +++\n\n");
 
   //cpu info
   timer.Stop();
