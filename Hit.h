@@ -4,8 +4,8 @@
 #define HIT_H
 
 #include "TObject.h"
-#include <TRandom3.h>
-#include <TH1F.h>
+#include "TRandom3.h"
+#include "TH1F.h"
 
 class Hit : public TObject{
 

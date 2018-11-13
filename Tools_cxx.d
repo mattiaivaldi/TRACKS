@@ -1,7 +1,7 @@
 
 # DO NOT DELETE
 
-Tools_cxx.so: Event.h /Applications/root_v6.14.04/include/TObject.h
+Tools_cxx.so: Tools.h Layer.h /Applications/root_v6.14.04/include/TObject.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/RConfigure.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/Rtypes.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/RtypesCore.h
@@ -48,7 +48,7 @@ Tools_cxx.so: /Applications/root_v6.14.04/include/Fit/FitExecutionPolicy.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/TVectorFfwd.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/TVectorDfwd.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/TFitResultPtr.h
-Tools_cxx.so: /usr/include/float.h Tools.h Layer.h Particle.h
+Tools_cxx.so: /usr/include/float.h Particle.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/TClonesArray.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/TObjArray.h
 Tools_cxx.so: /Applications/root_v6.14.04/include/TSeqCollection.h

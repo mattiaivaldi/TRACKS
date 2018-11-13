@@ -141,7 +141,7 @@ test_C.so: /Applications/root_v6.14.04/include/VecCore/Utilities.h
 test_C.so: /Applications/root_v6.14.04/include/TROOT.h
 test_C.so: /Applications/root_v6.14.04/include/TF1AbsComposition.h
 test_C.so: /Applications/root_v6.14.04/include/Math/ParamFunctor.h
-test_C.so: /Applications/root_v6.14.04/include/TStopwatch.h Event.h Hit.h
-test_C.so: Tools.h Layer.h Particle.h
+test_C.so: /Applications/root_v6.14.04/include/TStopwatch.h Tools.h Layer.h
+test_C.so: Hit.h Particle.h
 test_C.so: /Applications/root_v6.14.04/include/RVersion.h /Applications/root_v6.14.04/include/RConfig.h /Applications/root_v6.14.04/include/TClass.h /Applications/root_v6.14.04/include/TDictAttributeMap.h /Applications/root_v6.14.04/include/TInterpreter.h /Applications/root_v6.14.04/include/TROOT.h /Applications/root_v6.14.04/include/TBuffer.h /Applications/root_v6.14.04/include/TMemberInspector.h /Applications/root_v6.14.04/include/TError.h /Applications/root_v6.14.04/include/RtypesImp.h /Applications/root_v6.14.04/include/TIsAProxy.h /Applications/root_v6.14.04/include/TFileMergeInfo.h /Applications/root_v6.14.04/include/TCollectionProxyInfo.h /Applications/root_v6.14.04/bin/rootcling
 test_C__ROOTBUILDVERSION= 6.14/04

@@ -1,9 +1,7 @@
 #include "vector"
-#include "Event.h"
 #include "Tools.h"
 #include "Layer.h"
 #include "Hit.h"
-#include "Event.h"
 #include "Particle.h"
 #include "TMath.h"
 #include "TRandom3.h"
@@ -37,7 +35,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
     return hit;
 }
 
-void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector){
+void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray cross, bool b_verbose, bool b_multiscatter, char const *detector){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -54,15 +52,13 @@ void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, 
     //cross.push_back(hit);
     new(cross[index])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
 
-    if (b_verbose==true) {
-      printf("Hit with %s at (%f, %f, %f)\n",detector,*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
-    }
-
     if (b_cross == true && b_multiscatter == true) {
       part.Rotate(L->GetRMS());
     }
 
-    //printf("Angles after: theta %f - phi %f\n\n",part.GetTheta(),part.GetPhi());
+    if (b_verbose==true) {
+      printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2),part.GetTheta(),part.GetPhi());
+    }
 
   }else{new(cross[index])Hit();}
   //else{printf("Does not hit next layer\n\n");}

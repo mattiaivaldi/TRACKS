@@ -20,19 +20,28 @@
 #include "TF1.h"
 #include "TStopwatch.h"
 #include "vector"
-#include "Event.h"
 #include "Tools.h"
 #include "Layer.h"
 #include "Hit.h"
 #include "Particle.h"
 
+bool war=true;//declaring war
+
 using namespace TMath;
 
-void test(bool PrintParticles, bool multiscatman, int kExp) {
+void test(bool PrintParticles, bool multiscatman, bool paolonoise, int kExp) {
 
   //PrintParticles activates verbose mode
   //multiscatman activates multiple scattering
-  //kExp is the number of runs
+  //paolonoise activates the noise
+  //kExp is the number of collisions
+
+  TStopwatch timer;
+  timer.Start(true);//start cpu monitor
+
+  gRandom->SetSeed(0);
+
+  //verbosities
 
   printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
 
@@ -44,42 +53,50 @@ void test(bool PrintParticles, bool multiscatman, int kExp) {
     printf("Applying multiple scattering: ON\n\nAll distances are in cm, all angles are in rad.\n\n\n");
   }else{printf("Applying multiple scattering: OFF\n\nAll distances are in cm, all angles are in rad.\n\n\n");}
 
-  TStopwatch timer;
-  timer.Start(true);
-
   TFile h_gen("gen.root","RECREATE");
   TTree *tree_gen=new TTree("TG","PORCODIO");
 
-  ////length, radius, thickness, multiscattering RMS
+  //length, radius, thickness, multiscattering RMS
   Layer *BP = new Layer(27.,3.,0.8,0.001);
   Layer *L1 = new Layer(27.,4.,0.2,0.001);
   Layer *L2 = new Layer(27.,7.,0.2,0.001);
 
-  TString distr="kinem.root";
+  TString distr="kinem.root";//get starting kinematics
   TFile hfile(distr);
-  TH1F *pseudorap = (TH1F*)hfile.Get("heta");
-  TH1F *multiplicity = (TH1F*)hfile.Get("hmul");
+  TH1F *pseudorap = (TH1F*)hfile.Get("heta");//get pseudorapidity distribution
+  TH1F *multiplicity = (TH1F*)hfile.Get("hmul");//get multiplicity distribution
 
-  TClonesArray *cross_BP=new TClonesArray("Hit",50);
-  TClonesArray *cross_L1=new TClonesArray("Hit",50);
-  TClonesArray *cross_L2=new TClonesArray("Hit",50);
+  int kNoise=0;
+  if(paolonoise==true){
+    kNoise=(int)gRandom->Integer(5);//number of spurious hits
+  }
 
-  TClonesArray &hits_BP=*cross_BP;
-  TClonesArray &hits_L1=*cross_L1;
-  TClonesArray &hits_L2=*cross_L2;
+  int size=multiplicity->FindLastBinAbove(0,1)+kNoise;
+
+  TClonesArray *cross_BP=new TClonesArray("Hit",size);
+  TClonesArray *cross_L1=new TClonesArray("Hit",size);
+  TClonesArray *cross_L2=new TClonesArray("Hit",size);//TCA booking
+
+  printf("%d\n\n",size);
+
+  TClonesArray& hits_BP=*cross_BP;
+  TClonesArray& hits_L1=*cross_L1;
+  TClonesArray& hits_L2=*cross_L2;//TCA aliases to be filled
 
   tree_gen->Branch("HIT_BP",&cross_BP);
   tree_gen->Branch("HIT_L1",&cross_L1);
-  tree_gen->Branch("HIT_L2",&cross_L2);
+  tree_gen->Branch("HIT_L2",&cross_L2);//branch booking
+
+  //start experiment
 
   for(int i=0; i<kExp; i++){
 
     //vertex mean, sigmaxy, sigmaz, kinematics file
     Hit *vgen = new Hit(0, 0.001, 5.3, multiplicity);
     int mult = vgen->GetMult();
-    //vector <Hit*> cross_BP, cross_L1, cross_L2;
+    int index_noise=0;
 
-    printf("> RUN %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
+    printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
     //start tracks generation
 
@@ -91,9 +108,10 @@ void test(bool PrintParticles, bool multiscatman, int kExp) {
         printf(">>> Particle %i: theta %f - phi %f <<<\n\n",j+1,part->GetTheta(),part->GetPhi());
       }
 
-      detect(j, vgen, BP, *part, *cross_BP, PrintParticles, multiscatman, "BP");
-      detect(j, vgen, L1, *part, *cross_L1, PrintParticles, multiscatman, "L1");
-      detect(j, vgen, L2, *part, *cross_L2, PrintParticles, multiscatman, "L2");
+      //if particle hits layer TCA is filled, otherwhise gets 0
+      detect(j, vgen, BP, *part, hits_BP, PrintParticles, multiscatman, "BP");
+      detect(j, vgen, L1, *part, hits_L1, PrintParticles, multiscatman, "L1");
+      detect(j, vgen, L2, *part, hits_L2, PrintParticles, multiscatman, "L2");
 
       delete part;
 
@@ -101,7 +119,20 @@ void test(bool PrintParticles, bool multiscatman, int kExp) {
 
     delete vgen;
 
-    //printf("Out of %d generated particles:\n\n%lu crossed BP\n%lu crossed L1\n%lu crossed L2\n\n",mult,cross_BP.size(),cross_L1.size(),cross_L2.size());
+    //randomly add or not add noise
+
+    index_noise=0;
+
+    for(int k=0; k<kNoise; k++){
+      if(gRandom->Rndm()>0.5){
+        new(hits_L1[index_noise])Hit();
+        new(hits_L2[index_noise])Hit();
+      }else{
+        new(hits_L1[index_noise])Hit();
+        new(hits_L2[index_noise])Hit();
+      }
+      index_noise++;
+    }
 
     tree_gen->Fill();
 
@@ -109,7 +140,7 @@ void test(bool PrintParticles, bool multiscatman, int kExp) {
     cross_L1->Clear();
     cross_L2->Clear();
 
-  }
+  }//end for up to kExp
 
   printf("+++ END generation +++\n\n");
 
