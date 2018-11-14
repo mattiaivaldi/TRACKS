@@ -11,6 +11,6 @@ where
 _a_ = verbose mode ON/OFF  
 _b_ = multiple scattering ON/OFF  
 _c_ = noise ON/OFF  
-must be 1 or 0 and _d_ is the (integer) number of collisions you want to generate.
+must be 1 or 0 and _d_ is the (integer) number of collisions you want to generate. The output is a file _gen.root_ containing the hit data from the detector layers.
 
--_reconstruction under development_-
+-_reconstruction and wiki under development_-
