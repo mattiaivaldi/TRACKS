@@ -1,6 +1,6 @@
 # TRACKS
 
-Monte Carlo particles' tracks generation and reconstruction with multiple scattering and noise. Developed by Luca Quaglia and Mattia Ivaldi - Torino, 2018.
+Monte Carlo particles' tracks generation and reconstruction with multiple scattering and noise. Developed by Luca Quaglia and Mattia Ivaldi - Torino, 2018.  
 
 To use TRACKS you must have a working version of Root installed on your device. To generate the tracks just execute:
 
