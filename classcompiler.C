@@ -8,11 +8,9 @@ void classcompiler(TString myopt="fast"){
     else {
         opt = "kg";
     }
-    //gSystem->Beep(440,1);
-    gSystem->CompileMacro("Hit.cxx",opt.Data());
     gSystem->CompileMacro("Layer.cxx",opt.Data());
+    gSystem->CompileMacro("Hit.cxx",opt.Data());
     gSystem->CompileMacro("Particle.cxx",opt.Data());
     gSystem->CompileMacro("Tools.cxx",opt.Data());
     gSystem->CompileMacro("tracks_gen.C",opt.Data());
-    //gSystem->CleanCompiledMacros();
 }

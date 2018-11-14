@@ -15,7 +15,7 @@ public:
 
     //member function
 
-    double GetWidth() const; //getters
+    double GetWidth() const;
     double GetRadius() const;
     double GetThick() const;
     double GetRMS() const;
@@ -24,7 +24,7 @@ private:
 
     //data member
 
-    double fWidth; //detector features
+    double fWidth;
     double fRadius;
     double fThick;
     double fRMS;

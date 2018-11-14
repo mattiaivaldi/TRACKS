@@ -5,41 +5,39 @@
 
 ClassImp(Layer)
 
-//Initialize all data memebers to 0
 Layer::Layer():TObject(),
 fWidth(0.),
 fRadius(0.),
 fThick(0.),
 fRMS(0.)
 {
-    //Default constructor
+  //default constructor
 }
 
-//Initialize data members to values provided in the main program
 Layer::Layer(double W, double R, double T, double RMS): TObject(),
 fWidth(W),
 fRadius(R),
 fThick(T),
 fRMS(RMS)
 {
-    //Standard constructor
+  //standard constructor, W R T RMS are given by the user
 }
 
 Layer::~Layer() {
-    //Default destructor
+  //default destructor
 }
 
 Double_t Layer::GetWidth() const {
-    //Returns Width
-    return fWidth;
+  //returns Width
+  return fWidth;
 }
 
 Double_t Layer::GetRadius() const {
-    //Returns Radius
-    return fRadius;
+  //returns Radius
+  return fRadius;
 }
 
 Double_t Layer::GetRMS() const {
-    //Returns Thickness
-    return fRMS;
+  //returns Thickness
+  return fRMS;
 }

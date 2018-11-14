@@ -2,57 +2,72 @@
 
 #include "Riostream.h"
 #include "Hit.h"
+#include "Layer.h"
+#include "TMath.h"
 #include "TRandom3.h"
 #include "TH1F.h"
 
+//using namespace TMath;
+
 ClassImp(Hit)
 
-//Initialize all data members to "0"
 Hit::Hit():TObject(),
 fX(0.),
 fY(0.),
 fZ(0.)
 {
-    //Default constructor
+  //Default constructor
 }
 
-//Initialize data members to the value of the intersection point
 Hit::Hit(double x, double y, double z): TObject(),
 fX(x),
 fY(y),
 fZ(z)
 {
-    //Standard constructor
+  //hit constructor
+}
+
+Hit::Hit(double R, double H): TObject(),
+fX(gRandom->Uniform(-R, R)),
+fY(TMath::Sqrt(R*R-fX*fX)),
+fZ(gRandom->Uniform(-H/2,H/2))
+{
+  /*if(gRandom->Rndm()<0.5){
+    fY=TMath::Sqrt(R*R-fX*fX);
+  }else{fY=-1*TMath::Sqrt(R*R-fX*fX);}*/
+
+  //spurious hit constructor
 }
 
 Hit::Hit(double meanv, double sigmaxy, double sigmaz, TH1F *distr_mult): TObject(),
-fX(gRandom->Gaus(meanv,sigmaxy)), //generates random values according to given data
+fX(gRandom->Gaus(meanv,sigmaxy)),
 fY(gRandom->Gaus(meanv,sigmaxy)),
 fZ(gRandom->Gaus(meanv,sigmaz)),
-fMult(fMult=(int)distr_mult->GetRandom())
+fMult((int)distr_mult->GetRandom())
 {
-  //event constructor
+  //event constructor, def2
 }
 
 Hit::~Hit() {
-    //Default destructor
+  //default destructor
 }
 
 Double_t Hit::GetX() const {
-    //Returns X
-    return fX;
+  //returns X
+  return fX;
 }
 
 Double_t Hit::GetY() const {
-    //Returns Y
-    return fY;
+  //returns Y
+  return fY;
 }
 
 Double_t Hit::GetZ() const {
-    //Returns Z
-    return fZ;
+  //returns Z
+  return fZ;
 }
 
 int Hit::GetMult() const {
+  //returns Mult, def2
   return fMult;
 }

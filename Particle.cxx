@@ -16,7 +16,7 @@ fRap(0.),
 fTheta(Pi()/4.),
 fPhi(0.)
 {
-  //Default constructor
+  //default constructor
 }
 
 Particle::Particle(TH1F *distr_rap): TObject(),
@@ -24,31 +24,32 @@ fRap(distr_rap->GetRandom()),
 fTheta(2*ATan(Exp(-(double)fRap))),
 fPhi(gRandom->Uniform(2*Pi()))
 {
-  //Standard constructor
-    //printf("%f %f %f\n\n",fRap, fTheta, fPhi);
+  //standard constructor
 }
 
 Particle::~Particle() {
-  // Default destructor
+  //default destructor
 }
 
 
 Double_t Particle::GetTheta() const {
-  //Returns theta
+  //returns theta
   return fTheta;
 }
 
 Double_t Particle::GetPhi() const {
-  //Returns phi
+  //returns phi
   return fPhi;
 }
 
 Float_t Particle::GetRap() const {
-  //Returns pseudorapidity
+  //returns pseudorapidity
   return fRap;
 }
 
 void Particle::Rotate(double rms){
+
+  //rotation matrix for multiple scattering
 
   gRandom->SetSeed(0);
 
@@ -81,7 +82,7 @@ void Particle::Rotate(double rms){
 
   fTheta=ACos(rot[2]);
 
-  if(ATan(rot[1]/rot[0]) >= 0) {
+  /*if(ATan(rot[1]/rot[0]) >= 0) {
     if(double x = gRandom->Rndm() < 0.5){
       fPhi = ATan(rot[1]/rot[0]);
     }
@@ -97,9 +98,6 @@ void Particle::Rotate(double rms){
     else {
       fPhi = ATan(rot[1]/rot[0]) + Pi();
     }
-  }
-
-  //fTheta+=thetap;
-  //fPhi=phip;
+  }*/
 
 }

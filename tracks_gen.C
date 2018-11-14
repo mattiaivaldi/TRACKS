@@ -1,5 +1,5 @@
 //
-//TRACKS - generation and recontruction of particle tracks in a detector
+//TRACKS - MC generation of particle tracks in a detector
 //with multiple scattering and noise
 //developed by Luca Quaglia and Mattia Ivaldi, 2018
 //
@@ -29,7 +29,7 @@ bool war=true;//declaring war
 
 using namespace TMath;
 
-void test(bool PrintParticles, bool multiscatman, bool paolonoise, int kExp) {
+void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kExp) {
 
   //PrintParticles activates verbose mode
   //multiscatman activates multiple scattering
@@ -42,16 +42,7 @@ void test(bool PrintParticles, bool multiscatman, bool paolonoise, int kExp) {
   gRandom->SetSeed(0);
 
   //verbosities
-
-  printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
-
-  if (PrintParticles==true) {
-    printf("Printing vertex and hit coordinates: ON\n\n");
-  }else{printf("Printing vertex and hit coordinates: OFF\n\n");}
-
-  if (multiscatman==true) {
-    printf("Applying multiple scattering: ON\n\nAll distances are in cm, all angles are in rad.\n\n\n");
-  }else{printf("Applying multiple scattering: OFF\n\nAll distances are in cm, all angles are in rad.\n\n\n");}
+  verbosities(PrintParticles, multiscatman, paolonoise);
 
   TFile h_gen("gen.root","RECREATE");
   TTree *tree_gen=new TTree("TG","PORCODIO");
@@ -94,7 +85,6 @@ void test(bool PrintParticles, bool multiscatman, bool paolonoise, int kExp) {
     //vertex mean, sigmaxy, sigmaz, kinematics file
     Hit *vgen = new Hit(0, 0.001, 5.3, multiplicity);
     int mult = vgen->GetMult();
-    int index_noise=0;
 
     printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
@@ -117,21 +107,11 @@ void test(bool PrintParticles, bool multiscatman, bool paolonoise, int kExp) {
 
     }
 
-    delete vgen;
-
     //randomly add or not add noise
 
-    index_noise=0;
-
-    for(int k=0; k<kNoise; k++){
-      if(gRandom->Rndm()>0.5){
-        new(hits_L1[index_noise])Hit();
-        new(hits_L2[index_noise])Hit();
-      }else{
-        new(hits_L1[index_noise])Hit();
-        new(hits_L2[index_noise])Hit();
-      }
-      index_noise++;
+    if(paolonoise==true){
+      noize(kNoise,mult,hits_L1, L1);
+      noize(kNoise,mult,hits_L2, L2);
     }
 
     tree_gen->Fill();
@@ -139,6 +119,8 @@ void test(bool PrintParticles, bool multiscatman, bool paolonoise, int kExp) {
     cross_BP->Clear();
     cross_L1->Clear();
     cross_L2->Clear();
+
+    delete vgen;
 
   }//end for up to kExp
 
