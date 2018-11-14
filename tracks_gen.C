@@ -31,10 +31,10 @@ using namespace TMath;
 
 void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kExp) {
 
-  //PrintParticles activates verbose mode
-  //multiscatman activates multiple scattering
-  //paolonoise activates the noise
-  //kExp is the number of collisions
+  //PrintParticles activates verbose mode (0,1)
+  //multiscatman activates multiple scattering (0,1)
+  //paolonoise activates the noise (0,1)
+  //kExp is the number of collisions you want to perform
 
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
@@ -110,8 +110,8 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
     //randomly add or not add noise
 
     if(paolonoise==true){
-      noize(kNoise,mult,hits_L1, L1);
-      noize(kNoise,mult,hits_L2, L2);
+      noise(PrintParticles,kNoise,mult,hits_L1, L1,"L1");
+      noise(PrintParticles,kNoise,mult,hits_L2, L2,"L2");
     }
 
     tree_gen->Fill();

@@ -29,12 +29,12 @@ fZ(z)
 
 Hit::Hit(double R, double H): TObject(),
 fX(gRandom->Uniform(-R, R)),
-fY(TMath::Sqrt(R*R-fX*fX)),
+fY(0.),
 fZ(gRandom->Uniform(-H/2,H/2))
 {
-  /*if(gRandom->Rndm()<0.5){
+  if(gRandom->Rndm()<0.5){
     fY=TMath::Sqrt(R*R-fX*fX);
-  }else{fY=-1*TMath::Sqrt(R*R-fX*fX);}*/
+  }else{fY=-1*TMath::Sqrt(R*R-fX*fX);}
 
   //spurious hit constructor
 }

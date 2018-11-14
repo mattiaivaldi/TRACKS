@@ -54,10 +54,10 @@ void Particle::Rotate(double rms){
   gRandom->SetSeed(0);
 
   double theta0=rms/Sqrt(2);
-  double thetap=gRandom->Gaus(0,theta0);
-  double phip=gRandom->Uniform(2*Pi());
+  double thetap=gRandom->Gaus(0,theta0);//scattering angle theta
+  double phip=gRandom->Uniform(2*Pi());//scattering angle phi
 
-  double mr[3][3], pol[3], rot[3], r;
+  double mr[3][3], pol[3], rot[3], r;//rotation matrixes
 
   mr[0][0]=-Sin(fPhi);
   mr[1][0]=Cos(fPhi);

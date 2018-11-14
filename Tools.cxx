@@ -62,42 +62,35 @@ void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray cross, b
 
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
 
-    b_cross = true;
-    //gSystem->Beep(440,1);
+    b_cross = true;//yes we have detection
+    gSystem->Beep(440,1);
 
-    //Hit *hit = new Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
-
-    //cross.push_back(hit);
-    new(cross[index])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));
+    new(cross[index])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill with hit
 
     if (b_cross == true && b_multiscatter == true) {
-      part.Rotate(L->GetRMS());
+      part.Rotate(L->GetRMS());//if multiscattering ON set new angles
     }
 
-    /*if (b_verbose==true) {
-    printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2),part.GetTheta(),part.GetPhi());
-  }*/
+    if (b_verbose==true) {
+      printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,((Hit*)cross[index])->GetX(),((Hit*)cross[index])->GetY(),((Hit*)cross[index])->GetZ(),part.GetTheta(),part.GetPhi());
+    }
 
-  if (b_verbose==true) {
-    printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,((Hit*)cross[index])->GetX(),((Hit*)cross[index])->GetY(),((Hit*)cross[index])->GetZ(),part.GetTheta(),part.GetPhi());
-  }
-
-}else{new(cross[index])Hit();}
-//else{printf("Does not hit next layer\n\n");}
+  }else{new(cross[index])Hit();}//otherwise fill with 0
 
 }
 
-void noize(int Noise, int Mult, TClonesArray cross, Layer* L){
+void noise(bool b_verbose, int Noise, int Mult, TClonesArray cross, Layer* L, char const *detector){
 
   int index_noise=Mult;
 
   for(int i=0; i<Noise; i++){
     if(gRandom->Rndm()>0.5){
-      new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());
-      printf("(%f, %f,%f)\n",((Hit*)cross[index_noise])->GetX(),((Hit*)cross[index_noise])->GetY(),((Hit*)cross[index_noise])->GetZ());
+      new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());//random spurious hit
+      if(b_verbose==true){
+        printf("> Noise hit with %s at (%f, %f,%f) <\n\n",detector,((Hit*)cross[index_noise])->GetX(),((Hit*)cross[index_noise])->GetY(),((Hit*)cross[index_noise])->GetZ());
+      }
     }else{
-      new(cross[index_noise])Hit();
-      printf("(%f, %f,%f)\n",((Hit*)cross[index_noise])->GetX(),((Hit*)cross[index_noise])->GetY(),((Hit*)cross[index_noise])->GetZ());
+      new(cross[index_noise])Hit();//fill with 0
     }
     index_noise++;
   }

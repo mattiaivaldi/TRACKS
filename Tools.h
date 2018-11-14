@@ -16,6 +16,6 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
 
 void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray cross, bool b_verbose, bool b_multiscatter, char const *detector);
 
-void noize(int Noise, int Mult, TClonesArray cross, Layer* L);
+void noise(bool b_verbose, int Noise, int Mult, TClonesArray cross, Layer* L, char const *detector);
 
 #endif
