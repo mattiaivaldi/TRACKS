@@ -11,6 +11,6 @@ where
 _a_ = verbose mode ON/OFF  
 _b_ = multiple scattering ON/OFF  
 _c_ = noise ON/OFF  
-must be 1 or 0 and _d_ is the (integer) number of collisions you want to generate.
+must be 1 or 0 and _d_ is the (integer) number of collisions you want to generate. The output is a file _
 
 -_reconstruction under development_-

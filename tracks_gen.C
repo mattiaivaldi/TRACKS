@@ -45,7 +45,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
   verbosities(PrintParticles, multiscatman, paolonoise);
 
   TFile h_gen("gen.root","RECREATE");
-  TTree *tree_gen=new TTree("TG","PORCODIO");
+  TTree *tree_gen=new TTree("TG","tree_gen");
 
   //length, radius, thickness, multiscattering RMS
   Layer *BP = new Layer(27.,3.,0.8,0.001);
