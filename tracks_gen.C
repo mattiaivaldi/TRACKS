@@ -25,7 +25,7 @@
 #include "Hit.h"
 #include "Particle.h"
 
-bool war=true;//declaring war
+bool war1=true;//declaring war
 
 using namespace TMath;
 
@@ -124,6 +124,8 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
     }
 
     mult_ev=mult;
+
+    cross_L1->Compress();
 
     tree_gen->Fill();
 
