@@ -82,7 +82,7 @@ void Particle::Rotate(double rms){
 
   fTheta=ACos(rot[2]);
 
-  /*if(ATan(rot[1]/rot[0]) >= 0) {
+  if(ATan(rot[1]/rot[0]) >= 0) {
     if(double x = gRandom->Rndm() < 0.5){
       fPhi = ATan(rot[1]/rot[0]);
     }
@@ -98,6 +98,6 @@ void Particle::Rotate(double rms){
     else {
       fPhi = ATan(rot[1]/rot[0]) + Pi();
     }
-  }*/
+  }
 
 }
