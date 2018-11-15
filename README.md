@@ -2,7 +2,7 @@
 
 Monte Carlo particles' tracks generation and reconstruction with multiple scattering and noise. Developed by Luca Quaglia and Mattia Ivaldi - Torino, 2018.  
 
-To use TRACKS you must have a working version of Root installed on your device. To generate the tracks just execute:
+TRACKS require a working version of Root on your device. To generate the tracks just execute:
 
 root[0] .x classcompiler.C _to load and compile all the libraries_  
 root[1] tracks_gen(a,b,c,d)
