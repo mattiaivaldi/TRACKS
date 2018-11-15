@@ -61,7 +61,7 @@ void tracks_reco(bool PrintParticles) {
 
   for(int i=0;i<tree_reco->GetEntries();i++){
     tree_reco->GetEvent(i);
-    printf("> EVENT %d - multiplicty %d <\n\n",i+1,mult_ev);
+    printf("> EVENT %d - # of hits %d <\n\n",i+1,mult_ev);
     for(int j=0;j<mult_ev;j++){
       Hit *hit_buffer1=(Hit*)cross_L1->At(j);
       Hit *hit_buffer2=(Hit*)cross_L2->At(j);

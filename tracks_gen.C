@@ -88,6 +88,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
     //vertex mean, sigmaxy, sigmaz, kinematics file
     Hit *vgen = new Hit(0, 0.001, 5.3, multiplicity);
     int mult = vgen->GetMult();
+    mult_ev=mult+kNoise;
 
     int counter_BP=0,counter_L1=0,counter_L2=0;
 
@@ -122,10 +123,6 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
       noise(PrintParticles,kNoise,mult,hits_L1, L1,"L1");
       noise(PrintParticles,kNoise,mult,hits_L2, L2,"L2");
     }
-
-    mult_ev=mult;
-
-    cross_L1->Compress();
 
     tree_gen->Fill();
 
