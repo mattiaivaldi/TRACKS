@@ -25,7 +25,7 @@
 #include "Hit.h"
 #include "Particle.h"
 
-bool war=true;//declaring war
+bool war1=true;//declaring war
 
 using namespace TMath;
 
@@ -70,21 +70,27 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
   printf("%d\n\n",size);
 
+  int mult_ev;
   TClonesArray& hits_BP=*cross_BP;
   TClonesArray& hits_L1=*cross_L1;
   TClonesArray& hits_L2=*cross_L2;//TCA aliases to be filled
 
-  tree_gen->Branch("HIT_BP",&cross_BP);
-  tree_gen->Branch("HIT_L1",&cross_L1);
-  tree_gen->Branch("HIT_L2",&cross_L2);//branch booking
+  tree_gen->Branch("LAMULTIANI",&mult_ev);
+  tree_gen->Branch("HITL1",&cross_L1);
+  tree_gen->Branch("HITL2",&cross_L2);//branch booking
 
   //start experiment
 
   for(int i=0; i<kExp; i++){
 
+    //mult_ev=0;
+
     //vertex mean, sigmaxy, sigmaz, kinematics file
     Hit *vgen = new Hit(0, 0.001, 5.3, multiplicity);
     int mult = vgen->GetMult();
+    mult_ev=mult+kNoise;
+
+    int counter_BP=0,counter_L1=0,counter_L2=0;
 
     printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
 
@@ -99,12 +105,16 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
       }
 
       //if particle hits layer TCA is filled, otherwhise gets 0
-      detect(j, vgen, BP, *part, hits_BP, PrintParticles, multiscatman, "BP");
-      detect(j, vgen, L1, *part, hits_L1, PrintParticles, multiscatman, "L1");
-      detect(j, vgen, L2, *part, hits_L2, PrintParticles, multiscatman, "L2");
+      detect(j, vgen, BP, *part, hits_BP, PrintParticles, multiscatman, "BP", counter_BP);
+      detect(j, vgen, L1, *part, hits_L1, PrintParticles, multiscatman, "L1", counter_L1);
+      detect(j, vgen, L2, *part, hits_L2, PrintParticles, multiscatman, "L2", counter_L2);
 
       delete part;
 
+    }
+
+    if(PrintParticles==true){
+      printf("Out of %d generated particles\n%d crossed BP\n%d crossed L1\n%d crossed L2\n\n",mult,counter_BP, counter_L1, counter_L2);
     }
 
     //randomly add or not add noise

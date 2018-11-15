@@ -13,4 +13,5 @@ void classcompiler(TString myopt="fast"){
     gSystem->CompileMacro("Particle.cxx",opt.Data());
     gSystem->CompileMacro("Tools.cxx",opt.Data());
     gSystem->CompileMacro("tracks_gen.C",opt.Data());
+    gSystem->CompileMacro("tracks_reco.C",opt.Data());
 }

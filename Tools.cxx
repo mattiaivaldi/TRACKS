@@ -52,7 +52,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
   return hit;
 }
 
-void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray cross, bool b_verbose, bool b_multiscatter, char const *detector){
+void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -63,6 +63,7 @@ void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray cross, b
 
     b_cross = true;//yes we have detection
     gSystem->Beep(440,1);
+    counter++;
 
     new(cross[index])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill with hit
 
