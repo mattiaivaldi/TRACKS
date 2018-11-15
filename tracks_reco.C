@@ -32,7 +32,7 @@ using namespace TMath;
 void tracks_reco(bool PrintParticles) {
 
   //PrintParticles activates verbose mode (0,1)
-  printf("+++ PORCODITO +++\n\n");
+  printf("\n\n+++ START reconstruction +++\n\n");
 
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
@@ -61,18 +61,18 @@ void tracks_reco(bool PrintParticles) {
 
   for(int i=0;i<tree_reco->GetEntries();i++){
     tree_reco->GetEvent(i);
-    cout<<"evento "<<i<<" Mult "<<mult_ev<<endl;
+    printf("> EVENT %d - multiplicty %d <\n\n",i+1,mult_ev);
     for(int j=0;j<mult_ev;j++){
-      Hit *hit_buffer=(Hit*)cross_L1->At(j);
-      cout<<"Zio: "<<hit_buffer->GetX()<<endl;
-      //delete hit_buffer;
+      Hit *hit_buffer1=(Hit*)cross_L1->At(j);
+      Hit *hit_buffer2=(Hit*)cross_L2->At(j);
+      if(PrintParticles==true){
+        printf("Hit with L1 at (%f, %f, %f)\nHit with L2 at (%f, %f, %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ(),hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
+      }
     }
+    cout<<endl;
   }
 
   printf("+++ END reconstruction +++\n\n");
-
-  //h_reco.Write();
-  //h_reco.Close();
 
   //cpu info
   timer.Stop();
