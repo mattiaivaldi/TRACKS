@@ -24,6 +24,9 @@ public:
     double GetY() const;
     double GetZ() const;
     int GetMult() const;//def2
+    void SetX(double xnew){fX=xnew;}
+    void SetY(double ynew){fY=ynew;}
+    void SetZ(double znew){fZ=znew;}
 
 private:
 

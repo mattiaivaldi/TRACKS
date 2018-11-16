@@ -51,6 +51,9 @@ void tracks_reco(bool PrintParticles) {
   TClonesArray *cross_L1=new TClonesArray("Hit",kExp);
   TClonesArray *cross_L2=new TClonesArray("Hit",kExp);
 
+  TClonesArray& hits_L1=*cross_L1;
+  TClonesArray& hits_L2=*cross_L2;//TCA aliases to be smeagled
+
   TBranch *bmult=tree_reco->GetBranch("LAMULTIANI");
   TBranch *b1=tree_reco->GetBranch("HITL1");
   TBranch *b2=tree_reco->GetBranch("HITL2");
@@ -62,13 +65,27 @@ void tracks_reco(bool PrintParticles) {
   int mult;
 
   for(int i=0;i<tree_reco->GetEntries();i++){
+
     tree_reco->GetEvent(i);
     int multi_ev=cross_L1->GetEntries();
+
     printf("> EVENT %i - # of hits %i <\n\n",i+1,multi_ev);
+
     for(int j=0;j<multi_ev;j++){
+
       Hit *hit_buffer1=(Hit*)cross_L1->At(j);
-      Hit *hit_buffer2=(Hit*)cross_L2->At(j);
-      printf("Hit with L1 at (%f %f %f)\nHit with L2 at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ(),hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
+      //Hit *hit_buffer2=(Hit*)cross_L2->At(j);
+
+      printf("Hit with L1 prima at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
+
+      if(hit_buffer1->GetX() != 0){
+        smeagol(j,0.00120,0.0003,4,hits_L1);
+      }
+
+      printf("Hit with L1 dopo at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
+
+      //printf("Hit with L1 at (%f %f %f)\nHit with L2 at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ(),hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
+
     }
     cout<<endl;
   }
