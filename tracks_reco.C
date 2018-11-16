@@ -59,15 +59,16 @@ void tracks_reco(bool PrintParticles) {
   b1->SetAddress(&cross_L1);
   b2->SetAddress(&cross_L2);
 
+  int mult;
+
   for(int i=0;i<tree_reco->GetEntries();i++){
     tree_reco->GetEvent(i);
-    printf("> EVENT %d - # of hits %d <\n\n",i+1,mult_ev);
-    for(int j=0;j<mult_ev;j++){
+    int multi_ev=cross_L1->GetEntries();
+    printf("> EVENT %i - # of hits %i <\n\n",i+1,multi_ev);
+    for(int j=0;j<multi_ev;j++){
       Hit *hit_buffer1=(Hit*)cross_L1->At(j);
       Hit *hit_buffer2=(Hit*)cross_L2->At(j);
-      if(PrintParticles==true){
-        printf("Hit with L1 at (%f, %f, %f)\nHit with L2 at (%f, %f, %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ(),hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
-      }
+      printf("Hit with L1 at (%f %f %f)\nHit with L2 at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ(),hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
     }
     cout<<endl;
   }
