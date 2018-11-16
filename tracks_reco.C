@@ -82,7 +82,7 @@ void tracks_reco(bool PrintParticles) {
         smeagol(j,0.00120,0.0003,4,hits_L1);
       }
 
-      printf("Hit with L1 dopo at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
+      printf("Fuori da smeagol dopo at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
 
       //printf("Hit with L1 at (%f %f %f)\nHit with L2 at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ(),hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
 

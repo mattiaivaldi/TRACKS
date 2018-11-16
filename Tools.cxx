@@ -133,7 +133,7 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
     y=TMath::Sin(theta)*TMath::Sin(phi);
   }
 
-  printf("dentro smeagol dopo lo smeagol theta %f phi %f",theta,phi);
+  printf("dentro smeagol dopo lo smeagol theta %f phi %f\n\n",theta,phi);
 
   printf("dentro smeagol dopo lo smeagol direttamente getter (%f %f %f)\n\n",buffer->GetX(), buffer->GetY(), buffer->GetZ());
   printf("dentro smeagol dopo lo smeagol x y z (%f %f %f)\n\n",x, y, z);
