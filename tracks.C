@@ -1,6 +1,6 @@
 //Macro used in order to compile all classes. You have to run this macro with .x before executing the main code
 
-void classcompiler(TString myopt="fast"){
+void tracks(TString myopt="fast"){
     TString opt;
     if(myopt.Contains("force")){
         opt = "kfg";
@@ -14,4 +14,6 @@ void classcompiler(TString myopt="fast"){
     gSystem->CompileMacro("Tools.cxx",opt.Data());
     gSystem->CompileMacro("tracks_gen.C",opt.Data());
     gSystem->CompileMacro("tracks_reco.C",opt.Data());
+    gROOT->ProcessLine("tracks_gen(0,1,1,10)");
+    gROOT->ProcessLine("tracks_reco(1)");
 }

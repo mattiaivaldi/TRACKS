@@ -52,7 +52,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
   return hit;
 }
 
-void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter){
+void detect(int &index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -75,7 +75,9 @@ void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, 
       printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,((Hit*)cross[index])->GetX(),((Hit*)cross[index])->GetY(),((Hit*)cross[index])->GetZ(),part.GetTheta(),part.GetPhi());
     }
 
-  }else{new(cross[index])Hit();}//otherwise fill with 0
+    index++;
+
+  }//else{new(cross[index])Hit();}//otherwise fill with 0
 
 }
 
@@ -84,14 +86,10 @@ void noise(bool b_verbose, int Noise, int Mult, TClonesArray cross, Layer* L, ch
   int index_noise=Mult;
 
   for(int i=0; i<Noise; i++){
-    if(gRandom->Rndm()>0.5){
-      new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());//random spurious hit
-      if(b_verbose==true){
+    new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());//random spurious hit
+    if(b_verbose==true){
         printf("> Noise hit with %s at (%f, %f,%f) <\n\n",detector,((Hit*)cross[index_noise])->GetX(),((Hit*)cross[index_noise])->GetY(),((Hit*)cross[index_noise])->GetZ());
       }
-    }else{
-      new(cross[index_noise])Hit();//fill with 0
-    }
     index_noise++;
   }
 
@@ -104,43 +102,50 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
   double y=buffer->GetY();
   double z=buffer->GetZ();
   double phi=0.;
-  double theta=TMath::ACos(z);
+  double theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
+  //double theta=TMath::ACos(z);
 
-  printf("Dentro smeagol usando i getter su buffer (%f %f %f)\n\n",buffer->GetX(), buffer->GetY(), buffer->GetZ());
+  /*printf("Dentro smeagol usando i getter su buffer (%f %f %f)\n\n",buffer->GetX(), buffer->GetY(), buffer->GetZ());
   printf("Dentro smeagol usando x y z (%f %f %f)\n\n",x, y, z);
 
+  printf("Dentro smeagol theta %f\n\n",theta);*/
+
   if(x>0&&y>0){
-    phi=TMath::ATan(y/z);
+    phi=TMath::ATan(y/x);
   }else if(x>0&&y<0){
-    phi=TMath::ATan(y/z)+2*TMath::Pi();
+    phi=TMath::ATan(y/x)+2*TMath::Pi();
   }
   else if(x<0&&y<0){
-    phi=TMath::ATan(y/z)+TMath::Pi();
+    phi=TMath::ATan(y/x)+TMath::Pi();
   }
   else if(x<0&&y>0){
-    phi=TMath::ATan(y/z)+TMath::Pi();
+    phi=TMath::ATan(y/x)+TMath::Pi();
   }
 
   if(gRandom->Rndm()<0.5){
     z+=gRandom->Gaus(0,sigmaz);
+    theta=TMath::ACos(z);
     phi+=gRandom->Gaus(0,sigmarf)/R;
     x=TMath::Sin(theta)*TMath::Cos(phi);
     y=TMath::Sin(theta)*TMath::Sin(phi);
   }else{
     z-=gRandom->Gaus(0,sigmaz);
+    theta=TMath::ACos(z);
     phi-=gRandom->Gaus(0,sigmarf)/R;
     x=TMath::Sin(theta)*TMath::Cos(phi);
     y=TMath::Sin(theta)*TMath::Sin(phi);
   }
 
-  printf("dentro smeagol dopo lo smeagol theta %f phi %f\n\n",theta,phi);
+  //theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
+
+  /*printf("dentro smeagol dopo lo smeagol theta %f phi %f\n\n",theta,phi);
 
   printf("dentro smeagol dopo lo smeagol direttamente getter (%f %f %f)\n\n",buffer->GetX(), buffer->GetY(), buffer->GetZ());
-  printf("dentro smeagol dopo lo smeagol x y z (%f %f %f)\n\n",x, y, z);
+  printf("dentro smeagol dopo lo smeagol x y z (%f %f %f)\n\n",x, y, z);*/
 
   buffer->SetX(x);
   buffer->SetY(y);
   buffer->SetZ(z);
 
-  printf("dentro smeagol dopo lo smeagol dopo i setter (%f %f %f)\n\n",buffer->GetX(), buffer->GetY(), buffer->GetZ());
+  //printf("dentro smeagol dopo lo smeagol dopo i setter (%f %f %f)\n\n",buffer->GetX(), buffer->GetY(), buffer->GetZ());
 }

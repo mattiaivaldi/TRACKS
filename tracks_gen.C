@@ -96,6 +96,8 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
     //start tracks generation
 
+    int k1=0,k2=0,k3=0;
+
     for (int j=0; j<mult; j++) {
 
       Particle *part = new Particle(pseudorap);
@@ -105,9 +107,9 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
       }
 
       //if particle hits layer TCA is filled, otherwhise gets 0
-      detect(j, vgen, BP, *part, hits_BP, PrintParticles, multiscatman, "BP", counter_BP);
-      detect(j, vgen, L1, *part, hits_L1, PrintParticles, multiscatman, "L1", counter_L1);
-      detect(j, vgen, L2, *part, hits_L2, PrintParticles, multiscatman, "L2", counter_L2);
+      detect(k1, vgen, BP, *part, hits_BP, PrintParticles, multiscatman, "BP", counter_BP);
+      detect(k2, vgen, L1, *part, hits_L1, PrintParticles, multiscatman, "L1", counter_L1);
+      detect(k3, vgen, L2, *part, hits_L2, PrintParticles, multiscatman, "L2", counter_L2);
 
       delete part;
 
@@ -119,12 +121,16 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
     //randomly add or not add noise
 
-    if(paolonoise==true){
-      noise(PrintParticles,kNoise,mult,hits_L1, L1,"L1");
-      noise(PrintParticles,kNoise,mult,hits_L2, L2,"L2");
+    if(paolonoise){
+      noise(PrintParticles,kNoise,k2,hits_L1, L1,"L1");
+      noise(PrintParticles,kNoise,k3,hits_L2, L2,"L2");
     }
 
     tree_gen->Fill();
+
+    k1=0;
+    k2=0;
+    k3=0;
 
     cross_BP->Clear();
     cross_L1->Clear();
