@@ -57,25 +57,26 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
   TH1F *pseudorap = (TH1F*)hfile.Get("heta");//get pseudorapidity distribution
   TH1F *multiplicity = (TH1F*)hfile.Get("hmul");//get multiplicity distribution
 
-  int kNoise=0;
-  if(paolonoise==true){
-    kNoise=(int)gRandom->Integer(5);//number of spurious hits
+  int kNoise1=0, kNoise2=0;
+  if(paolonoise){
+    kNoise1=(int)gRandom->Integer(5);//number of spurious hits
+    kNoise2=(int)gRandom->Integer(5);
   }
 
-  int size=multiplicity->FindLastBinAbove(0,1)+kNoise;
+  int size0=multiplicity->FindLastBinAbove(0,1);
+  int size1=multiplicity->FindLastBinAbove(0,1)+kNoise1;
+  int size2=multiplicity->FindLastBinAbove(0,1)+kNoise2;
 
-  TClonesArray *cross_BP=new TClonesArray("Hit",size);
-  TClonesArray *cross_L1=new TClonesArray("Hit",size);
-  TClonesArray *cross_L2=new TClonesArray("Hit",size);//TCA booking
+  TClonesArray *cross_BP=new TClonesArray("Hit",size0);
+  TClonesArray *cross_L1=new TClonesArray("Hit",size1);
+  TClonesArray *cross_L2=new TClonesArray("Hit",size2);//TCA booking
 
-  printf("%d\n\n",size);
-
-  int mult_ev;
+  //int mult_ev1, mult_ev2;
   TClonesArray& hits_BP=*cross_BP;
   TClonesArray& hits_L1=*cross_L1;
   TClonesArray& hits_L2=*cross_L2;//TCA aliases to be filled
 
-  tree_gen->Branch("LAMULTIANI",&mult_ev);
+  //tree_gen->Branch("LAMULTIANI",&mult_ev);
   tree_gen->Branch("HITL1",&cross_L1);
   tree_gen->Branch("HITL2",&cross_L2);//branch booking
 
@@ -83,12 +84,11 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
   for(int i=0; i<kExp; i++){
 
-    //mult_ev=0;
-
     //vertex mean, sigmaxy, sigmaz, kinematics file
     Hit *vgen = new Hit(0, 0.001, 5.3, multiplicity);
     int mult = vgen->GetMult();
-    mult_ev=mult+kNoise;
+    //mult_ev1=mult+kNoise1;
+    //mult_ev2=mult+kNoise2;
 
     int counter_BP=0,counter_L1=0,counter_L2=0;
 
@@ -102,7 +102,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
       Particle *part = new Particle(pseudorap);
 
-      if (PrintParticles==true) {
+      if (PrintParticles) {
         printf(">>> Particle %i: theta %f - phi %f <<<\n\n",j+1,part->GetTheta(),part->GetPhi());
       }
 
@@ -115,15 +115,15 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
     }
 
-    if(PrintParticles==true){
+    if(PrintParticles){
       printf("Out of %d generated particles\n%d crossed BP\n%d crossed L1\n%d crossed L2\n\n",mult,counter_BP, counter_L1, counter_L2);
     }
 
     //randomly add or not add noise
 
     if(paolonoise){
-      noise(PrintParticles,kNoise,k2,hits_L1, L1,"L1");
-      noise(PrintParticles,kNoise,k3,hits_L2, L2,"L2");
+      noise(PrintParticles,kNoise1,k2,hits_L1, L1,"L1");
+      noise(PrintParticles,kNoise2,k3,hits_L2, L2,"L2");
     }
 
     tree_gen->Fill();

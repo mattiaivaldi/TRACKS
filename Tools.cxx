@@ -14,15 +14,15 @@ void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise){
 
   printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
 
-  if (b_verbose==true) {
+  if (b_verbose) {
     printf("Printing vertex and hit coordinates: ON\n\n");
   }else{printf("Printing vertex and hit coordinates: OFF\n\n");}
 
-  if (b_multiscatter==true) {
+  if (b_multiscatter) {
     printf("Applying multiple scattering: ON\n\n");
   }else{printf("Applying multiple scattering: OFF\n\n");}
 
-  if (b_noise==true) {
+  if (b_noise) {
     printf("Applying noise: ON\n\nAll distances are in cm, all angles are in rad.\n\n\n");
   }else{printf("Applying noise: OFF\n\nAll distances are in cm, all angles are in rad.\n\n\n");}
 
@@ -67,17 +67,21 @@ void detect(int &index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross,
 
     new(cross[index])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill with hit
 
-    if (b_cross == true && b_multiscatter == true) {
+    if (b_cross&&b_multiscatter) {
       part.Rotate(L->GetRMS());//if multiscattering ON set new angles
     }
 
-    if (b_verbose==true) {
+    if (b_verbose) {
       printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,((Hit*)cross[index])->GetX(),((Hit*)cross[index])->GetY(),((Hit*)cross[index])->GetZ(),part.GetTheta(),part.GetPhi());
     }
 
     index++;
 
-  }//else{new(cross[index])Hit();}//otherwise fill with 0
+  }else{
+    if(b_verbose){
+      printf("Does not hit %s\n\n",detector);
+    }
+  }
 
 }
 
@@ -87,7 +91,7 @@ void noise(bool b_verbose, int Noise, int Mult, TClonesArray cross, Layer* L, ch
 
   for(int i=0; i<Noise; i++){
     new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());//random spurious hit
-    if(b_verbose==true){
+    if(b_verbose){
         printf("> Noise hit with %s at (%f, %f,%f) <\n\n",detector,((Hit*)cross[index_noise])->GetX(),((Hit*)cross[index_noise])->GetY(),((Hit*)cross[index_noise])->GetZ());
       }
     index_noise++;
