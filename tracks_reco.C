@@ -76,7 +76,7 @@ void tracks_reco(bool PrintParticles){
         printf("PRIMA (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
       }
 
-      ciccio(j,0.0012,0.0003,4,hits_L1);
+      smeagol(j,0.0012,0.0003,4,hits_L1);
 
       if(PrintParticles){
         printf("DOPO  (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());

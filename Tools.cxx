@@ -99,22 +99,22 @@ void noise(bool b_verbose, int Noise, int Mult, TClonesArray cross, Layer* L, ch
 
 }
 
-void ciccio(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross){
-    
+void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross){
+
     double dphi=0;
     double dz=0;
-    
+
     Hit *hit_buffer=(Hit*)cross.At(index);
-    
+
     double x=hit_buffer->GetX();
     double y=hit_buffer->GetY();
     double z=hit_buffer->GetZ();
-    
+
     double phi=TMath::ACos(x/R);
     double theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
-    
+
     printf("[Entro in smeagol]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
-    
+
     if (gRandom->Rndm()<0.5) {
         dphi=(gRandom->Gaus(0,sigmarf))/R;
         x=TMath::Cos(phi+dphi);
@@ -130,13 +130,13 @@ void ciccio(int index, double sigmaz, double sigmarf, double R, TClonesArray &cr
         z-=dz;
         theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
     }
-    
+
     printf("[dopo i conti]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
-    
+
     hit_buffer->SetX(x);
     hit_buffer->SetY(y);
     hit_buffer->SetZ(z);
-    
+
     printf("[dopo i setter]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
-    
+
 }
