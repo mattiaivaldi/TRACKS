@@ -111,13 +111,13 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
   double z=hit_buffer->GetZ();
 
   double phi=TMath::ACos(x/R);
+  double dphi=(gRandom->Gaus(0,sigmarf))/R;
   double zio=0;
   double theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
 
   printf("[Entro in smeagol]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
 
   if (gRandom->Rndm()<0.5) {
-    dphi=(gRandom->Gaus(0,sigmarf))/R;
     zio=phi+dphi;
     x=TMath::Cos(zio);
     y=TMath::Sin(zio);
@@ -125,7 +125,6 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
     z+=dz;
     theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
   } else {
-    dphi=(gRandom->Gaus(0,sigmarf))/R;
     zio=phi-dphi;
     x=TMath::Cos(zio);
     y=TMath::Sin(zio);
@@ -134,12 +133,12 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
     theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
   }
 
-  printf("[dopo i conti]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
+  printf("[soxio i conti]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,zio);
 
   hit_buffer->SetX(x);
   hit_buffer->SetY(y);
   hit_buffer->SetZ(z);
 
-  printf("[dopo i setter]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
+  printf("[dopo i setter]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,zio);
 
 }
