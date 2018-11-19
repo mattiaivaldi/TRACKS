@@ -14,15 +14,15 @@ void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise){
 
   printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
 
-  if (b_verbose) {
+  if (b_verbose==true) {
     printf("Printing vertex and hit coordinates: ON\n\n");
   }else{printf("Printing vertex and hit coordinates: OFF\n\n");}
 
-  if (b_multiscatter) {
+  if (b_multiscatter==true) {
     printf("Applying multiple scattering: ON\n\n");
   }else{printf("Applying multiple scattering: OFF\n\n");}
 
-  if (b_noise) {
+  if (b_noise==true) {
     printf("Applying noise: ON\n\nAll distances are in cm, all angles are in rad.\n\n\n");
   }else{printf("Applying noise: OFF\n\nAll distances are in cm, all angles are in rad.\n\n\n");}
 
@@ -52,7 +52,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
   return hit;
 }
 
-void detect(int &index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter){
+void detect(int index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -67,21 +67,15 @@ void detect(int &index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross,
 
     new(cross[index])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill with hit
 
-    if (b_cross&&b_multiscatter) {
+    if (b_cross == true && b_multiscatter == true) {
       part.Rotate(L->GetRMS());//if multiscattering ON set new angles
     }
 
-    if (b_verbose) {
+    if (b_verbose==true) {
       printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,((Hit*)cross[index])->GetX(),((Hit*)cross[index])->GetY(),((Hit*)cross[index])->GetZ(),part.GetTheta(),part.GetPhi());
     }
 
-    index++;
-
-  }else{
-    if(b_verbose){
-      printf("Does not hit %s\n\n",detector);
-    }
-  }
+  }else{new(cross[index])Hit();}//otherwise fill with 0
 
 }
 
@@ -90,53 +84,15 @@ void noise(bool b_verbose, int Noise, int Mult, TClonesArray cross, Layer* L, ch
   int index_noise=Mult;
 
   for(int i=0; i<Noise; i++){
-    new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());//random spurious hit
-    if(b_verbose){
+    if(gRandom->Rndm()>0.5){
+      new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());//random spurious hit
+      if(b_verbose==true){
         printf("> Noise hit with %s at (%f, %f,%f) <\n\n",detector,((Hit*)cross[index_noise])->GetX(),((Hit*)cross[index_noise])->GetY(),((Hit*)cross[index_noise])->GetZ());
       }
+    }else{
+      new(cross[index_noise])Hit();//fill with 0
+    }
     index_noise++;
   }
 
-}
-
-void ciccio(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross){
-    
-    double dphi=0;
-    double dz=0;
-    
-    Hit *hit_buffer=(Hit*)cross.At(index);
-    
-    double x=hit_buffer->GetX();
-    double y=hit_buffer->GetY();
-    double z=hit_buffer->GetZ();
-    
-    double phi=TMath::ACos(x/R);
-    double theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
-    
-    printf("[Entro in smeagol]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
-    
-    if (gRandom->Rndm()<0.5) {
-        dphi=(gRandom->Gaus(0,sigmarf))/R;
-        x=TMath::Cos(phi+dphi);
-        y=TMath::Sin(phi+dphi);
-        dz=gRandom->Gaus(0,sigmaz);
-        z+=dz;
-        theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
-    } else {
-        dphi=(gRandom->Gaus(0,sigmarf))/R;
-        x=TMath::Cos(phi-dphi);
-        y=TMath::Sin(phi-dphi);
-        dz=gRandom->Gaus(0,sigmaz);
-        z-=dz;
-        theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
-    }
-    
-    printf("[dopo i conti]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
-    
-    hit_buffer->SetX(x);
-    hit_buffer->SetY(y);
-    hit_buffer->SetZ(z);
-    
-    printf("[dopo i setter]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
-    
 }
