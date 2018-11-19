@@ -10,13 +10,13 @@
 
 //using namespace TMath;
 
-void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise){
+void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp){
 
   printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
 
   if (b_verbose) {
     printf("Printing vertex and hit coordinates: ON\n\n");
-  }else{printf("Printing vertex and hit coordinates: OFF\n\n");}
+  }else{printf("Printing vertex and hit coordinates: OFF - only ten event displayed\n\n");}
 
   if (b_multiscatter) {
     printf("Applying multiple scattering: ON\n\n");
@@ -25,6 +25,8 @@ void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise){
   if (b_noise) {
     printf("Applying noise: ON\n\nAll distances are in cm, all angles are in rad.\n\n\n");
   }else{printf("Applying noise: OFF\n\nAll distances are in cm, all angles are in rad.\n\n\n");}
+
+  printf("Ready to generate %d events! The detection info will be stored in a .root file containing a TTree with two branches, respectively the hits on the first and the second Si layers.\n\n\n",kExp);
 
 }
 
@@ -62,7 +64,7 @@ void detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verb
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
 
     b_cross = true;//yes we have detection
-    gSystem->Beep(440,1);
+    //gSystem->Beep(440,1);
 
     new(cross[counter])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill with hit
 

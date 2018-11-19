@@ -9,7 +9,7 @@
 #include "Particle.h"
 #include "TClonesArray.h"
 
-void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise);
+void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp);
 
 //x0, y0, z0 = generated vertex coordinates; theta, phi = generated angles; R = radius of the detector
 double *hit_point(double x0, double y0, double z0, double theta, double phi, double R);

@@ -42,7 +42,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
   gRandom->SetSeed(0);
 
   //verbosities
-  verbosities(PrintParticles, multiscatman, paolonoise);
+  verbosities(PrintParticles, multiscatman, paolonoise, kExp);
 
   TFile h_gen("gen.root","RECREATE");
   TTree *tree_gen=new TTree("TG","tree_gen");
@@ -92,7 +92,11 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
     int counter_BP=0,counter_L1=0,counter_L2=0;
 
-    printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
+    if(PrintParticles){
+      printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
+    }else if((i+1)%(kExp/10)==0){
+      printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n[running]\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
+    }
 
     //start tracks generation
 
@@ -134,7 +138,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
   }//end for up to kExp
 
-  printf("+++ END generation +++\n\n");
+  printf("+++ END generation +++\n\nSaving files...\n\nYou will find gen.root containing the detection info in the current directory.\n\n");
 
   h_gen.Write();
   h_gen.Close();
