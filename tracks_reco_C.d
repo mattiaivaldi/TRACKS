@@ -86,6 +86,7 @@ tracks_reco_C.so: /Applications/root_v6.14.04/include/TFitResultPtr.h
 tracks_reco_C.so: /usr/include/float.h
 tracks_reco_C.so: /Applications/root_v6.14.04/include/TMatrixFBasefwd.h
 tracks_reco_C.so: /Applications/root_v6.14.04/include/TMatrixDBasefwd.h
+tracks_reco_C.so: /Applications/root_v6.14.04/include/TH1D.h
 tracks_reco_C.so: /Applications/root_v6.14.04/include/TH1F.h
 tracks_reco_C.so: /Applications/root_v6.14.04/include/TTree.h
 tracks_reco_C.so: /Applications/root_v6.14.04/include/ROOT/TIOFeatures.hxx

@@ -9,6 +9,7 @@
 #include "TString.h"
 #include "TFile.h"
 #include "TH2F.h"
+#include "TH1D.h"
 #include "TH1F.h"
 #include "TTree.h"
 #include "TBranch.h"
@@ -43,6 +44,8 @@ void tracks_reco(bool PrintParticles){
   TFile h_reco("gen.root","READ");
   TTree *tree_reco=(TTree*)h_reco.Get("TG");
 
+  TFile h_isto("histo.root","RECREATE");
+
   int kExp=tree_reco->GetEntries();
 
   //int mult_ev=0;
@@ -60,7 +63,7 @@ void tracks_reco(bool PrintParticles){
   b1->SetAddress(&cross_L1);
   b2->SetAddress(&cross_L2);
 
-  for(int i=0;i<tree_reco->GetEntries();i++){
+  for(int i=0;i<kExp;i++){
 
     tree_reco->GetEvent(i);
     int mult_ev1=cross_L1->GetEntries();
@@ -73,13 +76,13 @@ void tracks_reco(bool PrintParticles){
       Hit *hit_buffer1=(Hit*)cross_L1->At(j);
 
       if(PrintParticles){
-        printf("PRIMA (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
+        printf("PRIMA (%f, %f, %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
       }
 
-      smeagol(j,0.0012,0.0003,4,hits_L1);
+      smeagol(j,0.0012,0.0003,4.,hits_L1);
 
       if(PrintParticles){
-        printf("DOPO  (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
+        printf("DOPO  (%f, %f, %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
       }
 
     }
@@ -91,12 +94,55 @@ void tracks_reco(bool PrintParticles){
       Hit *hit_buffer2=(Hit*)cross_L2->At(k);
 
       if(PrintParticles){
-        printf("(%f %f %f)\n\n",hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
+        printf("PRIMA (%f %f %f)\n\n",hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
+      }
+
+      smeagol(k,0.0012,0.0003,7.,hits_L2);
+
+      if(PrintParticles){
+        printf("DOPO  (%f, %f, %f)\n\n",hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
       }
 
     }
 
   }
+
+  TH1D *h1=new TH1D("h1","h1",100,-13.5,13.5);
+
+  TCanvas *pippa=new TCanvas();
+  pippa->cd();
+
+  for(int i=0;i<kExp;i++){
+    tree_reco->GetEvent(i);
+    int mult_ev1=cross_L1->GetEntries();
+    int mult_ev2=cross_L2->GetEntries();
+    for(int j=0;j<mult_ev2;j++){
+      Hit *hit_buffer2=(Hit*)cross_L2->At(j);
+      double phi2=phigetta(hit_buffer2->GetX(),7.);
+      //printf("phigetta %f\n",phi2);
+      for(int k=0;k<mult_ev1;k++){
+        Hit *hit_buffer1=(Hit*)cross_L1->At(k);
+        double phi1=phigetta(hit_buffer1->GetX(),4.);
+        double Dphi=Abs(phi2-phi1);
+        if(Dphi<0.05){
+          //printf("sborro duro\n\n");
+          double x1=hit_buffer1->GetX();
+          double x2=hit_buffer2->GetX();
+          double z1=hit_buffer1->GetZ();
+          double z2=hit_buffer2->GetZ();
+          double z_reco=z1+((z2-z1)/(x1-x2)*x1);
+          printf("sborro duro %f\n",z_reco);
+          h1->Fill(z_reco);
+        }
+      }
+    }
+  }
+
+  h1->Draw("hist");
+  pippa->Modified();
+  pippa->Update();
+  h_isto.Write();
+  h_isto.Close();
 
   printf("+++ END reconstruction +++\n\n");
 

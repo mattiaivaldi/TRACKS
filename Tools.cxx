@@ -52,7 +52,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
   return hit;
 }
 
-void detect(int &index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter){
+void detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -63,19 +63,18 @@ void detect(int &index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross,
 
     b_cross = true;//yes we have detection
     gSystem->Beep(440,1);
-    counter++;
 
-    new(cross[index])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill with hit
+    new(cross[counter])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill with hit
 
     if (b_cross&&b_multiscatter) {
       part.Rotate(L->GetRMS());//if multiscattering ON set new angles
     }
 
     if (b_verbose) {
-      printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,((Hit*)cross[index])->GetX(),((Hit*)cross[index])->GetY(),((Hit*)cross[index])->GetZ(),part.GetTheta(),part.GetPhi());
+      printf("Hit with %s at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",detector,((Hit*)cross[counter])->GetX(),((Hit*)cross[counter])->GetY(),((Hit*)cross[counter])->GetZ(),part.GetTheta(),part.GetPhi());
     }
 
-    index++;
+    counter++;
 
   }else{
     if(b_verbose){
@@ -101,7 +100,7 @@ void noise(bool b_verbose, int Noise, int Mult, TClonesArray cross, Layer* L, ch
 
 void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross){
 
-  double dphi=0;
+  double dphi=(gRandom->Gaus(0,sigmarf))/R;
   double dz=0;
 
   Hit *hit_buffer=(Hit*)cross.At(index);
@@ -111,34 +110,36 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
   double z=hit_buffer->GetZ();
 
   double phi=TMath::ACos(x/R);
-  double dphi=(gRandom->Gaus(0,sigmarf))/R;
+  dz=gRandom->Gaus(0,sigmaz);
   double zio=0;
   double theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
 
-  printf("[Entro in smeagol]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
+  //printf("[Entro in smeagol]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,phi);
 
   if (gRandom->Rndm()<0.5) {
     zio=phi+dphi;
-    x=TMath::Cos(zio);
-    y=TMath::Sin(zio);
-    dz=gRandom->Gaus(0,sigmaz);
+    x=R*TMath::Cos(zio);
+    y=R*TMath::Sin(zio);
     z+=dz;
     theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
   } else {
     zio=phi-dphi;
-    x=TMath::Cos(zio);
-    y=TMath::Sin(zio);
-    dz=gRandom->Gaus(0,sigmaz);
+    x=R*TMath::Cos(zio);
+    y=R*TMath::Sin(zio);
     z-=dz;
     theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
   }
 
-  printf("[soxio i conti]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,zio);
+  //printf("[dopo i conti]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,zio);
 
   hit_buffer->SetX(x);
   hit_buffer->SetY(y);
   hit_buffer->SetZ(z);
 
-  printf("[dopo i setter]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,zio);
+  //printf("[dopo i setter]\n\nGetter su buffer (%f %f %f)\n\nx, y, z (%f %f %f)\n\ntheta %f phi %f\n\n",hit_buffer->GetX(), hit_buffer->GetY(), hit_buffer->GetZ(),x,y,z,theta,zio);
 
+}
+
+double phigetta(double x, double R){
+  return TMath::ACos(x/R);
 }
