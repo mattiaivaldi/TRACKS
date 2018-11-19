@@ -29,73 +29,81 @@ bool war2=true;//declaring war
 
 using namespace TMath;
 
-void tracks_reco(bool PrintParticles) {
+void tracks_reco(bool PrintParticles){
 
   //PrintParticles activates verbose mode (0,1)
+
   printf("\n\n+++ START reconstruction +++\n\n");
 
-  TStopwatch timer;
-  timer.Start(true);//start cpu monitor
+  TStopwatch timer_reco;
+  timer_reco.Start(true);//start cpu monitor
 
   gRandom->SetSeed(0);
-
-  //verbosities
-  //verbosities(PrintParticles, multiscatman, paolonoise);
 
   TFile h_reco("gen.root","READ");
   TTree *tree_reco=(TTree*)h_reco.Get("TG");
 
   int kExp=tree_reco->GetEntries();
 
-  int mult_ev=0;
+  //int mult_ev=0;
   TClonesArray *cross_L1=new TClonesArray("Hit",kExp);
   TClonesArray *cross_L2=new TClonesArray("Hit",kExp);
 
   TClonesArray& hits_L1=*cross_L1;
   TClonesArray& hits_L2=*cross_L2;//TCA aliases to be smeagled
 
-  TBranch *bmult=tree_reco->GetBranch("LAMULTIANI");
+  //TBranch *bmult=tree_reco->GetBranch("LAMULTIANI");
   TBranch *b1=tree_reco->GetBranch("HITL1");
   TBranch *b2=tree_reco->GetBranch("HITL2");
 
-  bmult->SetAddress(&mult_ev);
+  //bmult->SetAddress(&mult_ev);
   b1->SetAddress(&cross_L1);
   b2->SetAddress(&cross_L2);
-
-  int mult;
 
   for(int i=0;i<tree_reco->GetEntries();i++){
 
     tree_reco->GetEvent(i);
-    int multi_ev=cross_L1->GetEntries();
+    int mult_ev1=cross_L1->GetEntries();
+    int mult_ev2=cross_L2->GetEntries();
 
-    printf("> EVENT %i - # of hits %i <\n\n",i+1,multi_ev);
+    printf("> EVENT %i <\n\n%i hits with L1 at\n\n",i+1,mult_ev1);
 
-    for(int j=0;j<multi_ev;j++){
+    for(int j=0;j<mult_ev1;j++){
 
       Hit *hit_buffer1=(Hit*)cross_L1->At(j);
-      //Hit *hit_buffer2=(Hit*)cross_L2->At(j);
 
-      printf("Hit with L1 prima at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
-
-      if(hit_buffer1->GetX() != 0){
-        smeagol(j,0.00120,0.0003,4,hits_L1);
+      if(PrintParticles){
+        printf("PRIMA (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
       }
 
-      printf("Fuori da smeagol dopo at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
+      ciccio(j,0.0012,0.0003,4,hits_L1);
 
-      //printf("Hit with L1 at (%f %f %f)\nHit with L2 at (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ(),hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
+      if(PrintParticles){
+        printf("DOPO  (%f %f %f)\n\n",hit_buffer1->GetX(),hit_buffer1->GetY(),hit_buffer1->GetZ());
+      }
 
     }
-    cout<<endl;
+
+    printf("%i hits with L2 at\n\n",mult_ev2);
+
+    for(int k=0;k<mult_ev2;k++){
+
+      Hit *hit_buffer2=(Hit*)cross_L2->At(k);
+
+      if(PrintParticles){
+        printf("(%f %f %f)\n\n",hit_buffer2->GetX(),hit_buffer2->GetY(),hit_buffer2->GetZ());
+      }
+
+    }
+
   }
 
   printf("+++ END reconstruction +++\n\n");
 
   //cpu info
-  timer.Stop();
-  double cpu_time = timer.CpuTime();
-  double real_time = timer.RealTime();
+  timer_reco.Stop();
+  double cpu_time = timer_reco.CpuTime();
+  double real_time = timer_reco.RealTime();
   double cpu_efficiency = (cpu_time/real_time)*100;
   printf("CPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,real_time, cpu_efficiency);
 

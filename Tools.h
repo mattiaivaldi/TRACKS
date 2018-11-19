@@ -18,6 +18,6 @@ void detect(int &index, Hit* vtx, Layer* L, Particle &part, TClonesArray &cross,
 
 void noise(bool b_verbose, int Noise, int Mult, TClonesArray cross, Layer* L, char const *detector);
 
-void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross);
+void ciccio(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross);
 
 #endif
