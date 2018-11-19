@@ -43,8 +43,6 @@ void tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
 
-  time_t my_time = time(NULL);
-
   gRandom->SetSeed(0);
   gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
@@ -83,7 +81,7 @@ void tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
     if(PrintParticles){
       printf("> EVENT %i <\n\n%i hits with L1\n\n%i hits with L2\n\n",i+1,mult_ev1, mult_ev2);
     }else if((i+1)%(kExp/10)==0){
-      printf("> EVENT %i < %s\n\n%i hits with L1\n\n%i hits with L2\n\n[running]\n\n",i+1,ctime(&my_time),mult_ev1, mult_ev2);
+      printf("> EVENT %i < %s\n\n%i hits with L1\n\n%i hits with L2\n\n[running]\n\n",i+1,mult_ev1, mult_ev2);
     }
 
     for(int j=0;j<mult_ev1;j++){
