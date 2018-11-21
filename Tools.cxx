@@ -54,7 +54,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
   return hit;
 }
 
-void detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter, TH1D** histo){
+bool detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, char const *detector, int &counter, TH1D** histo){
 
   double *hit_buffer;
   bool b_cross=false;
@@ -85,6 +85,8 @@ void detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verb
       printf("Does not hit %s\n\n",detector);
     }
   }
+
+  return b_cross;
 
 }
 

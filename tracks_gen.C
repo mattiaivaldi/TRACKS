@@ -43,7 +43,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
   timer.Start(true);//start cpu monitor
 
   gRandom->SetSeed(0);
-  gStyle->SetOptStat(0);
+  //gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
 
   //length, radius, thickness, multiscattering RMS
@@ -66,7 +66,15 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
   h_L2[2] = new TH1D("hL2_z","TRACKS generation - Z hit",100,-L2->GetWidth()/2,L2->GetWidth()/2);
 
   TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex",100,-BP->GetWidth()/2,BP->GetWidth()/2);
-  TH1I *h_mult=new TH1I("h_mult","TRACKS generation - event multiplicity",50,0,60);
+  h_vgen->GetXaxis()->SetTitle("z [cm]");
+  h_vgen->GetYaxis()->SetTitle("# [a.u.]");
+  TH1I *h_mult=new TH1I("h_mult","TRACKS generation - event multiplicity",60,0,60);
+  h_mult->GetXaxis()->SetTitle("multiplicity [a.u.]");
+  h_mult->GetYaxis()->SetTitle("# [a.u.]");
+
+  TH1D *h_Dphi=new TH1D("h_Dphi","TRACKS generation - #Delta #phi",10000,-2*Pi(),2*Pi());
+  TH1D *h_b=new TH1D("h_b","TRACKS generation - #phi",10000,-2*Pi(),2*Pi());
+  TH1D *h_a=new TH1D("h_b","TRACKS generation - #phi",10000,-2*Pi(),2*Pi());
 
   //verbosities
   verbosities(PrintParticles, multiscatman, paolonoise, kExp);
@@ -104,6 +112,8 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
   //start experiment
 
+  double phib=0,phia=0;
+
   for(int i=0; i<kExp; i++){
 
     //vertex mean, sigmaxy, sigmaz, kinematics file
@@ -115,6 +125,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
     //mult_ev2=mult+kNoise2;
 
     int counter_BP=0,counter_L1=0,counter_L2=0;
+    bool flag;
 
     if(PrintParticles){
       printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
@@ -133,9 +144,17 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
       }
 
       //if particle hits layer TCA is filled, otherwhise gets 0
-      detect(vgen, BP, *part, hits_BP, PrintParticles, multiscatman, "BP", counter_BP,h_BP);
-      detect(vgen, L1, *part, hits_L1, PrintParticles, multiscatman, "L1", counter_L1,h_L1);
-      detect(vgen, L2, *part, hits_L2, PrintParticles, multiscatman, "L2", counter_L2,h_L2);
+      flag=detect(vgen, BP, *part, hits_BP, PrintParticles, multiscatman, "BP", counter_BP,h_BP);
+      phib=part->GetPhi();
+      h_b->Fill(phib);
+      flag=detect(vgen, L1, *part, hits_L1, PrintParticles, multiscatman, "L1", counter_L1,h_L1);
+      phia=part->GetPhi();
+      h_a->Fill(phia);
+      if(flag){
+        printf("prima %f dopo %f\n",phib,phia);
+        h_Dphi->Fill(phia-phib);
+      }
+      flag=detect(vgen, L2, *part, hits_L2, PrintParticles, multiscatman, "L2", counter_L2,h_L2);
 
       delete part;
 
@@ -164,6 +183,14 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
 
   printf("+++ END generation +++\n\nSaving files...\n\nYou will find gen.root containing the detection info in the current directory.\n\n");
 
+  TCanvas *c_gen = new TCanvas("c_gen","c_gen",1200,400);
+  c_gen->Divide(2,1);
+  c_gen->cd(1);
+  h_vgen->Draw();
+  c_gen->cd(2);
+  h_mult->Draw();
+  c_gen->SaveAs("c_gen.eps");
+
   TCanvas *c_hit = new TCanvas("c_hit","c_hit",600,400);
   c_hit->Divide(2,2);
   for(int i=1;i<=3;i++){
@@ -189,13 +216,18 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, int kEx
   leg_hit->Draw();//create and plot legend
   c_hit->SaveAs("c_hit.eps");
 
-  TCanvas *c_gen = new TCanvas("c_gen","c_gen",1200,400);
-  c_gen->Divide(2,1);
-  c_gen->cd(1);
-  h_vgen->Draw();
-  c_gen->cd(2);
-  h_mult->Draw();
-  c_gen->SaveAs("c_gen.eps");
+  TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
+  c_dphi->cd();
+  h_Dphi->Draw();
+  c_dphi->SaveAs("c_dphi.eps");
+
+  TCanvas *c_phi = new TCanvas("c_phi","c_phi",600,400);
+  c_phi->Divide(2,1);
+  c_phi->cd(1);
+  h_b->Draw();
+  c_phi->cd(2);
+  h_a->Draw();
+  c_phi->SaveAs("c_phi.eps");
 
   h_gen.Write();
   h_gen.Close();

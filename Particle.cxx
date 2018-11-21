@@ -89,9 +89,7 @@ void Particle::Rotate(double rms){
     else {
       fPhi = ATan(rot[1]/rot[0])+Pi();
     }
-  }
-
-  else if (ATan(rot[1]/rot[0]) < 0) {
+  }else{
     if(double x = gRandom->Rndm() < 0.5){
       fPhi = ATan(rot[1]/rot[0]) + 2*Pi();
     }

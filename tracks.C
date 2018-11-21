@@ -14,6 +14,6 @@ void tracks(TString myopt="fast"){
     gSystem->CompileMacro("Tools.cxx",opt.Data());
     gSystem->CompileMacro("tracks_gen.C",opt.Data());
     gSystem->CompileMacro("tracks_reco.C",opt.Data());
-    gROOT->ProcessLine("tracks_gen(0,1,1,1000000)");
+    gROOT->ProcessLine("tracks_gen(0,1,1,100)");
     //gROOT->ProcessLine("tracks_reco(0,0.0012,0.0003)");
 }
