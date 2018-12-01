@@ -1,5 +1,3 @@
-//Macro used in order to compile all classes. You have to run this macro with .x before executing the main code
-
 void tracks(TString myopt="fast"){
     TString opt;
     if(myopt.Contains("force")){
