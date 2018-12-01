@@ -50,6 +50,8 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
 
+  TString dirplot=TString("/Users/mattiaivaldi/GitHub/TRACKS/")+"tracksplot/";
+
   gRandom->SetSeed(0);
   gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
@@ -100,8 +102,11 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
 
     if(PrintParticles){
       printf("> EVENT %i <\n\n%i hits with L1\n\n%i hits with L2\n\n",i+1,mult_ev1, mult_ev2);
-    }else if((i+1)%percent==0){
+    }else if(kExp>=100&&((i+1)%percent==0)){
       printf("\r[reconstruction running %3d%%]",100*(i+1)/kExp);
+      fflush(stdout);
+    }else if(kExp<100){
+      printf("\r[reconstruction running]");
       fflush(stdout);
     }
 
@@ -175,7 +180,7 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
   pt_reco->AddText(Form("#sigma = %f cm",h_zreco->GetStdDev(1)));
   h_zreco->Draw();
   pt_reco->Draw();
-  c_zreco->SaveAs("c_zreco.eps");
+  c_zreco->SaveAs(dirplot+"c_zreco.eps");
 
   TCanvas *c_reso=new TCanvas("c_reso","c_reso",600,400);
   c_reso->cd();
@@ -188,7 +193,7 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
   pt_reso->AddText(Form("%d events",kExp));
   pt_reso->AddText(Form("RMS = %f cm",h_reso->GetRMS()));
   pt_reso->Draw();
-  c_reso->SaveAs("c_reso.eps");
+  c_reso->SaveAs(dirplot+"c_reso.eps");
 
   //cpu info
   timer.Stop();

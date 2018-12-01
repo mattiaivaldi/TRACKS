@@ -98,9 +98,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   histostyler(*h_rap,2);
 
   THStack *s_hit_x = new THStack("s_hit_x","TRACKS generation - X hit;x [cm];# [a.u.]");
-  //stackstyler(*s_hit_x);
   THStack *s_hit_y = new THStack("s_hit_y","TRACKS generation - Y hit;y [cm];# [a.u.]");
-  //stackstyler(*s_hit_y);
 
   TH1D *h_BP[3], *h_L1[3], *h_L2[3];
 
@@ -261,6 +259,9 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
   c_dphi->cd();
   h_Dphi->SetLineColor(kBlue+1);
+  h_Dphi->GetXaxis()->SetTitleSize(0.04);
+  h_Dphi->GetYaxis()->SetTitleSize(0.035);
+  h_Dphi->GetXaxis()->SetTitleOffset(1.1);
   h_Dphi->Draw();
   TPaveText *pt_dphi = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
   pavestyler(*pt_dphi,0.03);
@@ -289,12 +290,12 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
       s_hit_x->Add(h_L1[i-1]);
       s_hit_x->Add(h_BP[i-1]);
       s_hit_x->Draw();
-      /*s_hit_x->GetXaxis()->SetLabelSize(0.045);
+      s_hit_x->GetXaxis()->SetLabelSize(0.045);
       s_hit_x->GetYaxis()->SetLabelSize(0.045);
       s_hit_x->GetXaxis()->SetTitleSize(0.05);
       s_hit_x->GetYaxis()->SetTitleSize(0.05);
       s_hit_x->GetXaxis()->SetTitleOffset(0.9);
-      s_hit_x->GetYaxis()->SetTitleOffset(0.7);*/
+      s_hit_x->GetYaxis()->SetTitleOffset(0.7);
       gPad->SetLogy();
     }
     else if(i==2){
