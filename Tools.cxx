@@ -7,7 +7,12 @@
 #include "TRandom3.h"
 #include "TClonesArray.h"
 #include "TSystem.h"
+#include "TROOT.h"
+#include "TStyle.h"
+#include "TCanvas.h"
+#include "TString.h"
 #include "TPaveText.h"
+#include "THStack.h"
 #include "Riostream.h"
 
 //using namespace TMath;
@@ -49,7 +54,7 @@ void graphstyler(TGraph &graph, int divide){
     graph.GetXaxis()->SetTitleOffset(1.15);
     graph.GetYaxis()->SetTitleOffset(1.3);
   }
-  if(divide==4||divide==3){
+  if(divide==4){
     graph.GetXaxis()->SetLabelSize(0.045);
     graph.GetYaxis()->SetLabelSize(0.045);
     graph.GetXaxis()->SetTitleSize(0.05);
@@ -86,6 +91,16 @@ void histostyler(TH1 &histo, int divide){
   }
 }
 
+void stackstyler(THStack &stack){
+
+    stack.GetXaxis()->SetLabelSize(0.045);
+    stack.GetYaxis()->SetLabelSize(0.045);
+    stack.GetXaxis()->SetTitleSize(0.05);
+    stack.GetYaxis()->SetTitleSize(0.05);
+    stack.GetXaxis()->SetTitleOffset(0.9);
+    stack.GetYaxis()->SetTitleOffset(0.7);
+}
+
 void pavestyler(TPaveText &pave, double textsize){
   pave.SetTextAlign(13);
   pave.SetFillStyle(0);
@@ -94,6 +109,48 @@ void pavestyler(TPaveText &pave, double textsize){
   pave.SetBorderSize(0);
   pave.SetMargin(0);
   pave.SetTextSize(textsize);
+}
+
+void MSaveBigPNG(TString filename, double scale) {
+    TCanvas* old_canv = gPad->GetCanvas();
+
+    gROOT->SetBatch(kTRUE);
+    gROOT->ForceStyle(kTRUE);
+
+    Int_t orig_msz = gStyle->GetMarkerSize();
+    Int_t orig_mst = gStyle->GetMarkerStyle();
+    Int_t orig_lt  = gStyle->GetLineWidth();
+
+    gStyle->SetMarkerSize(1.0+scale/5);
+    gStyle->SetMarkerStyle(20);
+    gStyle->SetLineWidth(orig_lt*scale);
+
+    if(filename == "zio") {
+        filename = old_canv->GetName();
+        filename += ".png";
+    }
+
+    Int_t old_width  = old_canv->GetWindowWidth();
+    Int_t old_height = old_canv->GetWindowHeight();
+
+    Int_t new_width = old_width * scale;
+    Int_t new_height= old_height* scale;
+
+    TCanvas* temp_canvas = new TCanvas("temp", "", new_width, new_height);
+    old_canv->DrawClonePad();
+
+    temp_canvas->Draw();
+    temp_canvas->SaveAs(filename);
+    temp_canvas->Close();
+
+    gStyle->SetMarkerSize(orig_msz);
+    gStyle->SetMarkerStyle(orig_mst);
+    gStyle->SetLineWidth(orig_lt);
+
+    gROOT->ForceStyle(kFALSE);
+    gROOT->SetBatch(kFALSE);
+
+    return;
 }
 
 double *hit_point(double x0, double y0, double z0, double theta, double phi, double R) {

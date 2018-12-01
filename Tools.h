@@ -9,8 +9,10 @@
 #include "Particle.h"
 #include "TClonesArray.h"
 #include "TPaveText.h"
+#include "THStack.h"
 #include "vector"
 #include "TGraph.h"
+#include "TString.h"
 
 void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp);
 
@@ -18,7 +20,11 @@ void graphstyler(TGraph &graph, int divide);
 
 void histostyler(TH1 &histo, int divide);
 
+void stackstyler(THStack &stack);
+
 void pavestyler(TPaveText &pave, double textsize);
+
+void MSaveBigPNG(TString filename, double scale);
 
 //x0, y0, z0 = generated vertex coordinates; theta, phi = generated angles; R = radius of the detector
 double *hit_point(double x0, double y0, double z0, double theta, double phi, double R);

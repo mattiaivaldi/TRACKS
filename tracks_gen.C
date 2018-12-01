@@ -26,6 +26,7 @@
 #include "TMath.h"
 #include "TF1.h"
 #include "TStopwatch.h"
+#include "TDirectory.h"
 #include "vector"
 #include "Tools.h"
 #include "Layer.h"
@@ -55,6 +56,8 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
 
+  TString dirplot=TString("/Users/mattiaivaldi/GitHub/TRACKS/")+"tracksplot/";
+
   gRandom->SetSeed(0);
   gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
@@ -69,28 +72,23 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
 
   int foo=0;
 
-  FILE *stream;
-  char o;
-  stream = fopen("detector_info.txt","r");
+  FILE *stream_data;
+  char isopen;
+  stream_data = fopen("detector_info.txt","r");
 
   while(1){
-    o = fgetc(stream);
-    if(o==EOF){break;}
+    isopen = fgetc(stream_data);
+    if(isopen==EOF){break;}
     else{
-      fscanf(stream,"%s %lf %lf %lf %lf\n",&buffer_name [0],&W_buffer,&R_buffer,&T_buffer,&RMS_buffer);
+      fscanf(stream_data,"%s %lf %lf %lf %lf\n",&buffer_name [0],&W_buffer,&R_buffer,&T_buffer,&RMS_buffer);
       layer_name=buffer_name;
       layer.push_back(new Layer(layer_name,W_buffer,R_buffer,T_buffer,RMS_buffer));
     }
   }
 
-  fclose (stream);
+  fclose (stream_data);
 
-  //length, radius, thickness, multiscattering RMS
-  Layer *BP = new Layer("BP",27.,3.,0.8,0.001);
-  Layer *L1 = new Layer("L1",27.,4.,0.2,0.001);
-  Layer *L2 = new Layer("L2",27.,7.,0.2,0.001);
-
-  double R_range=L2->GetRadius(),width=BP->GetWidth();
+  double R_range=layer[2]->GetRadius(),width=layer[0]->GetWidth();
 
   TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex;z [cm];# [a.u.]",100,-width/2,width/2);
   histostyler(*h_vgen,4);
@@ -100,7 +98,9 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   histostyler(*h_rap,2);
 
   THStack *s_hit_x = new THStack("s_hit_x","TRACKS generation - X hit;x [cm];# [a.u.]");
+  //stackstyler(*s_hit_x);
   THStack *s_hit_y = new THStack("s_hit_y","TRACKS generation - Y hit;y [cm];# [a.u.]");
+  //stackstyler(*s_hit_y);
 
   TH1D *h_BP[3], *h_L1[3], *h_L2[3];
 
@@ -113,9 +113,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   h_L1[2] = new TH1D("hL1_z","hL1_z",100,-width/2,width/2);
 
   h_L2[0] = new TH1D("hL2_x","hL2_x",100,-R_range,R_range);
-  histostyler(*h_L2[0],4);
   h_L2[1] = new TH1D("hL2_y","hL2_y",100,-R_range,R_range);
-  histostyler(*h_L2[1],4);
   h_L2[2] = new TH1D("hL2_z","TRACKS generation - Z hit;z [cm];# [a.u.]",100,-width/2,width/2);
   histostyler(*h_L2[2],4);
 
@@ -125,8 +123,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   verbosities(PrintParticles, multiscatman, paolonoise, kExp);
 
   TString distr="kinem.root";//get starting kinematics
-
-  TFile hfile(distr);//get starting kinematics
+  TFile hfile(distr);
   TH1F *pseudorap = (TH1F*)hfile.Get("heta");
   pseudorap->SetLineWidth(1);
   pseudorap->SetLineColor(kRed);
@@ -182,8 +179,11 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
 
     if(PrintParticles){
       printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
-    }else if((i+1)%percent==0){
+    }else if(kExp>=100&&((i+1)%percent==0)){
       printf("\r[generation running %3d%%]",100*(i+1)/kExp);
+      fflush(stdout);
+    }else if(kExp<100){
+      printf("\r[generation running]");
       fflush(stdout);
     }
 
@@ -209,8 +209,6 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
       if(flag&&flag1){h_Dphi->Fill(phia-phib);}
 
       delete part;
-
-      //printf("%f %f %f\n",phib,phia,phia-phib);
 
     }
 
@@ -258,9 +256,9 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   h_mult->Draw();
   multiplicity->DrawCopy("SAME");
   legk->Draw();
-  c_gen->SaveAs("c_gen.eps");
+  c_gen->SaveAs(dirplot+"c_gen.eps");
 
-  /*TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
+  TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
   c_dphi->cd();
   h_Dphi->SetLineColor(kBlue+1);
   h_Dphi->Draw();
@@ -271,7 +269,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   pt_dphi->AddText("1 bin = 1 mrad");
   pt_dphi->Draw();
   c_dphi->SetLogy();
-  c_dphi->SaveAs("c_dphi.eps");*/
+  c_dphi->SaveAs(dirplot+"c_dphi.eps");
 
   TCanvas *c_hit = new TCanvas("c_hit","c_hit",600,400);
   c_hit->Divide(2,2);
@@ -304,14 +302,12 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
       s_hit_y->Add(h_L1[i-1]);
       s_hit_y->Add(h_BP[i-1]);
       s_hit_y->Draw();
-      /*s_hit_y->GetXaxis()->SetTitle("y [cm]");
-      s_hit_y->GetYaxis()->SetTitle("# [a.u.]");
       s_hit_y->GetXaxis()->SetLabelSize(0.045);
       s_hit_y->GetYaxis()->SetLabelSize(0.045);
       s_hit_y->GetXaxis()->SetTitleSize(0.05);
       s_hit_y->GetYaxis()->SetTitleSize(0.05);
       s_hit_y->GetXaxis()->SetTitleOffset(0.9);
-      s_hit_y->GetYaxis()->SetTitleOffset(0.7);*/
+      s_hit_y->GetYaxis()->SetTitleOffset(0.7);
       gPad->SetLogy();
     }
     else{
@@ -379,7 +375,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   overlay->Draw();
   overlay->cd();
   Double_t xmin = pad->GetUxmin();
-  Double_t ymin = 0.5;
+  Double_t ymin = 0.25;
   Double_t xmax = pad->GetUxmax();
   Double_t ymax = pad->GetUymax();
   TH1F *hframe = overlay->DrawFrame(xmin,10,xmax,ymax);
@@ -387,7 +383,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   hframe->GetYaxis()->SetNdivisions(0);
 
   //TF1 *f3=new TF1("f3","log10(x)",1,2100);
-  TGaxis *axis = new TGaxis(xmax,ymin,xmax,5.8,1,2000,505,"G+L");
+  TGaxis *axis = new TGaxis(xmax,ymin,xmax,5.8,0.1,2000,505,"G+L");
   axis->SetLineColor(kGreen+2);
   axis->SetLabelColor(kGreen+2);
   axis->SetTitleColor(kGreen+2);
@@ -396,9 +392,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   axis->SetTitleSize(0.05);
   axis->Draw();
 
-  c_hit->SaveAs("c_hit.eps");
-
-  printf("\n\n%f\n\n",ymin);
+  c_hit->SaveAs(dirplot+"c_hit.eps");
 
   h_gen.Write();
   h_gen.Close();
