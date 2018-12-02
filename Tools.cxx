@@ -39,12 +39,9 @@ void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp){
 
 void graphstyler(TGraph &graph, int divide){
   if(divide==1){
-    graph.GetXaxis()->SetLabelSize(0.04);
-    graph.GetYaxis()->SetLabelSize(0.04);
     graph.GetXaxis()->SetTitleSize(0.04);
-    graph.GetYaxis()->SetTitleSize(0.04);
-    graph.GetXaxis()->SetTitleOffset(1.15);
-    graph.GetYaxis()->SetTitleOffset(1.3);
+    graph.GetYaxis()->SetTitleSize(0.035);
+    graph.GetXaxis()->SetTitleOffset(1.1);
   }
   if(divide==2){
     graph.GetXaxis()->SetLabelSize(0.04);
@@ -66,12 +63,9 @@ void graphstyler(TGraph &graph, int divide){
 
 void histostyler(TH1 &histo, int divide){
   if(divide==1){
-    histo.GetXaxis()->SetLabelSize(0.04);
-    histo.GetYaxis()->SetLabelSize(0.04);
     histo.GetXaxis()->SetTitleSize(0.04);
-    histo.GetYaxis()->SetTitleSize(0.04);
-    histo.GetXaxis()->SetTitleOffset(1.15);
-    histo.GetYaxis()->SetTitleOffset(1.3);
+    histo.GetYaxis()->SetTitleSize(0.035);
+    histo.GetXaxis()->SetTitleOffset(1.1);
   }
   if(divide==2){
     histo.GetXaxis()->SetLabelSize(0.04);

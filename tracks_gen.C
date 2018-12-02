@@ -116,6 +116,7 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   histostyler(*h_L2[2],4);
 
   TH1D *h_Dphi=new TH1D("h_Dphi","TRACKS generation - #Delta#phi;#Delta#phi [rad];# [a.u.]",20,-0.015,0.015);
+  histostyler(*h_Dphi,1);
 
   //verbosities
   verbosities(PrintParticles, multiscatman, paolonoise, kExp);
@@ -259,9 +260,9 @@ void tracks_gen(bool PrintParticles, bool multiscatman, bool paolonoise, bool cu
   TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
   c_dphi->cd();
   h_Dphi->SetLineColor(kBlue+1);
-  h_Dphi->GetXaxis()->SetTitleSize(0.04);
+  /*h_Dphi->GetXaxis()->SetTitleSize(0.04);
   h_Dphi->GetYaxis()->SetTitleSize(0.035);
-  h_Dphi->GetXaxis()->SetTitleOffset(1.1);
+  h_Dphi->GetXaxis()->SetTitleOffset(1.1);*/
   h_Dphi->Draw();
   TPaveText *pt_dphi = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
   pavestyler(*pt_dphi,0.03);

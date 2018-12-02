@@ -14,6 +14,8 @@
 #include "TFile.h"
 #include "TH1D.h"
 #include "TH1F.h"
+#include "TMultiGraph.h"
+#include "TLegend.h"
 #include "TTree.h"
 #include "TBranch.h"
 #include "TClonesArray.h"
@@ -56,18 +58,14 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
   gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
 
-  TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex",100,-13.5,13.5);
-  h_zreco->GetXaxis()->SetTitle("Z_{V} [cm]");
-  h_zreco->GetYaxis()->SetTitle("# [a.u.]");
-  h_zreco->GetXaxis()->SetTitleOffset(1.1);
-  h_zreco->GetYaxis()->SetTitleOffset(0.8);
-  h_zreco->GetXaxis()->SetTitleSize(0.04);
-  h_zreco->GetYaxis()->SetTitleSize(0.04);
+  TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex;z_{V} [cm];# [a.u.]",100,-13.5,13.5);
+  histostyler(*h_zreco,2);
 
   TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",270,-13.45,13.55);
   TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.49995,13.50005);
 
-  TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution",200,-0.0995,0.1005);
+  TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",200,-0.0995,0.1005);
+  histostyler(*h_reso,2);
 
   TFile h_gen("gen.root","READ");
   TTree *tree_gen=(TTree*)h_gen.Get("TG");
@@ -140,14 +138,13 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
       }
     }
 
-    /*new TCanvas();
-    h_ROI->Draw();
-    new TCanvas();
-    h_tracklet->Draw();*/
-
     total_reco+=(double)goodz;
 
     if(goodz!=0){
+      /*new TCanvas();
+      h_ROI->Draw("histo");
+      new TCanvas();
+      h_tracklet->Draw("histo");*/
       center_ROI = h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//mm
       left_ROI=h_tracklet->FindBin(center_ROI-(delta/2));
       right_ROI=h_tracklet->FindBin(center_ROI+(delta/2));
@@ -171,29 +168,54 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
 
   printf("\n\n+++ END reconstruction +++\n\nSaving files...\n\n");
 
-  TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",600,400);
-  c_zreco->cd();
+  TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",1200,400);
+  c_zreco->Divide(2,1);
+  c_zreco->cd(1);
+  h_zreco->Draw();
   TPaveText *pt_reco = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
   pavestyler(*pt_reco,0.03);
   pt_reco->AddText(Form("%d events",kExp));
   pt_reco->AddText(Form("#mu = %f cm",h_zreco->GetMean(1)));
   pt_reco->AddText(Form("#sigma = %f cm",h_zreco->GetStdDev(1)));
-  h_zreco->Draw();
   pt_reco->Draw();
-  c_zreco->SaveAs(dirplot+"c_zreco.eps");
-
-  TCanvas *c_reso=new TCanvas("c_reso","c_reso",600,400);
-  c_reso->cd();
-  h_reso->GetXaxis()->SetTitle("z_{gen} - z_{reco} [cm]");
-  h_reso->GetYaxis()->SetTitle("# [a.u.]");
-  h_reso->SetLineColor(kBlue+1);
+  c_zreco->cd(2);
   h_reso->Draw();
   TPaveText *pt_reso = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
   pavestyler(*pt_reso,0.03);
   pt_reso->AddText(Form("%d events",kExp));
   pt_reso->AddText(Form("RMS = %f cm",h_reso->GetRMS()));
   pt_reso->Draw();
-  c_reso->SaveAs(dirplot+"c_reso.eps");
+  c_zreco->SaveAs(dirplot+"c_zreco.eps");
+
+  TCanvas *c_reco_perform=new TCanvas("c_reco_perform","c_reco_perform",600,400);
+  c_reco_perform->cd();
+  c_reco_perform->SetLogx();
+  c_reco_perform->SetLogy();
+  double exp[10]={100,500,1000,5000,10000,50000,100000,500000,1000000,5000000};
+  double cput[10]={0.25,0.33,0.37,0.88,1.6,6.01,14,64,124,680};
+  double runt[10]={0.26,0.35,0.39,0.92,1.65,6.08,14.1,66,125,694};
+
+  TGraph *p_cpu=new TGraph(10,exp,cput);
+  p_cpu->SetLineColor(kBlue);
+  p_cpu->SetLineWidth(2);
+  TGraph *p_run=new TGraph(10,exp,runt);
+  p_run->SetLineColor(kRed);
+  p_run->SetLineWidth(2);
+
+  TMultiGraph *p_time=new TMultiGraph();
+  p_time->Add(p_cpu);
+  p_time->Add(p_run);
+  p_time->Draw("AL");
+  p_time->SetTitle("TRACKS reconstruction - performances;# collisions;t [s]");
+  p_time->GetXaxis()->SetTitleSize(0.04);
+  p_time->GetYaxis()->SetTitleSize(0.035);
+  p_time->GetXaxis()->SetTitleOffset(1.1);
+
+  auto legt = new TLegend(0.15,0.65,0.3,0.85);
+  legt->SetHeader("#varepsilon_{CPU} > 93%","");
+  legt->AddEntry(p_cpu,"CPU time","l");
+  legt->AddEntry(p_run,"RUN time","l");
+  legt->Draw();
 
   //cpu info
   timer.Stop();
