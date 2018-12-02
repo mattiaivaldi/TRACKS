@@ -219,7 +219,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     legt->AddEntry(p_run,"RUN time","l");
     legt->Draw();
 
-    c_zreco->SaveAs(dirplot+"c_reco_perform.eps");
+    c_reco_perform->SaveAs(dirplot+"c_reco_perform.eps");
 
   }
 
