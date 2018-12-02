@@ -1,0 +1,6 @@
+/gen.root
+
+*.d
+*.so
+*.pcm
+*.key
