@@ -45,7 +45,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
   reco_perform perform;
 
-  //PrintParticles activates verbose mode (0,1)
+  //printparticles activates verbose mode (0,1)
+  //printplot plot print (0,1)
 
   printf("\n\n+++ START reconstruction +++\n\n");
 

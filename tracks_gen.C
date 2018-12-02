@@ -45,10 +45,11 @@ using namespace TMath;
 
 void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool paolonoise, int custom, int kExp, double z_custom, int mult_custom) {
 
-  //PrintParticles activates verbose mode (0,1)
+  //printparticles activates verbose mode (0,1)
+  //printplot plot print (0,1)
   //multiscatman activates multiple scattering (0,1)
   //paolonoise activates the noise (0,1)
-  //custom activates custom vertex z and multiplicity (0,1)
+  //custom activates custom vertex z and/or multiplicity (10,5,15)
   //kExp is the number of collisions you want to perform
   //z_custom is the imposed vertex z
   //mult_custom is the imposed vertex multiplicity
