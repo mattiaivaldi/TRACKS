@@ -41,7 +41,7 @@ bool war2=true;//declaring war
 
 using namespace TMath;
 
-reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
+reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, double smear_phi){
 
   reco_perform perform;
 
@@ -98,7 +98,7 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
 
     z_gen->GetEvent(i);
 
-    if(PrintParticles){
+    if(printparticles){
       printf("> EVENT %i <\n\n%i hits with L1\n\n%i hits with L2\n\n",i+1,mult_ev1, mult_ev2);
     }else if(kExp>=100&&((i+1)%percent==0)){
       printf("\r[reconstruction running %3d%%]",100*(i+1)/kExp);
@@ -138,9 +138,8 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
       }
     }
 
-    total_reco+=(double)goodz;
-
     if(goodz!=0){
+      total_reco++;
       /*new TCanvas();
       h_ROI->Draw("histo");
       new TCanvas();
@@ -168,54 +167,58 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
 
   printf("\n\n+++ END reconstruction +++\n\nSaving files...\n\n");
 
-  TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",1200,400);
-  c_zreco->Divide(2,1);
-  c_zreco->cd(1);
-  h_zreco->Draw();
-  TPaveText *pt_reco = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
-  pavestyler(*pt_reco,0.03);
-  pt_reco->AddText(Form("%d events",kExp));
-  pt_reco->AddText(Form("#mu = %f cm",h_zreco->GetMean(1)));
-  pt_reco->AddText(Form("#sigma = %f cm",h_zreco->GetStdDev(1)));
-  pt_reco->Draw();
-  c_zreco->cd(2);
-  h_reso->Draw();
-  TPaveText *pt_reso = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
-  pavestyler(*pt_reso,0.03);
-  pt_reso->AddText(Form("%d events",kExp));
-  pt_reso->AddText(Form("RMS = %f cm",h_reso->GetRMS()));
-  pt_reso->Draw();
-  c_zreco->SaveAs(dirplot+"c_zreco.eps");
+  if(printplot){
 
-  TCanvas *c_reco_perform=new TCanvas("c_reco_perform","c_reco_perform",600,400);
-  c_reco_perform->cd();
-  c_reco_perform->SetLogx();
-  c_reco_perform->SetLogy();
-  double exp[10]={100,500,1000,5000,10000,50000,100000,500000,1000000,5000000};
-  double cput[10]={0.25,0.33,0.37,0.88,1.6,6.01,14,64,124,680};
-  double runt[10]={0.26,0.35,0.39,0.92,1.65,6.08,14.1,66,125,694};
+    TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",1200,400);
+    c_zreco->Divide(2,1);
+    c_zreco->cd(1);
+    h_zreco->Draw();
+    TPaveText *pt_reco = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
+    pavestyler(*pt_reco,0.03);
+    pt_reco->AddText(Form("%d events",kExp));
+    pt_reco->AddText(Form("#mu = %f cm",h_zreco->GetMean(1)));
+    pt_reco->AddText(Form("#sigma = %f cm",h_zreco->GetStdDev(1)));
+    pt_reco->Draw();
+    c_zreco->cd(2);
+    h_reso->Draw();
+    TPaveText *pt_reso = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
+    pavestyler(*pt_reso,0.03);
+    pt_reso->AddText(Form("%d events",kExp));
+    pt_reso->AddText(Form("RMS = %f cm",h_reso->GetRMS()));
+    pt_reso->Draw();
+    c_zreco->SaveAs(dirplot+"c_zreco.eps");
 
-  TGraph *p_cpu=new TGraph(10,exp,cput);
-  p_cpu->SetLineColor(kBlue);
-  p_cpu->SetLineWidth(2);
-  TGraph *p_run=new TGraph(10,exp,runt);
-  p_run->SetLineColor(kRed);
-  p_run->SetLineWidth(2);
+    TCanvas *c_reco_perform=new TCanvas("c_reco_perform","c_reco_perform",600,400);
+    c_reco_perform->cd();
+    c_reco_perform->SetLogx();
+    c_reco_perform->SetLogy();
+    double exp[10]={100,500,1000,5000,10000,50000,100000,500000,1000000,5000000};
+    double cput[10]={0.25,0.33,0.37,0.88,1.6,6.01,14,64,124,680};
+    double runt[10]={0.26,0.35,0.39,0.92,1.65,6.08,14.1,66,125,694};
 
-  TMultiGraph *p_time=new TMultiGraph();
-  p_time->Add(p_cpu);
-  p_time->Add(p_run);
-  p_time->Draw("AL");
-  p_time->SetTitle("TRACKS reconstruction - performances;# collisions;t [s]");
-  p_time->GetXaxis()->SetTitleSize(0.04);
-  p_time->GetYaxis()->SetTitleSize(0.035);
-  p_time->GetXaxis()->SetTitleOffset(1.1);
+    TGraph *p_cpu=new TGraph(10,exp,cput);
+    p_cpu->SetLineColor(kBlue);
+    p_cpu->SetLineWidth(2);
+    TGraph *p_run=new TGraph(10,exp,runt);
+    p_run->SetLineColor(kRed);
+    p_run->SetLineWidth(2);
 
-  auto legt = new TLegend(0.15,0.65,0.3,0.85);
-  legt->SetHeader("#varepsilon_{CPU} > 93%","");
-  legt->AddEntry(p_cpu,"CPU time","l");
-  legt->AddEntry(p_run,"RUN time","l");
-  legt->Draw();
+    TMultiGraph *p_time=new TMultiGraph();
+    p_time->Add(p_cpu);
+    p_time->Add(p_run);
+    p_time->Draw("AL");
+    p_time->SetTitle("TRACKS reconstruction - performances;# collisions;t [s]");
+    p_time->GetXaxis()->SetTitleSize(0.04);
+    p_time->GetYaxis()->SetTitleSize(0.035);
+    p_time->GetXaxis()->SetTitleOffset(1.1);
+
+    auto legt = new TLegend(0.15,0.65,0.3,0.85);
+    legt->SetHeader("#varepsilon_{CPU} > 93%","");
+    legt->AddEntry(p_cpu,"CPU time","l");
+    legt->AddEntry(p_run,"RUN time","l");
+    legt->Draw();
+
+  }
 
   //cpu info
   timer.Stop();
@@ -226,11 +229,11 @@ reco_perform tracks_reco(bool PrintParticles, double smear_z, double smear_phi){
   perform.cputime=cpu_time;
   perform.runtime=run_time;
   perform.reso=h_reso->GetRMS();
-  perform.eff=(double)kExp/total_reco;
+  perform.eff=(double)total_reco/(double)kExp;
 
   h_gen.Close();
 
-  printf("CPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,run_time, cpu_efficiency);
+  printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,run_time, cpu_efficiency);
 
   return perform;
 
