@@ -93,6 +93,10 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
 
   TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex;z [cm];# [a.u.]",100,-width/2,width/2);
   histostyler(*h_vgen,4);
+  TH1D *h_theta=new TH1D("h_theta","TRACKS generation - #theta;#theta [rad];# [a.u.]",100,0,Pi());
+  histostyler(*h_theta,4);
+  TH1D *h_phi=new TH1D("h_phi","TRACKS generation - #varphi;#varphi [rad];# [a.u.]",100,0,2*Pi());
+  histostyler(*h_phi,4);
   TH1I *h_mult=new TH1I("h_mult","TRACKS generation - event multiplicity;multiplicity [a.u.];# [a.u.]",60,-0.5,59.5);
   histostyler(*h_mult,2);
   TH1I *h_rap=new TH1I("h_rap","TRACKS generation - pseudorapidity;#eta;# [a.u.]",100,-6,6);
@@ -116,7 +120,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
   h_L2[2] = new TH1D("hL2_z","TRACKS generation - Z hit;z [cm];# [a.u.]",100,-width/2,width/2);
   histostyler(*h_L2[2],4);
 
-  TH1D *h_Dphi=new TH1D("h_Dphi","TRACKS generation - #Delta#phi;#Delta#phi [rad];# [a.u.]",20,-0.015,0.015);
+  TH1D *h_Dphi=new TH1D("h_Dphi","TRACKS generation - #Delta#varphi;#Delta#varphi [rad];# [a.u.]",20,-0.015,0.015);
   histostyler(*h_Dphi,1);
 
   //verbosities
@@ -201,8 +205,9 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
     for (int j=0; j<mult; j++) {
 
       Particle *part = new Particle(pseudorap);
-
       h_rap->Fill(part->GetRap());
+      h_theta->Fill(part->GetTheta());
+      h_phi->Fill(part->GetPhi());
 
       if (printparticles) {
         printf(">>> Particle %i: theta %f - phi %f <<<\n\n",j+1,part->GetTheta(),part->GetPhi());
@@ -248,25 +253,46 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
 
   if(printplot){
 
-    TCanvas *c_gen = new TCanvas("c_gen","c_gen",1200,400);
-    c_gen->Divide(2,1);
-    c_gen->cd(1);
-    //h_vgen->SetLineColor(kBlue+1);
-    //h_vgen->Draw();
+    TCanvas *c_kinem = new TCanvas("c_kinem","c_kinem",1200,400);
+    c_kinem->Divide(2,1);
+    c_kinem->cd(1);
     h_rap->SetLineColor(kBlue+1);
-    h_rap->Draw("histo");
+    h_rap->Draw();
     pseudorap->DrawCopy("SAME");
     auto legk = new TLegend(0.73,0.7,0.94,0.86);
     legk->SetHeader("10^{5} events","");
     legk->AddEntry(pseudorap,"theo","l");
     legk->AddEntry(h_rap,"extracted","l");
     legk->Draw();
-    c_gen->cd(2);
+    c_kinem->cd(2);
     gPad->SetLogy();
     h_mult->SetLineColor(kBlue+1);
     h_mult->Draw();
     multiplicity->DrawCopy("SAME");
     legk->Draw();
+    c_kinem->SaveAs(dirplot+"c_kinem.eps");
+
+    TCanvas *c_gen = new TCanvas("c_gen","c_gen",600,400);
+    c_gen->Divide(2,2);
+    c_gen->cd(1);
+    h_vgen->SetLineColor(kBlue+1);
+    h_vgen->Draw();
+    TPaveText *pt_gen = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
+    pavestyler(*pt_gen,0.03);
+    pt_gen->AddText(Form("%d events",kExp));
+    pt_gen->AddText(Form("#mu = %f cm",h_vgen->GetMean(1)));
+    pt_gen->AddText(Form("#sigma = %f cm",h_vgen->GetStdDev(1)));
+    pt_gen->Draw();
+    h_vgen->GetYaxis()->SetNdivisions(506);
+    c_gen->cd(3);
+    gPad->SetLogy();
+    h_theta->SetLineColor(kBlue+1);
+    h_theta->Draw();
+    c_gen->cd(4);
+    h_phi->SetLineColor(kBlue+1);
+    h_phi->Draw();
+    h_phi->SetAxisRange(h_phi->GetBinContent(h_phi->GetMaximumBin())+5000, h_phi->GetBinContent(h_phi->GetMaximumBin())-5000,"Y");
+    h_phi->GetYaxis()->SetNdivisions(506);
     c_gen->SaveAs(dirplot+"c_gen.eps");
 
     TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
@@ -276,7 +302,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
     TPaveText *pt_dphi = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
     pavestyler(*pt_dphi,0.03);
     pt_dphi->AddText(Form("%d events",kExp));
-    pt_dphi->AddText(Form("#Delta#phi_{max} = %f rad",Dphi_MAX));
+    pt_dphi->AddText(Form("#Delta#varphi_{max} = %f rad",Dphi_MAX));
     pt_dphi->AddText("1 bin = 1 mrad");
     pt_dphi->Draw();
     c_dphi->SetLogy();

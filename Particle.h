@@ -9,12 +9,12 @@
 class Particle : public TObject {
 
 public:
-
+	
 	Particle(); //default constructor
 	Particle(TH1F *distr_rap); //custom constructors
 	virtual ~Particle(); //destructor
 
-//member functions
+	//member functions
 
 	double GetTheta() const; //getters
 	double GetPhi() const;
@@ -23,9 +23,9 @@ public:
 
 private:
 
-//data members
+	//data members
 
-    float fRap; //pseudorapidity
+	float fRap; //pseudorapidity
 	double fTheta; //theta
 	double fPhi; //phi
 
