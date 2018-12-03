@@ -17,12 +17,10 @@ void spit_perform(){
   GetCurrentDir(cwd,FILENAME_MAX);
   TString dirplot=TString(cwd)+"/tracksplot/";
 
-  //TString dirplot=TString("/Users/mattiaivaldi/GitHub/TRACKS/")+"tracksplot/";
-
   const int kTest=11;
 
   double z_custom[kTest]={-13.,-10.,-7.,-4.,-2.,0.,2.,4.,7.,10.,13.};
-  double mult_custom[kTest]={2,5,10,15,20,25,30,35,40,45,50};
+  double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
   double resoz[kTest], resom[kTest], effm[kTest];
 
   TString z, m, exec;
@@ -35,6 +33,7 @@ void spit_perform(){
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resoz[i]=perform.reso;
+    gROOT->Reset();
   }
 
   printf("+++ START efficiency performances +++\n\n");
@@ -46,6 +45,7 @@ void spit_perform(){
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resom[i]=perform.reso;
     effm[i]=perform.eff;
+    gROOT->Reset();
   }
 
   TCanvas *c_perform=new TCanvas("c_perform","c_perform",600,400);
@@ -54,7 +54,7 @@ void spit_perform(){
   TGraph *p_resoz=new TGraph(kTest,z_custom,resoz);
   p_resoz->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
   graphstyler(*p_resoz,4);
-  p_resoz->GetYaxis()->SetTitleOffset(1.2);
+  p_resoz->GetYaxis()->SetTitleOffset(1.1);
   p_resoz->SetMarkerStyle(20);
   p_resoz->SetMarkerSize(0.4);
   p_resoz->SetMarkerColor(1);
@@ -63,7 +63,7 @@ void spit_perform(){
   TGraph *p_resom=new TGraph(kTest,mult_custom,resom);
   p_resom->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
   graphstyler(*p_resom,4);
-  p_resom->GetYaxis()->SetTitleOffset(1.2);
+  p_resom->GetYaxis()->SetTitleOffset(1.1);
   p_resom->SetMarkerStyle(20);
   p_resom->SetMarkerSize(0.4);
   p_resom->SetMarkerColor(1);
@@ -79,6 +79,10 @@ void spit_perform(){
   p_effm->SetMarkerColor(1);
   p_effm->Draw("AP");
   c_perform->SaveAs(dirplot+"c_perform.eps");
+
+  delete p_resoz;
+  delete p_resom;
+  delete p_effm;
 
   //cpu info
   timer.Stop();

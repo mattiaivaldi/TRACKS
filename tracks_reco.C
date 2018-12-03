@@ -75,8 +75,10 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",270,-13.45,13.55);
   TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.49995,13.50005);
 
-  TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",200,-0.0995,0.1005);
+  TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",200,-40,40);
   histostyler(*h_reso,2);
+
+  //0.0995,0.1005
 
   TFile h_gen("gen.root","READ");
   TTree *tree_gen=(TTree*)h_gen.Get("TG");
@@ -151,10 +153,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
     if(goodz!=0){
       total_reco++;
-      /*new TCanvas();
-      h_ROI->Draw("histo");
-      new TCanvas();
-      h_tracklet->Draw("histo");*/
+      h_tracklet->DrawCopy();
       center_ROI = h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//mm
       left_ROI=h_tracklet->FindBin(center_ROI-(delta/2));
       right_ROI=h_tracklet->FindBin(center_ROI+(delta/2));
@@ -183,7 +182,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",1200,400);
     c_zreco->Divide(2,1);
     c_zreco->cd(1);
-    h_zreco->Draw();
+    h_zreco->DrawCopy();
     TPaveText *pt_reco = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
     pavestyler(*pt_reco,0.03);
     pt_reco->AddText(Form("%d events",kExp));
@@ -191,7 +190,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     pt_reco->AddText(Form("#sigma = %f cm",h_zreco->GetStdDev(1)));
     pt_reco->Draw();
     c_zreco->cd(2);
-    h_reso->Draw();
+    h_reso->DrawCopy();
     TPaveText *pt_reso = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
     pavestyler(*pt_reso,0.03);
     pt_reso->AddText(Form("%d events",kExp));
@@ -245,6 +244,11 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   perform.eff=(double)total_reco/(double)kExp;
 
   h_gen.Close();
+
+  delete h_zreco;
+  delete h_ROI;
+  delete h_tracklet;
+  delete h_reso;
 
   printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,run_time, cpu_efficiency);
 

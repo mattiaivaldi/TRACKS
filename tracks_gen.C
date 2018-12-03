@@ -99,14 +99,18 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
 
   double R_range=layer[2]->GetRadius(),width=layer[0]->GetWidth();
 
-  TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex;z [cm];# [a.u.]",100,-width/2,width/2);
+  TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex;z [cm];# [a.u.]",100,-40,40);
   histostyler(*h_vgen,4);
+
   TH1D *h_theta=new TH1D("h_theta","TRACKS generation - #theta;#theta [rad];# [a.u.]",100,0,Pi());
   histostyler(*h_theta,4);
+
   TH1D *h_phi=new TH1D("h_phi","TRACKS generation - #varphi;#varphi [rad];# [a.u.]",100,0,2*Pi());
   histostyler(*h_phi,4);
+
   TH1I *h_mult=new TH1I("h_mult","TRACKS generation - event multiplicity;multiplicity [a.u.];# [a.u.]",60,-0.5,59.5);
   histostyler(*h_mult,2);
+
   TH1I *h_rap=new TH1I("h_rap","TRACKS generation - pseudorapidity;#eta;# [a.u.]",100,-6,6);
   histostyler(*h_rap,2);
 
@@ -261,7 +265,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
     c_kinem->Divide(2,1);
     c_kinem->cd(1);
     h_rap->SetLineColor(kBlue+1);
-    h_rap->Draw();
+    h_rap->DrawCopy();
     pseudorap->DrawCopy("SAME");
     auto legk = new TLegend(0.73,0.7,0.94,0.86);
     legk->SetHeader("10^{5} events","");
@@ -271,7 +275,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
     c_kinem->cd(2);
     gPad->SetLogy();
     h_mult->SetLineColor(kBlue+1);
-    h_mult->Draw();
+    h_mult->DrawCopy();
     multiplicity->DrawCopy("SAME");
     legk->Draw();
     c_kinem->SaveAs(dirplot+"c_kinem.eps");
@@ -280,7 +284,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
     c_gen->Divide(2,2);
     c_gen->cd(1);
     h_vgen->SetLineColor(kBlue+1);
-    h_vgen->Draw();
+    h_vgen->DrawCopy();
     TPaveText *pt_gen = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
     pavestyler(*pt_gen,0.03);
     pt_gen->AddText(Form("%d events",kExp));
@@ -291,18 +295,18 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
     c_gen->cd(3);
     gPad->SetLogy();
     h_theta->SetLineColor(kBlue+1);
-    h_theta->Draw();
+    h_theta->DrawCopy();
     c_gen->cd(4);
     h_phi->SetLineColor(kBlue+1);
-    h_phi->Draw();
     h_phi->SetAxisRange(h_phi->GetBinContent(h_phi->GetMaximumBin())+5000, h_phi->GetBinContent(h_phi->GetMaximumBin())-5000,"Y");
     h_phi->GetYaxis()->SetNdivisions(506);
+    h_phi->DrawCopy();
     c_gen->SaveAs(dirplot+"c_gen.eps");
 
     TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
     c_dphi->cd();
     h_Dphi->SetLineColor(kBlue+1);
-    h_Dphi->Draw();
+    h_Dphi->DrawCopy();
     TPaveText *pt_dphi = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
     pavestyler(*pt_dphi,0.03);
     pt_dphi->AddText(Form("%d events",kExp));
@@ -352,10 +356,10 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
         gPad->SetLogy();
       }
       else{
-        h_L2[i-1]->Draw();
-        h_L1[i-1]->Draw("SAME");
-        h_BP[i-1]->Draw("SAME");
         h_L2[i-1]->SetMaximum(h_BP[i-1]->GetMaximum()+5000);
+        h_L2[i-1]->DrawCopy();
+        h_L1[i-1]->DrawCopy("SAME");
+        h_BP[i-1]->DrawCopy("SAME");
         auto leg_hit = new TLegend(0.15,0.6,0.4,0.85);
         leg_hit->SetHeader(Form("%d events",kExp),"");
         leg_hit->AddEntry(h_BP[0],"BP","l");
@@ -436,6 +440,22 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
 
   h_gen.Write();
   h_gen.Close();
+
+  delete h_vgen;
+  delete h_theta;
+  delete h_phi;
+  delete h_mult;
+  delete h_rap;
+  delete h_Dphi;
+  delete pseudorap;
+  delete multiplicity;
+  delete s_hit_x;
+  delete s_hit_y;
+  for(int i=0;i<3;i++){
+    delete h_BP[i];
+    delete h_L1[i];
+    delete h_L2[i];
+  }
 
   //cpu info
   timer.Stop();
