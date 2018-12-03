@@ -30,6 +30,14 @@
 #include "Hit.h"
 #include "Particle.h"
 
+#ifdef WINDOWS
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
 struct reco_perform{
   double cputime;
   double runtime;
@@ -53,7 +61,9 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
 
-  TString dirplot=TString("/Users/mattiaivaldi/GitHub/TRACKS/")+"tracksplot/";
+  char cwd[FILENAME_MAX];
+  GetCurrentDir(cwd,FILENAME_MAX);
+  TString dirplot=TString(cwd)+"/tracksplot/";
 
   gRandom->SetSeed(0);
   gStyle->SetOptStat(0);

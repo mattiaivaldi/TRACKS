@@ -37,6 +37,14 @@
 #include<string>
 #include<stdio.h>
 
+#ifdef WINDOWS
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
 #define  MAX_LEN 30
 
 bool war1=true;//declaring war
@@ -57,7 +65,9 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
 
-  TString dirplot=TString("/Users/mattiaivaldi/GitHub/TRACKS/")+"tracksplot/";
+  char cwd[FILENAME_MAX];
+  GetCurrentDir(cwd,FILENAME_MAX);
+  TString dirplot=TString(cwd)+"/tracksplot/";
 
   gRandom->SetSeed(0);
   gStyle->SetOptStat(0);
@@ -70,8 +80,6 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
   double W_buffer=0,R_buffer=0,T_buffer=0,RMS_buffer=0;
   TString layer_name;
   vector<Layer*> layer;
-
-  int foo=0;
 
   FILE *stream_data;
   char isopen;
@@ -177,10 +185,6 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
       vgen->SetZ(z_custom);
       vgen->SetMult(mult_custom);
     }
-
-    /*if(custom){
-      vgen=new Hit(0, 0.001, z_custom, mult_custom);
-    }else{vgen=new Hit(0, 0.001, 5.3, multiplicity);}*/
 
     int mult = vgen->GetMult();
     z_gen->Fill((float)vgen->GetZ());
