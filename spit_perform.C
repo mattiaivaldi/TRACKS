@@ -54,7 +54,7 @@ void spit_perform(){
   TGraph *p_resoz=new TGraph(kTest,z_custom,resoz);
   p_resoz->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
   graphstyler(*p_resoz,4);
-  p_resoz->GetYaxis()->SetTitleOffset(1.1);
+  p_resoz->GetYaxis()->SetTitleOffset(1.2);
   p_resoz->SetMarkerStyle(20);
   p_resoz->SetMarkerSize(0.4);
   p_resoz->SetMarkerColor(1);
@@ -63,7 +63,7 @@ void spit_perform(){
   TGraph *p_resom=new TGraph(kTest,mult_custom,resom);
   p_resom->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
   graphstyler(*p_resom,4);
-  p_resom->GetYaxis()->SetTitleOffset(1.1);
+  p_resom->GetYaxis()->SetTitleOffset(1.2);
   p_resom->SetMarkerStyle(20);
   p_resom->SetMarkerSize(0.4);
   p_resom->SetMarkerColor(1);
