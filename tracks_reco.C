@@ -75,10 +75,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",270,-13.45,13.55);
   TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.49995,13.50005);
 
-  TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",200,-40,40);
+  TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",200,-0.0995,0.1005);
   histostyler(*h_reso,2);
-
-  //0.0995,0.1005
 
   TFile h_gen("gen.root","READ");
   TTree *tree_gen=(TTree*)h_gen.Get("TG");
@@ -153,7 +151,6 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
     if(goodz!=0){
       total_reco++;
-      h_tracklet->DrawCopy();
       center_ROI = h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//mm
       left_ROI=h_tracklet->FindBin(center_ROI-(delta/2));
       right_ROI=h_tracklet->FindBin(center_ROI+(delta/2));

@@ -99,7 +99,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
 
   double R_range=layer[2]->GetRadius(),width=layer[0]->GetWidth();
 
-  TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex;z [cm];# [a.u.]",100,-40,40);
+  TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex;z [cm];# [a.u.]",100,-width/2,width/2);
   histostyler(*h_vgen,4);
 
   TH1D *h_theta=new TH1D("h_theta","TRACKS generation - #theta;#theta [rad];# [a.u.]",100,0,Pi());
