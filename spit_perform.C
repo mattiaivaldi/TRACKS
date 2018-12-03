@@ -31,7 +31,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,1000000,"+z+",20)";
+    exec="tracks_gen(0,0,1,1,15,100000,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resoz[i]=perform.reso;
@@ -41,7 +41,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,1000000,0,"+m+")";
+    exec="tracks_gen(0,0,1,1,15,100000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resom[i]=perform.reso;
