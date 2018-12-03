@@ -21,18 +21,19 @@ void spit_perform(){
 
   double z_custom[kTest]={-13.,-10.,-7.,-4.,-2.,0.,2.,4.,7.,10.,13.};
   double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
-  double resoz[kTest], resom[kTest], effm[kTest];
+  double resoz[kTest], e_resoz[kTest], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest], effz[kTest], e_effz[kTest];
 
   TString z, m, exec;
 
   printf("+++ START resolution performances +++\n\n");
 
-  for(int i=0; i<kTest;i++){
+  /*for(int i=0; i<kTest;i++){
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,100000,"+z+",20)";
+    exec="tracks_gen(0,0,1,1,15,10000,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resoz[i]=perform.reso;
+    e_resoz[i]=perform.e_reso;
     gROOT->Reset();
   }
 
@@ -40,18 +41,20 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,100000,0,"+m+")";
+    exec="tracks_gen(0,0,1,1,15,10000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resom[i]=perform.reso;
+    e_resom[i]=perform.e_reso;
     effm[i]=perform.eff;
+    e_effm[i]=TMath::Sqrt(effm[i]*(1-effm[i])/perform.kExp);
     gROOT->Reset();
   }
 
   TCanvas *c_perform=new TCanvas("c_perform","c_perform",600,400);
   c_perform->Divide(2,2);
   c_perform->cd(1);
-  TGraph *p_resoz=new TGraph(kTest,z_custom,resoz);
+  TGraphErrors *p_resoz=new TGraphErrors(kTest,z_custom,resoz,NULL,e_resoz);
   p_resoz->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
   graphstyler(*p_resoz,4);
   p_resoz->GetYaxis()->SetTitleOffset(1.1);
@@ -60,7 +63,7 @@ void spit_perform(){
   p_resoz->SetMarkerColor(1);
   p_resoz->Draw("AP");
   c_perform->cd(2);
-  TGraph *p_resom=new TGraph(kTest,mult_custom,resom);
+  TGraphErrors *p_resom=new TGraphErrors(kTest,mult_custom,resom,NULL,e_resom);
   p_resom->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
   graphstyler(*p_resom,4);
   p_resom->GetYaxis()->SetTitleOffset(1.1);
@@ -69,7 +72,7 @@ void spit_perform(){
   p_resom->SetMarkerColor(1);
   p_resom->Draw("AP");
   c_perform->cd(3);
-  TGraph *p_effm=new TGraph(kTest,mult_custom,effm);
+  TGraphErrors *p_effm=new TGraphErrors(kTest,mult_custom,effm,NULL,e_effm);
   p_effm->SetTitle("TRACKS performances - #varepsilon vs multiplicity;multiplicity;#varepsilon");
   graphstyler(*p_effm,4);
   p_effm->GetYaxis()->SetTitleOffset(0.5);
@@ -78,11 +81,27 @@ void spit_perform(){
   p_effm->SetMarkerSize(0.4);
   p_effm->SetMarkerColor(1);
   p_effm->Draw("AP");
-  c_perform->SaveAs(dirplot+"c_perform.eps");
+  c_perform->SaveAs(dirplot+"c_perform.eps");*/
 
-  delete p_resoz;
-  delete p_resom;
-  delete p_effm;
+  for(int i=0; i<kTest;i++){
+    m=Form("%f",mult_custom[i]);
+    exec="tracks_gen(0,0,1,1,5,1000000,0,"+m+")";
+    gROOT->ProcessLine(exec);
+    reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
+    effz[i]=perform.eff;
+    e_effz[i]=TMath::Sqrt(effz[i]*(1-effz[i])/perform.kExp);
+    gROOT->Reset();
+  }
+
+  for(int i=0;i<kTest;i++){
+    printf("%f, ",effz[i]);
+  }
+
+  cout<<endl<<endl;
+
+  for(int i=0;i<kTest;i++){
+    printf("%f, ",e_effz[i]);
+  }
 
   //cpu info
   timer.Stop();

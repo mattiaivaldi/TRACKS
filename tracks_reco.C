@@ -42,7 +42,9 @@ struct reco_perform{
   double cputime;
   double runtime;
   double reso;
+  double e_reso;
   double eff;
+  double kExp;
 };
 
 bool war2=true;//declaring war
@@ -238,7 +240,9 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   perform.cputime=cpu_time;
   perform.runtime=run_time;
   perform.reso=h_reso->GetRMS();
+  perform.e_reso=h_reso->GetRMSError();
   perform.eff=(double)total_reco/(double)kExp;
+  perform.kExp=(double)kExp;
 
   h_gen.Close();
 
