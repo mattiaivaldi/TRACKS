@@ -44,7 +44,8 @@ struct reco_perform{
   double reso;
   double e_reso;
   double eff;
-  double kExp;
+  double e_eff;
+  //double kExp;
 };
 
 bool war2=true;//declaring war
@@ -244,8 +245,9 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   perform.runtime=run_time;
   perform.reso=h_reso->GetRMS();
   perform.e_reso=h_reso->GetRMSError();
-  perform.eff=(double)total_reco/(double)kExp;
-  perform.kExp=(double)kExp;
+  perform.eff=total_good/(double)kExp;
+  //perform.kExp=(double)kExp;
+  perform.e_eff=Sqrt(perform.eff*(1-perform.eff)/(double)kExp);
 
   h_gen.Close();
 
@@ -257,6 +259,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,run_time, cpu_efficiency);
 
   printf("\n\n\n%f  %f\n\n\n",total_reco, total_good);
+
+  printf("\n\n\n%f  %f\n\n\n",total_reco/(double)kExp, perform.eff);
 
   return perform;
 

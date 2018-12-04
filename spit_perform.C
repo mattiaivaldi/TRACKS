@@ -32,7 +32,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,10000,"+z+",20)";
+    exec="tracks_gen(0,0,1,1,15,100000,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resoz[i]=perform.reso;
@@ -44,13 +44,13 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,10000,0,"+m+")";
+    exec="tracks_gen(0,0,1,1,15,100000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resom[i]=perform.reso;
     e_resom[i]=perform.e_reso;
     effm[i]=perform.eff;
-    e_effm[i]=TMath::Sqrt(effm[i]*(1-effm[i])/perform.kExp);
+    e_effm[i]=perform.e_eff;
     gROOT->Reset();
   }
 
@@ -76,7 +76,7 @@ void spit_perform(){
   p_resom->Draw("AP");
   c_perform->cd(3);
   TGraphErrors *p_effm=new TGraphErrors(kTest,mult_custom,effm,NULL,e_effm);
-  p_effm->SetTitle("TRACKS performances - #varepsilon vs multiplicity;multiplicity;#varepsilon");
+  p_effm->SetTitle("TRACKS performances - robustness vs multiplicity;multiplicity;#tilde{#varepsilon}");
   graphstyler(*p_effm,4);
   p_effm->GetYaxis()->SetTitleOffset(0.5);
   p_effm->GetYaxis()->SetTitleSize(0.07);
@@ -86,7 +86,7 @@ void spit_perform(){
   p_effm->Draw("AP");
   c_perform->cd(4);
   TGraphErrors *p_effz=new TGraphErrors(kTest,mult_custom,effz,NULL,e_effz);
-  p_effz->SetTitle("TRACKS performances - #varepsilon vs multiplicity for |z|<1#sigma;multiplicity;#varepsilon");
+  p_effz->SetTitle("TRACKS performances - robustness vs multiplicity for |z|<1#sigma;multiplicity;#tilde{#varepsilon}");
   graphstyler(*p_effz,4);
   p_effz->GetYaxis()->SetTitleOffset(0.5);
   p_effz->GetYaxis()->SetTitleSize(0.07);
