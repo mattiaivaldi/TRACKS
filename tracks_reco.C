@@ -101,7 +101,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   b2->SetAddress(&cross_L2);
 
   int goodz=0,left_ROI=0,right_ROI=0,counter_tracklet=0,percent=(int)kExp*0.01;
-  double phi1=0,phi2=0,x1=0,x2=0,z1=0,z2=0,z_reco=0,z_reco_fin=0,center_ROI=0,z_event=0,total_reco=0,delta = 0.1;
+  double phi1=0,phi2=0,x1=0,x2=0,z1=0,z2=0,z_reco=0,z_reco_fin=0,center_ROI=0,z_event=0,total_reco=0, total_good=0,delta = 0.1;
 
   for(int i=0;i<kExp;i++){
 
@@ -153,18 +153,21 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
     if(goodz!=0){
       total_reco++;
-      center_ROI = h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//mm
-      left_ROI=h_tracklet->FindBin(center_ROI-(delta/2));
-      right_ROI=h_tracklet->FindBin(center_ROI+(delta/2));
-      for(int k=left_ROI;k<right_ROI;k++){
-        if(h_tracklet->GetBinContent(k)!=0){
-          z_event+=(h_tracklet->GetXaxis()->GetBinCenter(k));
-          counter_tracklet++;
+      if(peakfinder(h_ROI)){
+        total_good++;
+        center_ROI=h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//mm
+        left_ROI=h_tracklet->FindBin(center_ROI-(delta/2));
+        right_ROI=h_tracklet->FindBin(center_ROI+(delta/2));
+        for(int k=left_ROI;k<right_ROI;k++){
+          if(h_tracklet->GetBinContent(k)!=0){
+            z_event+=(h_tracklet->GetXaxis()->GetBinCenter(k));
+            counter_tracklet++;
+          }
         }
-      }
-      if(counter_tracklet!=0){
-        z_event/=(double)counter_tracklet;
-        h_reso->Fill(zgen-(float)z_event);
+        if(counter_tracklet!=0){
+          z_event/=(double)counter_tracklet;
+          h_reso->Fill(zgen-(float)z_event);
+        }
       }
     }
     h_ROI->Reset();
@@ -252,6 +255,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   delete h_reso;
 
   printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,run_time, cpu_efficiency);
+
+  printf("\n\n\n%f  %f\n\n\n",total_reco, total_good);
 
   return perform;
 

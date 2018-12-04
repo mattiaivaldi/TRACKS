@@ -35,6 +35,8 @@ void noise(bool b_verbose, int Noise, int Mult, TClonesArray &cross, Layer* L);
 
 void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross);
 
+bool peakfinder(TH1D* histo);
+
 double mode(vector<double> v);
 
 #endif

@@ -257,6 +257,24 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
 
 }
 
+bool peakfinder(TH1D* histo){
+  bool peakit=false;
+  int kBin=histo->GetSize()-2;
+  int binC=histo->GetMaximumBin();
+  double Max=histo->GetBinContent(binC);
+  double ClusterSize=0;
+  for(int i=3;i<kBin-2;i++){
+    ClusterSize=histo->GetBinContent(i-2)+histo->GetBinContent(i-1)+histo->GetBinContent(i)+histo->GetBinContent(i+1)+histo->GetBinContent(i+2);
+    if(ClusterSize>=2*Max&&(i-2!=binC)&&(i-1!=binC)&&(i!=binC)&&(i-2!=binC)&&(i-2!=binC)){
+      takeit=false;
+      break;
+    }else{
+      peakit=true;
+    }
+  }
+  return peakit;
+}
+
 double mode(vector<double> v){
 
   double max = v.back();

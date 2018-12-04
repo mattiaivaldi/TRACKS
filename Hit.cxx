@@ -47,7 +47,7 @@ fMult((int)distr_mult->GetRandom())
 {
   double zgen;
   do{zgen=gRandom->Gaus(meanv,sigmaz);}
-  while(TMath::Abs(zgen)>5.3);
+  while(TMath::Abs(zgen)>13.5);
   fZ=zgen;
   //event constructor, def2
 }

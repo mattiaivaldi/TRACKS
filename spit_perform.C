@@ -21,13 +21,16 @@ void spit_perform(){
 
   double z_custom[kTest]={-13.,-10.,-7.,-4.,-2.,0.,2.,4.,7.,10.,13.};
   double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
-  double resoz[kTest], e_resoz[kTest], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest], effz[kTest], e_effz[kTest];
+  double resoz[kTest], e_resoz[kTest], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest];
+
+  double effz[kTest]={0.599157, 0.791143, 0.951297, 0.989414, 0.997564, 0.999472, 0.999870, 0.999968, 0.999991, 0.999999, 1.000000};
+  double e_effz[kTest]={0.000490, 0.000406, 0.000215, 0.000102, 0.000049, 0.000023, 0.000011, 0.000006, 0.000003, 0.000001, 0.000000};
 
   TString z, m, exec;
 
   printf("+++ START resolution performances +++\n\n");
 
-  /*for(int i=0; i<kTest;i++){
+  for(int i=0; i<kTest;i++){
     z=Form("%f",z_custom[i]);
     exec="tracks_gen(0,0,1,1,15,10000,"+z+",20)";
     gROOT->ProcessLine(exec);
@@ -81,9 +84,19 @@ void spit_perform(){
   p_effm->SetMarkerSize(0.4);
   p_effm->SetMarkerColor(1);
   p_effm->Draw("AP");
-  c_perform->SaveAs(dirplot+"c_perform.eps");*/
+  c_perform->cd(4);
+  TGraphErrors *p_effz=new TGraphErrors(kTest,mult_custom,effz,NULL,e_effz);
+  p_effz->SetTitle("TRACKS performances - #varepsilon vs multiplicity for |z|<1#sigma;multiplicity;#varepsilon");
+  graphstyler(*p_effz,4);
+  p_effz->GetYaxis()->SetTitleOffset(0.5);
+  p_effz->GetYaxis()->SetTitleSize(0.07);
+  p_effz->SetMarkerStyle(20);
+  p_effz->SetMarkerSize(0.4);
+  p_effz->SetMarkerColor(1);
+  p_effz->Draw("AP");
+  c_perform->SaveAs(dirplot+"c_perform.eps");
 
-  for(int i=0; i<kTest;i++){
+  /*for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
     exec="tracks_gen(0,0,1,1,5,1000000,0,"+m+")";
     gROOT->ProcessLine(exec);
@@ -91,17 +104,7 @@ void spit_perform(){
     effz[i]=perform.eff;
     e_effz[i]=TMath::Sqrt(effz[i]*(1-effz[i])/perform.kExp);
     gROOT->Reset();
-  }
-
-  for(int i=0;i<kTest;i++){
-    printf("%f, ",effz[i]);
-  }
-
-  cout<<endl<<endl;
-
-  for(int i=0;i<kTest;i++){
-    printf("%f, ",e_effz[i]);
-  }
+  }*/
 
   //cpu info
   timer.Stop();
