@@ -266,7 +266,7 @@ bool peakfinder(TH1D* histo){
   for(int i=3;i<kBin-2;i++){
     ClusterSize=histo->GetBinContent(i-2)+histo->GetBinContent(i-1)+histo->GetBinContent(i)+histo->GetBinContent(i+1)+histo->GetBinContent(i+2);
     if(ClusterSize>=2*Max&&(i-2!=binC)&&(i-1!=binC)&&(i!=binC)&&(i-2!=binC)&&(i-2!=binC)){
-      takeit=false;
+      peakit=false;
       break;
     }else{
       peakit=true;
