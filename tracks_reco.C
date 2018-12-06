@@ -262,6 +262,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
   printf("\n\n\n%f  %f\n\n\n",total_reco/(double)kExp, perform.eff);
 
+  printf("\n\n%f\n\n",total_good/total_reco);
+
   return perform;
 
 } //END
