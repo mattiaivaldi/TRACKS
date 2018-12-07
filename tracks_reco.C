@@ -24,11 +24,11 @@
 #include "TMath.h"
 #include "TF1.h"
 #include "TStopwatch.h"
-#include "vector"
 #include "Tools.h"
 #include "Layer.h"
 #include "Hit.h"
 #include "Particle.h"
+#include <vector>
 
 #ifdef WINDOWS
 #include <direct.h>
@@ -51,6 +51,7 @@ struct reco_perform{
 bool war2=true;//declaring war
 
 using namespace TMath;
+using namespace std;
 
 reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, double smear_phi){
 
@@ -69,16 +70,18 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   TString dirplot=TString(cwd)+"/tracksplot/";
 
   gRandom->SetSeed(0);
-  gStyle->SetOptStat(0);
+  gStyle->SetOptStat(1111);
   gStyle->SetLegendBorderSize(0);
 
   TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex;z_{V} [cm];# [a.u.]",100,-13.5,13.5);
   histostyler(*h_zreco,2);
 
   TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",270,-13.45,13.55);
-  TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.49995,13.50005);
+  TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.50005,13.50005);
+  //vector<double> h_tracklet;
 
   TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",200,-0.0995,0.1005);
+  //TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",10000,-10,10);
   histostyler(*h_reso,2);
 
   TFile h_gen("gen.root","READ");
@@ -101,6 +104,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   b1->SetAddress(&cross_L1);
   b2->SetAddress(&cross_L2);
 
+  bool startsum=false;
   int goodz=0,left_ROI=0,right_ROI=0,counter_tracklet=0,percent=(int)kExp*0.01;
   double phi1=0,phi2=0,x1=0,x2=0,z1=0,z2=0,z_reco=0,z_reco_fin=0,center_ROI=0,z_event=0,total_reco=0, total_good=0,delta = 0.1;
 
@@ -142,12 +146,12 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
           z2=hit_buffer2->GetZ();
           z_reco=z1+((z2-z1)/(x1-x2))*x1;
 
-          if(Abs(z_reco)<13.5){
-            goodz++;
-            h_zreco->Fill(z_reco);
-            h_ROI->Fill(z_reco);
-            h_tracklet->Fill(z_reco);
-          }
+          goodz++;
+          h_zreco->Fill(z_reco);
+          h_ROI->Fill(z_reco);
+          //h_tracklet.push_back(z_reco);
+          h_tracklet->Fill(z_reco);
+
         }
       }
     }
@@ -157,8 +161,19 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
       if(peakfinder(h_ROI)){
         total_good++;
         center_ROI=h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//mm
+        //left_ROI=center_ROI-(delta/2);
+        //right_ROI=center_ROI+(delta/2);
         left_ROI=h_tracklet->FindBin(center_ROI-(delta/2));
         right_ROI=h_tracklet->FindBin(center_ROI+(delta/2));
+        /*sort(h_tracklet.begin(),h_tracklet.end());
+        for(int i=0;i<goodz;i++){
+          if(h_tracklet[i]>left_ROI){startsum=true;}
+          if(startsum){
+            z_event+=h_tracklet[i-1];
+            counter_tracklet++;
+          }
+          if(h_tracklet[i]>right_ROI){startsum=false;}
+        }*/
         for(int k=left_ROI;k<right_ROI;k++){
           if(h_tracklet->GetBinContent(k)!=0){
             z_event+=(h_tracklet->GetXaxis()->GetBinCenter(k));
@@ -167,12 +182,14 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
         }
         if(counter_tracklet!=0){
           z_event/=(double)counter_tracklet;
+          //printf("\nz reco = %f\n",z_event);
           h_reso->Fill(zgen-(float)z_event);
         }
       }
     }
     h_ROI->Reset();
     h_tracklet->Reset();
+    //vector<double>().swap(h_tracklet);//iper ciocco per liberare memoria
     z_event=0;
     goodz=0;
     counter_tracklet=0;
@@ -253,16 +270,16 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
   delete h_zreco;
   delete h_ROI;
-  delete h_tracklet;
+  //delete h_tracklet;
   delete h_reso;
 
   printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,run_time, cpu_efficiency);
 
-  printf("\n\n\n%f  %f\n\n\n",total_reco, total_good);
+  //printf("\n%d  %f  %f\n\n",goodz, total_reco, total_good);
 
-  printf("\n\n\n%f  %f\n\n\n",total_reco/(double)kExp, perform.eff);
+  //printf("\n\n\n%f  %f\n\n\n",total_reco/(double)kExp, perform.eff);
 
-  printf("\n\n%f\n\n",total_good/total_reco);
+  //printf("\n\n%f\n\n",total_good/total_reco);
 
   return perform;
 

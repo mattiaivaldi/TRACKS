@@ -42,13 +42,13 @@ fZ(gRandom->Uniform(-H/2,H/2))
 Hit::Hit(double meanv, double sigmaxy, double sigmaz, TH1F *distr_mult): TObject(),
 fX(gRandom->Gaus(meanv,sigmaxy)),
 fY(gRandom->Gaus(meanv,sigmaxy)),
-fZ(0.),
+fZ(gRandom->Gaus(meanv,sigmaz)),
 fMult((int)distr_mult->GetRandom())
 {
-  double zgen;
+  /*double zgen;
   do{zgen=gRandom->Gaus(meanv,sigmaz);}
   while(TMath::Abs(zgen)>13.5);
-  fZ=zgen;
+  fZ=zgen;*/
   //event constructor, def2
 }
 

@@ -19,9 +19,9 @@ void spit_perform(){
 
   const int kTest=11;
 
-  double z_custom[kTest]={-13.,-10.,-7.,-4.,-2.,0.,2.,4.,7.,10.,13.};
+  double z_custom[17]={-40.,-30.,-20.,-13.,-10.,-7.,-4.,-2.,0.,2.,4.,7.,10.,13.,20.,30.,40.};
   double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
-  double resoz[kTest], e_resoz[kTest], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest];
+  double resoz[17], e_resoz[17], resom[17], e_resom[17], effm[kTest], e_effm[kTest];
 
   double effz[kTest]={0.599157, 0.791143, 0.951297, 0.989414, 0.997564, 0.999472, 0.999870, 0.999968, 0.999991, 0.999999, 1.000000};
   double e_effz[kTest]={0.000490, 0.000406, 0.000215, 0.000102, 0.000049, 0.000023, 0.000011, 0.000006, 0.000003, 0.000001, 0.000000};
@@ -30,9 +30,9 @@ void spit_perform(){
 
   printf("+++ START resolution performances +++\n\n");
 
-  for(int i=0; i<kTest;i++){
+  for(int i=0; i<17;i++){
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,1000000,"+z+",20)";
+    exec="tracks_gen(0,0,1,1,15,100000,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resoz[i]=perform.reso;
@@ -44,7 +44,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,1000000,0,"+m+")";
+    exec="tracks_gen(0,0,1,1,15,100000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
     resom[i]=perform.reso;
@@ -57,7 +57,7 @@ void spit_perform(){
   TCanvas *c_perform=new TCanvas("c_perform","c_perform",600,400);
   c_perform->Divide(2,2);
   c_perform->cd(1);
-  TGraphErrors *p_resoz=new TGraphErrors(kTest,z_custom,resoz,NULL,e_resoz);
+  TGraphErrors *p_resoz=new TGraphErrors(17,z_custom,resoz,NULL,e_resoz);
   p_resoz->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
   graphstyler(*p_resoz,4);
   p_resoz->GetYaxis()->SetTitleOffset(1.1);
@@ -66,7 +66,7 @@ void spit_perform(){
   p_resoz->SetMarkerColor(1);
   p_resoz->Draw("AP");
   c_perform->cd(2);
-  TGraphErrors *p_resom=new TGraphErrors(kTest,mult_custom,resom,NULL,e_resom);
+  TGraphErrors *p_resom=new TGraphErrors(17,mult_custom,resom,NULL,e_resom);
   p_resom->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
   graphstyler(*p_resom,4);
   p_resom->GetYaxis()->SetTitleOffset(1.1);

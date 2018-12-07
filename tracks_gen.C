@@ -51,7 +51,7 @@ bool war1=true;//declaring war
 
 using namespace TMath;
 
-void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool paolonoise, int custom, int kExp, double z_custom, int mult_custom) {
+void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paolonoise, int custom, int kExp, double z_custom, int mult_custom) {
 
   //printparticles activates verbose mode (0,1)
   //printplot plot print (0,1)
@@ -152,9 +152,12 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, bool pao
   TNtuple *z_gen=new TNtuple("z_gen","z_gen","z_gen");//generation data
 
   int kNoise1=0, kNoise2=0;
-  if(paolonoise){
+  if(paolonoise==1){
     kNoise1=(int)gRandom->Integer(5);
     kNoise2=(int)gRandom->Integer(5);
+  }else{
+    kNoise1=paolonoise;
+    kNoise2=paolonoise;
   }//number of spurious hits
 
   int size0=multiplicity->FindLastBinAbove(0,1);
