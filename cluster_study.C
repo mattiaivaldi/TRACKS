@@ -6,7 +6,7 @@
 #define GetCurrentDir getcwd
 #endif
 
-void spit_perform(){
+void cluster_study(){
 
   gROOT->Reset();
 
@@ -17,59 +17,62 @@ void spit_perform(){
   GetCurrentDir(cwd,FILENAME_MAX);
   TString dirplot=TString(cwd)+"/tracksplot/";
 
-  const int kTest=11;
+  const int kTest=6, kCluster=4;
 
-  double z_custom[kTest]={-13.,-10.,-7.,-4,-2.65,0.,2.,4.,7,10.,13.};
-  double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
-  double resoz[kTest], e_resoz[kTest], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest], effz[kTest], e_effz[kTest];
+  double ampli_custom[kCluster]={0.7,1,1.3,1.5};
+  double width_custom[kCluster]={1,3,5,7};
 
-  double effm1s[kTest]={0.599157, 0.791143, 0.951297, 0.989414, 0.997564, 0.999472, 0.999870, 0.999968, 0.999991, 0.999999, 1.000000};
-  double e_effm1s[kTest]={0.000490, 0.000406, 0.000215, 0.000102, 0.000049, 0.000023, 0.000011, 0.000006, 0.000003, 0.000001, 0.000000};
+  double z_custom[kTest]={0.,2.,4.,7,10.,13.};
+  double mult_custom[kTest]={5,15,30,40,50};
 
-  TString z, m, exec;
+  double resoz_ampli[kCluster][kTest], e_resoz_ampli[kCluster][kTest];
+
+  TGraphErrors *p_resoz_ampli[kCluster];
+
+  double reso_buffer[kTest], e_reso_buffer[kTest];
+
+  TString z, m, ampli, width, exec;
 
   printf("+++ START resolution performances +++\n\n");
 
-  for(int i=0; i<kTest;i++){
-    z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,10000,"+z+",20)";
-    gROOT->ProcessLine(exec);
-    reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,3);
-    resoz[i]=perform.reso;
-    e_resoz[i]=perform.e_reso;
-    effz[i]=perform.eff;
-    e_effz[i]=perform.e_eff;
-    gROOT->Reset();
+  for(int i=0; i<kCluster;i++){
+    for(int j=0; j<kTest;j++){
+      z=Form("%f",z_custom[j]);
+      exec="tracks_gen(0,0,1,1,15,100000,"+z+",20)";
+      gROOT->ProcessLine(exec);
+      reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
+      resoz_ampli[i][j]=perform.reso;
+      e_resoz_ampli[i][j]=perform.e_reso;
+      gROOT->Reset();
+    }
   }
 
-  printf("+++ START efficiency performances +++\n\n");
+  TCanvas *c_study=new TCanvas("c_study","c_study",600,400);
+  c_study->Divide(2,2);
 
-  for(int i=0; i<kTest;i++){
-    m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,10000,0,"+m+")";
-    gROOT->ProcessLine(exec);
-    reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,3);
-    resom[i]=perform.reso;
-    e_resom[i]=perform.e_reso;
-    effm[i]=perform.eff;
-    e_effm[i]=perform.e_eff;
-    gROOT->Reset();
+  c_study->cd(1);
+  TMultiGraph *m_resoz_ampli=new TMultiGraph;
+  for(int i=0;i<kCluster;i++){//over ampli custom
+    for(int j=0;j<kTest;j++){//over z custom
+      reso_buffer[j]=resoz_ampli[i][j];
+      e_reso_buffer[j]=e_resoz_ampli[i][j];
+    }
+    p_resoz_ampli[i]=new TGraphErrors(kTest,z_custom,reso_buffer,NULL,e_reso_buffer);
+    p_resoz_ampli[i]->SetMarkerColor(kRed+i);
+    m_resoz_ampli->Add(p_resoz_ampli[i]);
   }
-
-  TCanvas *c_perform=new TCanvas("c_perform","c_perform",600,400);
-  c_perform->Divide(2,2);
-
-  c_perform->cd(1);
-  TGraphErrors *p_resoz=new TGraphErrors(kTest,z_custom,resoz,NULL,e_resoz);
+  m_resoz_ampli->Draw("A*");
+  m_resoz_ampli->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
+  /*TGraphErrors *p_resoz=new TGraphErrors(kTest,z_custom,resoz,NULL,e_resoz);
   p_resoz->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
   graphstyler(*p_resoz,4);
   p_resoz->GetYaxis()->SetTitleOffset(1.1);
   p_resoz->SetMarkerStyle(20);
   p_resoz->SetMarkerSize(0.4);
   p_resoz->SetMarkerColor(1);
-  p_resoz->Draw("AP");
+  p_resoz->Draw("AP");*/
 
-  c_perform->cd(2);
+  /*c_study->cd(2);
   TGraphErrors *p_resom=new TGraphErrors(kTest,mult_custom,resom,NULL,e_resom);
   p_resom->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
   graphstyler(*p_resom,4);
@@ -79,7 +82,7 @@ void spit_perform(){
   p_resom->SetMarkerColor(1);
   p_resom->Draw("AP");
 
-  c_perform->cd(3);
+  c_study->cd(3);
   TGraphErrors *p_effz=new TGraphErrors(kTest,z_custom,effz,NULL,e_effz);
   p_effz->SetTitle("TRACKS performances - robustness vs Z_{gen};z_{gen} [cm];#tilde{#varepsilon}");
   graphstyler(*p_effz,4);
@@ -90,7 +93,7 @@ void spit_perform(){
   p_effz->SetMarkerColor(1);
   p_effz->Draw("AP");
 
-  c_perform->cd(4);
+  c_study->cd(4);
   TGraphErrors *p_effm=new TGraphErrors(kTest,mult_custom,effm,NULL,e_effm);
   p_effm->SetMarkerStyle(20);
   p_effm->SetMarkerSize(0.4);
@@ -106,9 +109,9 @@ void spit_perform(){
   m_effm->SetTitle("TRACKS performances - robustness vs multiplicity;multiplicity;#tilde{#varepsilon}");
   graphstyler(*p_effz,4);
   m_effm->GetYaxis()->SetTitleOffset(0.5);
-  m_effm->GetYaxis()->SetTitleSize(0.07);
+  m_effm->GetYaxis()->SetTitleSize(0.07);*/
 
-  c_perform->SaveAs(dirplot+"c_perform.eps");
+  c_study->SaveAs(dirplot+"c_study.eps");
 
   /*for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);

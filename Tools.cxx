@@ -257,18 +257,24 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
 
 }
 
-bool peakfinder(TH1D* histo){
+bool peakfinder(TH1D* histo, double ampli, int width){
+  int fisrtbin=(int)(ampli/2+0.5);
+  int lastbin=(int)(ampli/2+0.5)-1;
   bool peakit=false;
   int kBin=histo->GetSize()-2;
   int binC=histo->GetMaximumBin();
   double Max=histo->GetBinContent(binC);
   double ClusterSize=0;
-  for(int i=3;i<kBin-2;i++){
-    ClusterSize=histo->GetBinContent(i-2)+histo->GetBinContent(i-1)+histo->GetBinContent(i)+histo->GetBinContent(i+1)+histo->GetBinContent(i+2);
-    if(ClusterSize>=1.5*Max&&((i<=binC-4)||(i>=binC+4))){
+  for(int i=fisrtbin;i<kBin-lastbin;i++){
+    for(int j=-lastbin;j<=lastbin;j++){
+      ClusterSize+=histo->GetBinContent(i-j);
+    }
+    if(ClusterSize>=ampli*Max&&((i<=binC-width)||(i>=binC+width-1))){
       peakit=false;
+      ClusterSize=0;
       break;
     }else{
+      ClusterSize=0;
       peakit=true;
     }
   }
