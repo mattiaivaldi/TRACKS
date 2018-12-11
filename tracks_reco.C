@@ -79,7 +79,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   histostyler(*h_zreco,2);
 
   //TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",270,-13.5,13.5);
-  TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",161,-40.5,40.5); //---//
+  TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",161,-40.25,40.25); //---//
 
   //TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",800001,-40.,40.);
   //TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.5,13.5);
@@ -166,19 +166,19 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     }
     //new TCanvas();
     //h_ROI->DrawCopy();
-    h_ROI->Print("all");
+    //h_ROI->Print("all");
 
     sort(tracklet.begin(),tracklet.end());
-    cout<<endl;
+    //cout<<endl;
 
-    printf("\nnow z reco are ordered\n");
+    //printf("\nnow z reco are ordered\n");
 
     if(goodz!=0&&peakfinder(h_ROI,amplitude,width)){
       total_good++;
       center_ROI=h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//cm
       left_ROI=center_ROI-delta;
       right_ROI=center_ROI+delta;
-      printf("\nevento %d left %f center %f right %f\n\n",i,left_ROI,center_ROI,right_ROI);
+      //printf("\nevento %d left %f center %f right %f\n\n",i,left_ROI,center_ROI,right_ROI);
       for(int k=0;k<(int)tracklet.size();k++){
         //printf("\nevento %d %f %f",i,zgen,tracklet[k]);
         if(tracklet[k]>=center_ROI-delta&&tracklet[k]<=center_ROI+delta){
@@ -192,7 +192,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
     if(goodz!=0){
       diffz=zgen-z_event;
-      printf("\nevento %d %f %f %f\n",i,zgen,z_event, diffz);
+      //printf("\nevento %d %f %f %f\n",i,zgen,z_event, diffz);
       h_reso->Fill(diffz);
     }
 
