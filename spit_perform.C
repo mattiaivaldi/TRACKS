@@ -19,7 +19,7 @@ void spit_perform(){
 
   const int kTest=11;
 
-  double z_custom[kTest]={-13.,-10.,-7.,-4,-2.65,0.,2.,4.,7,10.,13.};
+  double z_custom[kTest]={-13.,-10.,-7.,-4,-2.,0.,2.,4.,7,10.,13.};
   double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
   double resoz[kTest], e_resoz[kTest], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest], effz[kTest], e_effz[kTest];
 
