@@ -46,7 +46,6 @@ struct reco_perform{
   double e_reso;
   double eff;
   double e_eff;
-  //double kExp;
 };
 
 bool war2=true;//declaring war
@@ -71,7 +70,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   TString dirplot=TString(cwd)+"/tracksplot/";
 
   gRandom->SetSeed(0);
-  gStyle->SetOptStat(1111);
+  gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
 
   TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex;z_{V} [cm];# [a.u.]",200,-40.,40.);

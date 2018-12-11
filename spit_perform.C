@@ -9,6 +9,7 @@
 void spit_perform(){
 
   gROOT->Reset();
+  gStyle->SetOptStat(0);
 
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
