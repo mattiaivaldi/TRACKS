@@ -19,7 +19,7 @@ void spit_perform(){
 
   const int kTest=11;
 
-  double z_custom[kTest]={-13.,-10.,-7.,-4,-2.,0.,2.,4.,7,10.,13.};
+  double z_custom[kTest]={-13,-10,-7,-4,-2,0,2,4,7,10,13};
   double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
   double resoz[kTest], e_resoz[kTest], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest], effz[kTest], e_effz[kTest];
 
@@ -28,9 +28,10 @@ void spit_perform(){
 
   TString z, m, exec;
 
-  printf("+++ START resolution performances +++\n\n");
+  printf("+++ START resolution performances +++  ");
 
   for(int i=0; i<kTest;i++){
+    printf("Z vertex = %f cm\n\n",z_custom[i]);
     z=Form("%f",z_custom[i]);
     exec="tracks_gen(0,0,1,1,15,10000,"+z+",20)";
     gROOT->ProcessLine(exec);
@@ -42,9 +43,10 @@ void spit_perform(){
     gROOT->Reset();
   }
 
-  printf("+++ START efficiency performances +++\n\n");
+  printf("+++ START efficiency performances +++  ");
 
   for(int i=0; i<kTest;i++){
+    printf("Event multiplicity = \n\n",mult_custom[i]);
     m=Form("%f",mult_custom[i]);
     exec="tracks_gen(0,0,1,1,15,10000,0,"+m+")";
     gROOT->ProcessLine(exec);
