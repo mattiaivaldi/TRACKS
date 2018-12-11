@@ -25,9 +25,9 @@ void cluster_study(){
   double z_custom[kTest]={0,2,4,7,10,13};
   double mult_custom[kTest]={5,15,30,40,50};
 
-  double resoz_ampli[kCluster][kTest], e_resoz_ampli[kCluster][kTest], resoz_width[kCluster][kTest], e_resoz_width[kCluster][kTest];
+  double resoz_ampli[kCluster][kTest], e_resoz_ampli[kCluster][kTest], resoz_width[kCluster][kTest], e_resoz_width[kCluster][kTest], resom_ampli[kCluster][kTest], e_resom_ampli[kCluster][kTest], resom_width[kCluster][kTest], e_resom_width[kCluster][kTest];
 
-  TGraphErrors *p_resoz_ampli[kCluster],*p_resoz_width[kCluster];
+  TGraphErrors *p_resoz_ampli[kCluster],*p_resoz_width[kCluster], *p_resom_ampli[kCluster],*p_resom_width[kCluster];
 
   double reso_buffer[kTest], e_reso_buffer[kTest];
 
@@ -58,6 +58,30 @@ void cluster_study(){
       gROOT->Reset();
     }
   }
+
+  for(int i=0; i<kCluster;i++){
+    for(int j=0; j<kTest;j++){
+      m=Form("%f",mult_custom[j]);
+      exec="tracks_gen(0,0,1,1,15,100000,0,"+m+")";
+      gROOT->ProcessLine(exec);
+      reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
+      resom_ampli[i][j]=perform.reso;
+      e_resom_ampli[i][j]=perform.e_reso;
+      gROOT->Reset();
+    }
+  }//resolution vs multiplicity for different amplitude
+
+  for(int i=0; i<kCluster;i++){
+    for(int j=0; j<kTest;j++){
+      m=Form("%f",mult_custom[j]);
+      exec="tracks_gen(0,0,1,1,15,100000,0,"+m+")";
+      gROOT->ProcessLine(exec);
+      reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
+      resom_width[i][j]=perform.reso;
+      e_resom_width[i][j]=perform.e_reso;
+      gROOT->Reset();
+    }
+  }//resolution vs multiplicity for different width
 
   TCanvas *c_study=new TCanvas("c_study","c_study",600,400);
   c_study->Divide(2,2);
@@ -96,65 +120,41 @@ void cluster_study(){
   m_resoz_width->Draw("AP");
   m_resoz_width->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
 
-  /*TGraphErrors *p_resoz=new TGraphErrors(kTest,z_custom,resoz,NULL,e_resoz);
-  p_resoz->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
-  graphstyler(*p_resoz,4);
-  p_resoz->GetYaxis()->SetTitleOffset(1.1);
-  p_resoz->SetMarkerStyle(20);
-  p_resoz->SetMarkerSize(0.4);
-  p_resoz->SetMarkerColor(1);
-  p_resoz->Draw("AP");*/
-
-  /*c_study->cd(2);
-  TGraphErrors *p_resom=new TGraphErrors(kTest,mult_custom,resom,NULL,e_resom);
-  p_resom->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
-  graphstyler(*p_resom,4);
-  p_resom->GetYaxis()->SetTitleOffset(1.1);
-  p_resom->SetMarkerStyle(20);
-  p_resom->SetMarkerSize(0.4);
-  p_resom->SetMarkerColor(1);
-  p_resom->Draw("AP");
-
   c_study->cd(3);
-  TGraphErrors *p_effz=new TGraphErrors(kTest,z_custom,effz,NULL,e_effz);
-  p_effz->SetTitle("TRACKS performances - robustness vs Z_{gen};z_{gen} [cm];#tilde{#varepsilon}");
-  graphstyler(*p_effz,4);
-  p_effz->GetYaxis()->SetTitleOffset(0.5);
-  p_effz->GetYaxis()->SetTitleSize(0.07);
-  p_effz->SetMarkerStyle(20);
-  p_effz->SetMarkerSize(0.4);
-  p_effz->SetMarkerColor(1);
-  p_effz->Draw("AP");
+  TMultiGraph *m_resom_amplitude=new TMultiGraph;
+  for(int i=0;i<kCluster;i++){//over ampli custom
+    for(int j=0;j<kTest;j++){//over z custom
+      reso_buffer[j]=resom_amplitude[i][j];
+      e_reso_buffer[j]=e_resom_amplitude[i][j];
+    }
+    p_resom_ampli[i]=new TGraphErrors(kTest,mult_custom,reso_buffer,NULL,e_reso_buffer);
+    p_resom_ampli[i]->SetMarkerStyle(20+i);
+    p_resom_ampli[i]->SetMarkerSize(0.4);
+    p_resom_ampli[i]->SetMarkerColor(kRed+i);
+    p_resom_ampli[i]->SetLineColor(kRed+i);
+    m_resom_amplitude->Add(p_resom_amplitude[i]);
+  }
+  m_resom_amplitude->Draw("AP");
+  m_resom_amplitude->SetTitle("TRACKS performances - resolution vs mltiplicity;multiplicity;RMS [cm]");
 
   c_study->cd(4);
-  TGraphErrors *p_effm=new TGraphErrors(kTest,mult_custom,effm,NULL,e_effm);
-  p_effm->SetMarkerStyle(20);
-  p_effm->SetMarkerSize(0.4);
-  p_effm->SetMarkerColor(1);
-  TGraphErrors *p_effm1s=new TGraphErrors(kTest,mult_custom,effm1s,NULL,e_effm1s);
-  p_effm1s->SetMarkerStyle(22);
-  p_effm1s->SetMarkerSize(0.35);
-  p_effm1s->SetMarkerColor(2);
-  TMultiGraph *m_effm=new TMultiGraph();
-  m_effm->Add(p_effm);
-  m_effm->Add(p_effm1s);
-  m_effm->Draw("AP");
-  m_effm->SetTitle("TRACKS performances - robustness vs multiplicity;multiplicity;#tilde{#varepsilon}");
-  graphstyler(*p_effz,4);
-  m_effm->GetYaxis()->SetTitleOffset(0.5);
-  m_effm->GetYaxis()->SetTitleSize(0.07);*/
+  TMultiGraph *m_resom_width=new TMultiGraph;
+  for(int i=0;i<kCluster;i++){//over ampli custom
+    for(int j=0;j<kTest;j++){//over z custom
+      reso_buffer[j]=resom_width[i][j];
+      e_reso_buffer[j]=e_resom_width[i][j];
+    }
+    p_resom_width[i]=new TGraphErrors(kTest,mult_custom,reso_buffer,NULL,e_reso_buffer);
+    p_resom_width[i]->SetMarkerStyle(20+i);
+    p_resom_width[i]->SetMarkerSize(0.4);
+    p_resom_width[i]->SetMarkerColor(kRed+i);
+    p_resom_width[i]->SetLineColor(kRed+i);
+    m_resom_width->Add(p_resom_width[i]);
+  }
+  m_resom_width->Draw("AP");
+  m_resom_width->SetTitle("TRACKS performances - resolution vs mltiplicity;multiplicity;RMS [cm]");
 
   c_study->SaveAs(dirplot+"c_study.eps");
-
-  /*for(int i=0; i<kTest;i++){
-    m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,5,1000000,0,"+m+")";
-    gROOT->ProcessLine(exec);
-    reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
-    effz[i]=perform.eff;
-    e_effz[i]=TMath::Sqrt(effz[i]*(1-effz[i])/perform.kExp);
-    gROOT->Reset();
-  }*/
 
   //cpu info
   timer.Stop();
