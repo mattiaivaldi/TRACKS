@@ -19,7 +19,7 @@ void spit_perform(){
 
   const int kTest=11;
 
-  double z_custom[kTest]={-13,-10,-7,-4,-2,0,2,4,7,10,13};
+  double z_custom[kTest]={-13,-10,-7,-4,-2.65,0,2.63,4,7,10,13};
   double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
   double resoz[kTest], e_resoz[kTest], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest], effz[kTest], e_effz[kTest];
 
@@ -32,7 +32,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,100000,"+z+",10)";
+    exec="tracks_gen(0,0,1,1,15,10000,"+z+",10)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,3);
     resoz[i]=perform.reso;
@@ -46,7 +46,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,100000,0,"+m+")";
+    exec="tracks_gen(0,0,1,1,15,10000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,3);
     resom[i]=perform.reso;

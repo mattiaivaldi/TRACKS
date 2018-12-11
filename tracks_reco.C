@@ -79,14 +79,14 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   histostyler(*h_zreco,2);
 
   //TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",270,-13.5,13.5);
-  TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",801,-40.,40.);
+  TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",801,-40.05,40.05); //---//
 
   //TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",800001,-40.,40.);
   //TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.5,13.5);
 
   vector<double> tracklet;
 
-  TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",201,-0.1005,0.1005);
+  TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",20,-0.105,0.105);
   histostyler(*h_reso,2);
 
   TFile h_gen("gen.root","READ");
@@ -164,6 +164,9 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
         }
       }
     }
+    //new TCanvas();
+    //h_ROI->DrawCopy();
+    //h_ROI->Print("all");
 
     sort(tracklet.begin(),tracklet.end());
     //cout<<endl;
@@ -176,7 +179,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
       left_ROI=center_ROI-delta;
       right_ROI=center_ROI+delta;
       //printf("\nevento %d left %f center %f right %f\n\n",i,left_ROI,center_ROI,right_ROI);
-      for(int k=0;k<tracklet.size();k++){
+      for(int k=0;k<(int)tracklet.size();k++){
         //printf("\nevento %d %f %f",i,zgen,tracklet[k]);
         if(tracklet[k]>=center_ROI-delta&&tracklet[k]<=center_ROI+delta){
           //printf("%d %f\n",k+1,tracklet[k]);
@@ -187,10 +190,15 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
       z_event/=counter_tracklet;
     }
 
-    //printf("\nevento %d %f %f\n",i,zgen,z_event);
+    printf("\nevento %d %f %f\n",i,zgen,z_event);
 
+    //diffz=zgen-z_event;
+    //h_reso->Fill(diffz);
+
+if(z_event!=0) {
     diffz=zgen-z_event;
     h_reso->Fill(diffz);
+}
 
     h_ROI->Reset();
     vector<double>().swap(tracklet);
