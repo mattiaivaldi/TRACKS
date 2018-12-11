@@ -22,12 +22,12 @@ void cluster_study(){
   double ampli_custom[kCluster]={0.7,1,1.3,1.5};
   double width_custom[kCluster]={1,3,5,7};
 
-  double z_custom[kTest]={0.,2.,4.,7,10.,13.};
+  double z_custom[kTest]={0,2,4,7,10,13};
   double mult_custom[kTest]={5,15,30,40,50};
 
-  double resoz_ampli[kCluster][kTest], e_resoz_ampli[kCluster][kTest];
+  double resoz_ampli[kCluster][kTest], e_resoz_ampli[kCluster][kTest], resoz_width[kCluster][kTest], e_resoz_width[kCluster][kTest];
 
-  TGraphErrors *p_resoz_ampli[kCluster];
+  TGraphErrors *p_resoz_ampli[kCluster],*p_resoz_width[kCluster];
 
   double reso_buffer[kTest], e_reso_buffer[kTest];
 
@@ -47,6 +47,18 @@ void cluster_study(){
     }
   }
 
+  for(int i=0; i<kCluster;i++){
+    for(int j=0; j<kTest;j++){
+      z=Form("%f",z_custom[j]);
+      exec="tracks_gen(0,0,1,1,15,100000,"+z+",20)";
+      gROOT->ProcessLine(exec);
+      reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
+      resoz_width[i][j]=perform.reso;
+      e_resoz_width[i][j]=perform.e_reso;
+      gROOT->Reset();
+    }
+  }
+
   TCanvas *c_study=new TCanvas("c_study","c_study",600,400);
   c_study->Divide(2,2);
 
@@ -58,11 +70,32 @@ void cluster_study(){
       e_reso_buffer[j]=e_resoz_ampli[i][j];
     }
     p_resoz_ampli[i]=new TGraphErrors(kTest,z_custom,reso_buffer,NULL,e_reso_buffer);
+    p_resoz_ampli[i]->SetMarkerStyle(20+i);
+    p_resoz_ampli[i]->SetMarkerSize(0.4);
     p_resoz_ampli[i]->SetMarkerColor(kRed+i);
+    p_resoz_ampli[i]->SetLineColor(kRed+i);
     m_resoz_ampli->Add(p_resoz_ampli[i]);
   }
-  m_resoz_ampli->Draw("A*");
+  m_resoz_ampli->Draw("AP");
   m_resoz_ampli->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
+
+  c_study->cd(2);
+  TMultiGraph *m_resoz_width=new TMultiGraph;
+  for(int i=0;i<kCluster;i++){//over ampli custom
+    for(int j=0;j<kTest;j++){//over z custom
+      reso_buffer[j]=resoz_width[i][j];
+      e_reso_buffer[j]=e_resoz_width[i][j];
+    }
+    p_resoz_width[i]=new TGraphErrors(kTest,z_custom,reso_buffer,NULL,e_reso_buffer);
+    p_resoz_width[i]->SetMarkerStyle(20+i);
+    p_resoz_width[i]->SetMarkerSize(0.4);
+    p_resoz_width[i]->SetMarkerColor(kRed+i);
+    p_resoz_width[i]->SetLineColor(kRed+i);
+    m_resoz_width->Add(p_resoz_width[i]);
+  }
+  m_resoz_width->Draw("AP");
+  m_resoz_width->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
+
   /*TGraphErrors *p_resoz=new TGraphErrors(kTest,z_custom,resoz,NULL,e_resoz);
   p_resoz->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
   graphstyler(*p_resoz,4);
