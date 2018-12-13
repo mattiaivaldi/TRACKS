@@ -259,7 +259,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   delete h_ROI;
   delete h_reso;
 
-  printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,run_time, cpu_efficiency);
+  printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\n",cpu_time,run_time, cpu_efficiency);
 
   return perform;
 

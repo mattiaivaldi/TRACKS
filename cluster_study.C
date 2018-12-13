@@ -4,7 +4,7 @@
 #else
 #include <unistd.h>
 #define GetCurrentDir getcwd
-#endif
+#endif //needed to get current working directory
 
 void cluster_study(){
 
@@ -16,7 +16,7 @@ void cluster_study(){
 
   char cwd[FILENAME_MAX];
   GetCurrentDir(cwd,FILENAME_MAX);
-  TString dirplot=TString(cwd)+"/tracksplot/";
+  TString dirplot=TString(cwd)+"/tracksplot/";//define the path where the plots will be saved
 
   const int kTest=6, kCluster=4;
 
@@ -34,9 +34,9 @@ void cluster_study(){
 
   double reso_buffer[kTest], e_reso_buffer[kTest];
 
-  TString z, m, ampli, width, exec;
+  TString z, m, ampli, width, exec;//to vary vertex z, multiplicity, amplitude and width during the study
 
-  printf("+++ START resolution performances +++\n\n");
+  printf("\n\nxxx START performances: amplitude xxx\n\n");
 
   for(int i=0; i<kCluster;i++){
     for(int j=0; j<kTest;j++){
@@ -61,6 +61,8 @@ void cluster_study(){
       gROOT->Reset();
     }
   }
+
+  printf("\n\nxxx START performances: width xxx\n\n");
 
   for(int i=0; i<kCluster;i++){
     for(int j=0; j<kTest;j++){
@@ -159,11 +161,10 @@ void cluster_study(){
 
   c_study->SaveAs(dirplot+"c_study.eps");
 
-  //cpu info
-  timer.Stop();
+  timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();
   double real_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/real_time)*100;
-  printf("Performances info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,real_time, cpu_efficiency);
+  printf("Performances info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\n",cpu_time,real_time, cpu_efficiency);
 
 }

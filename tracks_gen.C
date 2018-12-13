@@ -451,7 +451,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   double real_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/real_time)*100;
 
-  printf("Generation info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,real_time, cpu_efficiency);
+  printf("Generation info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\n",cpu_time,real_time, cpu_efficiency);
 
 }
 

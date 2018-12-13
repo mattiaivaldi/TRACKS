@@ -37,7 +37,7 @@ void tracks(TString myopt="fast"){
   double run_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/run_time)*100;
 
-  printf("\n\n+++ TRACKS STOP +++\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n",cpu_time,run_time, cpu_efficiency);
+  printf("\n\n+++ TRACKS STOP +++\n\nGlobal CPU time = %f s\nGlobal Run time = %f s\nGlobal CPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n",cpu_time,run_time, cpu_efficiency);
 
 }
 

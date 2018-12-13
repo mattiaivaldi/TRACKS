@@ -4,11 +4,10 @@
 #else
 #include <unistd.h>
 #define GetCurrentDir getcwd
-#endif
+#endif //needed to get current working directory
 
 void spit_perform(){
 
-  //gROOT->Reset();
   gStyle->SetOptStat(0);
 
   TStopwatch timer;
@@ -16,7 +15,7 @@ void spit_perform(){
 
   char cwd[FILENAME_MAX];
   GetCurrentDir(cwd,FILENAME_MAX);
-  TString dirplot=TString(cwd)+"/tracksplot/";
+  TString dirplot=TString(cwd)+"/tracksplot/";//define the path where the plots will be saved
 
   const int kTest=11;
 
@@ -27,34 +26,32 @@ void spit_perform(){
   double effm1s[kTest]={0.599157, 0.791143, 0.951297, 0.989414, 0.997564, 0.999472, 0.999870, 0.999968, 0.999991, 0.999999, 1.000000};
   double e_effm1s[kTest]={0.000490, 0.000406, 0.000215, 0.000102, 0.000049, 0.000023, 0.000011, 0.000006, 0.000003, 0.000001, 0.000000};
 
-  TString z, m, exec;
+  TString z, m, exec;//to vary vertex z and multiplicity during the study
 
-  //printf("+++ START resolution performances +++\n\n");
+  printf("\n\nxxx START performances: vertex z xxx\n\n");
 
-  for(int i=0; i<17;i++){
+  for(int i=0; i<17;i++){//performances varying vertex z
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,1000000,"+z+",20)";
+    exec="tracks_gen(0,0,1,-1,15,100000,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,1,0.0012,0.0003,1,5);
     resoz[i]=perform.reso;
     e_resoz[i]=perform.e_reso;
     effz[i]=perform.eff;
     e_effz[i]=perform.e_eff;
-    //gROOT->Reset();
   }
 
-  //printf("+++ START efficiency performances +++\n\n");
+  printf("\n\nxxx START performances: multiplicity xxx\n\n");
 
-  for(int i=0; i<kTest;i++){
+  for(int i=0; i<kTest;i++){//performances varying vertex z
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,1,1,1,15,1000000,0,"+m+")";
+    exec="tracks_gen(0,1,1,-1,15,100000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,1,0.0012,0.0003,1,5);
     resom[i]=perform.reso;
     e_resom[i]=perform.e_reso;
     effm[i]=perform.eff;
     e_effm[i]=perform.e_eff;
-    //gROOT->Reset();
   }
 
   TCanvas *c_perform=new TCanvas("c_perform","c_perform",600,400);
@@ -121,11 +118,11 @@ void spit_perform(){
     gROOT->Reset();
   }*/
 
-  //cpu info
-  timer.Stop();
+  timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();
   double real_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/real_time)*100;
-  printf("Performances info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,real_time, cpu_efficiency);
+
+  printf("Performances info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\n",cpu_time,real_time, cpu_efficiency);
 
 }
