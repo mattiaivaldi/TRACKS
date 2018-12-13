@@ -17,7 +17,7 @@
 
 //using namespace TMath;
 
-void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp){
+void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp){//general information about the simulation
 
   printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
 
@@ -37,7 +37,7 @@ void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp){
 
 }
 
-void graphstyler(TGraph &graph, int divide){
+void graphstyler(TGraph &graph, int divide){//TGraph makeup
   if(divide==1){
     graph.GetXaxis()->SetTitleSize(0.04);
     graph.GetYaxis()->SetTitleSize(0.035);
@@ -61,7 +61,7 @@ void graphstyler(TGraph &graph, int divide){
   }
 }
 
-void histostyler(TH1 &histo, int divide){
+void histostyler(TH1 &histo, int divide){//TH1 makeup
   if(divide==1){
     histo.GetXaxis()->SetTitleSize(0.04);
     histo.GetYaxis()->SetTitleSize(0.035);
@@ -85,7 +85,7 @@ void histostyler(TH1 &histo, int divide){
   }
 }
 
-void stackstyler(THStack &stack){
+void stackstyler(THStack &stack){//THStack makeup
 
     stack.GetXaxis()->SetLabelSize(0.045);
     stack.GetYaxis()->SetLabelSize(0.045);
@@ -95,7 +95,7 @@ void stackstyler(THStack &stack){
     stack.GetYaxis()->SetTitleOffset(0.7);
 }
 
-void pavestyler(TPaveText &pave, double textsize){
+void pavestyler(TPaveText &pave, double textsize){//TPave makeup
   pave.SetTextAlign(13);
   pave.SetFillStyle(0);
   pave.SetShadowColor(0);
@@ -147,15 +147,15 @@ void MSaveBigPNG(TString filename, double scale) {
     return;
 }
 
-double *hit_point(double x0, double y0, double z0, double theta, double phi, double R) {
+double *hit_point(double x0, double y0, double z0, double theta, double phi, double R) {//evaluate hit coordinates
 
   static double hit[3];
-  double c1 = TMath::Sin(theta)*TMath::Cos(phi), c2 = TMath::Sin(theta)*TMath::Sin(phi), c3 = TMath::Cos(theta);//direction cosines
-  double delta = 2*x0*y0*c1*c2 - c1*c1*y0*y0 + c1*c1*R*R -c2*c2*x0*x0 + c2*c2*R*R;//delta of II degree equation (>= 0 by construction)
-  double t_p = (-(x0*c1 - y0*c2) + TMath::Sqrt(delta))/(c1*c1 + c2*c2);//+ solution
-  double t_m = (-(x0*c1 - y0*c2) - TMath::Sqrt(delta))/(c1*c1 + c2*c2);//- solution
+  double c1=TMath::Sin(theta)*TMath::Cos(phi), c2=TMath::Sin(theta)*TMath::Sin(phi), c3=TMath::Cos(theta);//direction cosines
+  double delta=2*x0*y0*c1*c2-c1*c1*y0*y0+c1*c1*R*R-c2*c2*x0*x0+c2*c2*R*R;//delta of II degree equation (>= 0 by construction)
+  double t_p=(-(x0*c1-y0*c2)+TMath::Sqrt(delta))/(c1*c1+c2*c2);//+ solution
+  double t_m=(-(x0*c1-y0*c2)-TMath::Sqrt(delta))/(c1*c1+c2*c2);//- solution
 
-  //calculate the values of the intersection points (x,y,z)
+  //calculate the intersection coordinates (x,y,z)
   if (t_p >= 0) {
     hit[0] = x0 + c1*t_p;
     hit[1] = y0 + c2*t_p;
@@ -168,7 +168,7 @@ double *hit_point(double x0, double y0, double z0, double theta, double phi, dou
     hit[2] = z0 + c3*t_m;
   }
 
-  return hit;
+  return hit;//return a pointer to the first element of hit[]
 }
 
 bool detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, int &counter, TH1D** histo){
@@ -176,16 +176,16 @@ bool detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verb
   double *hit_buffer;
   bool b_cross=false;
 
-  hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),part.GetTheta(),part.GetPhi(),L->GetRadius());//evaluate hit point coordinates
+  hit_buffer=hit_point(vtx->GetX(),vtx->GetY(),vtx->GetZ(),part.GetTheta(),part.GetPhi(),L->GetRadius());//evaluate hit coordinates
 
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
 
     b_cross = true;//yes we have detection
     //gSystem->Beep(440,1);
 
-    new(cross[counter])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill with hit
+    new(cross[counter])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill the TCA with Hit object
 
-    for(int i=0;i<=2;i++){histo[i]->Fill(*(hit_buffer+i));}
+    for(int i=0;i<=2;i++){histo[i]->Fill(*(hit_buffer+i));}//fill the histogram with hist coordinates
 
     if (b_cross&&b_multiscatter) {
       part.Rotate(L->GetRMS());//if multiscattering ON set new angles
@@ -196,7 +196,7 @@ bool detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verb
       printf(" at (%f, %f, %f)\nAngles after: theta %f - phi %f\n\n",((Hit*)cross[counter])->GetX(),((Hit*)cross[counter])->GetY(),((Hit*)cross[counter])->GetZ(),part.GetTheta(),part.GetPhi());
     }
 
-    counter++;
+    counter++;//this counter will be taken by "detect" during the next call
 
   }else{
     if(b_verbose){
@@ -208,12 +208,12 @@ bool detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verb
 
 }
 
-void noise(bool b_verbose, int Noise, int Mult, TClonesArray &cross, Layer* L){
+void noise(bool b_verbose, int Noise, int Mult, TClonesArray &cross, Layer* L){//noise hit generator
 
   int index_noise=Mult;
 
   for(int i=0; i<Noise; i++){
-    new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());//random spurious hit
+    new(cross[index_noise])Hit(L->GetRadius(),L->GetWidth());//fill the TCA with a random noise hit
     if(b_verbose){
       cout<<"> Noise hit with "<<L->GetLayerName();
       printf(" at (%f, %f,%f) <\n\n",((Hit*)cross[index_noise])->GetX(),((Hit*)cross[index_noise])->GetY(),((Hit*)cross[index_noise])->GetZ());
@@ -223,19 +223,19 @@ void noise(bool b_verbose, int Noise, int Mult, TClonesArray &cross, Layer* L){
 
 }
 
-void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross){
+void smear(int index, double sigmaz, double sigmarf, double R, TClonesArray &cross){//gaussian smearing
 
   double dphi=(gRandom->Gaus(0,sigmarf))/R;
   double dz=gRandom->Gaus(0,sigmaz);
 
-  Hit *hit_buffer=(Hit*)cross.At(index);
+  Hit *hit_buffer=(Hit*)cross.At(index);//alias to retrieve the hit coordinates
 
   double x=hit_buffer->GetX();
   double y=hit_buffer->GetY();
   double z=hit_buffer->GetZ();
 
   double phi=TMath::ACos(x/R);
-  double theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
+  double theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));//angles before the smearing
 
   if (gRandom->Rndm()<0.5) {
     phi+=dphi;
@@ -249,7 +249,7 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
     y=R*TMath::Sin(phi);
     z-=dz;
     theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
-  }
+  }//new angles and coordinates after gaussian smearing
 
   hit_buffer->SetX(x);
   hit_buffer->SetY(y);
@@ -257,16 +257,27 @@ void smeagol(int index, double sigmaz, double sigmarf, double R, TClonesArray &c
 
 }
 
-bool peakfinder(TH1D* histo, double ampli, int width){
+bool peakfinder(TH1D* histo, double ampli, int width){//tracklet ambiguity check
+
+  //the idea of this check is to evaluate whether
+  //the tracklet histogram contains more than 1 region
+  //with a certain amount of counts - in this case
+  //we cannot say which region could contain the true vertex
+  //and discard the event, otherwise we accept it
+  //and evaluate the reconstructed z
+
+  //ampli is the scale factor that determines the "amount of counts"
+  //width in the number of bins in which we look for it
+
   int fisrtbin=(int)(ampli/2+0.5);
-  int lastbin=(int)(ampli/2+0.5)-1;
+  int lastbin=(int)(ampli/2+0.5)-1;//define the check range
   bool peakit=false;
-  int kBin=histo->GetSize()-2;
-  int binC=histo->GetMaximumBin();
-  double Max=histo->GetBinContent(binC);
+  int kBin=histo->GetSize()-2;//number of bin excluding under- and overflow
+  int binC=histo->GetMaximumBin();//bin index of the first global maximum
+  double Max=histo->GetBinContent(binC);//value of the first global maximum
   double ClusterSize=0;
-  for(int i=fisrtbin;i<kBin-lastbin;i++){
-    for(int j=-lastbin;j<=lastbin;j++){
+  for(int i=fisrtbin;i<kBin-lastbin;i++){//loop over the check range
+    for(int j=-lastbin;j<=lastbin;j++){//loop over width
       ClusterSize+=histo->GetBinContent(i-j);
     }
     if(ClusterSize>=ampli*Max&&((i<=binC-width)||(i>=binC+width))){
@@ -277,31 +288,6 @@ bool peakfinder(TH1D* histo, double ampli, int width){
       ClusterSize=0;
       peakit=true;
     }
-  }
+  }//end loop over the check range
   return peakit;
-}
-
-double mode(vector<double> v){
-
-  double max = v.back();
-  double min = v.front();
-  double prev = max;
-  double mode=0;
-  double maxcount = 0;
-  double currcount = 0;
-
-  for (const auto n : v) {
-    if (n == prev) {
-      ++currcount;
-      if (currcount > maxcount) {
-        maxcount = currcount;
-        mode = n;
-      }
-    } else {
-      currcount = 1;
-    }
-    prev = n;
-  }
-
-  return mode;
 }

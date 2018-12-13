@@ -126,13 +126,13 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     for(int l=0;l<mult_ev2;l++){//loop over total hits on layer #2
 
       Hit *hit_buffer2=(Hit*)cross_L2->At(l);
-      smeagol(l,smear_z,smear_phi,7.,hits_L2);//smearing on hit point
+      smear(l,smear_z,smear_phi,7.,hits_L2);//smearing on hit point
       phi2=ACos(hit_buffer2->GetX()/7.);
 
       for(int m=0;m<mult_ev1;m++){//loop over total hits on layer #1
 
         Hit *hit_buffer1=(Hit*)cross_L1->At(m);
-        smeagol(m,smear_z,smear_phi,4.,hits_L1);//smearing on hit point
+        smear(m,smear_z,smear_phi,4.,hits_L1);//smearing on hit point
         phi1=ACos(hit_buffer1->GetX()/4.);
 
         if(Abs(phi2-phi1)<0.01){//hit compatibility check
