@@ -86,7 +86,7 @@ int Hit::GetMult() const {
   return fMult;
 }
 
-void Hit::Customize() {
+void Hit::Customize(int custom, double z_custom, int mult_custom) {
   if(custom==10){
     fZ=z_custom;
   }else if(custom==5){

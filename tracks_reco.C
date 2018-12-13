@@ -1,11 +1,8 @@
 //
-//TRACKS - MC generation of particle tracks in a detector
-//with multiple scattering and noise
-//developed by Luca Quaglia and Mattia Ivaldi, 2018
+//TRACKS - reconstruction algorithm
 //
 //START
 
-#include <ctime>
 #include "TNtuple.h"
 #include "TCanvas.h"
 #include "TStyle.h"
@@ -29,7 +26,6 @@
 #include "Hit.h"
 #include "Particle.h"
 #include <vector>
-#include <deque>
 
 #ifdef WINDOWS
 #include <direct.h>
@@ -37,7 +33,7 @@
 #else
 #include <unistd.h>
 #define GetCurrentDir getcwd
-#endif
+#endif //needed to get current working directory
 
 struct reco_perform{
   double reso;
@@ -65,54 +61,49 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
   char cwd[FILENAME_MAX];
   GetCurrentDir(cwd,FILENAME_MAX);
-  TString dirplot=TString(cwd)+"/tracksplot/";
+  TString dirplot=TString(cwd)+"/tracksplot/";//define the path where the plots will be saved
 
   gRandom->SetSeed(0);
   gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
 
   TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex;z_{V} [cm];# [a.u.]",200,-40.,40.);
-  //TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex;z_{V} [cm];# [a.u.]",200,-13.5,13.5);
   histostyler(*h_zreco,2);
 
   //TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",801,-40.55,40.55);
   TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",161,-40.25,40.25);
 
-  //TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",800001,-40.,40.);
-  //TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.5,13.5);
-
-  vector<double> tracklet;
-
   TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",201,-0.1,0.1);
   histostyler(*h_reso,2);
 
-  TFile h_gen("gen.root","READ");
+  vector<double> tracklet;
+
+  TFile h_gen("gen.root","READ");//accessing hit information
   TTree *tree_gen=(TTree*)h_gen.Get("TG");
-  TNtuple *z_gen=(TNtuple*)h_gen.Get("z_gen");
+
+  TNtuple *z_gen=(TNtuple*)h_gen.Get("z_gen");//accessing MC truth
   float zgen;
   z_gen->SetBranchAddress("z_gen",&zgen);
 
   int kExp=tree_gen->GetEntries();
 
   TClonesArray *cross_L1=new TClonesArray("Hit",100);
-  TClonesArray *cross_L2=new TClonesArray("Hit",100);
+  TClonesArray *cross_L2=new TClonesArray("Hit",100);//TCA to retrieve hot coordinates
 
   TClonesArray& hits_L1=*cross_L1;
-  TClonesArray& hits_L2=*cross_L2;//TCA aliases to be smeagled
+  TClonesArray& hits_L2=*cross_L2;//TCA aliases to be smeared
 
   TBranch *b1=tree_gen->GetBranch("HITL1");
-  TBranch *b2=tree_gen->GetBranch("HITL2");
-
   b1->SetAddress(&cross_L1);
-  b2->SetAddress(&cross_L2);
+  TBranch *b2=tree_gen->GetBranch("HITL2");
+  b2->SetAddress(&cross_L2);//getting branches
 
-  bool startsum=false;
   int goodz=0,percent=(int)kExp*0.01;
   double phi1=0,phi2=0,x1=0,x2=0,z1=0,z2=0,z_reco=0,z_reco_fin=0;
   double left_ROI=0,right_ROI=0,center_ROI=0,z_event=0,total_good=0,counter_tracklet=0;
-  double diffz=0,delta = 0.25;
+  double diffz=0,delta=0.25;//work variables
 
-  for(int i=0;i<kExp;i++){
+  for(int i=0;i<kExp;i++){//start loop over total events
 
     tree_gen->GetEvent(i);
     int mult_ev1=cross_L1->GetEntries();
@@ -132,25 +123,25 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
     //printf("\nlist of z reco produced\n");
 
-    for(int l=0;l<mult_ev2;l++){
+    for(int l=0;l<mult_ev2;l++){//loop over total hits on layer #2
 
       Hit *hit_buffer2=(Hit*)cross_L2->At(l);
-      smeagol(l,smear_z,smear_phi,7.,hits_L2);
+      smeagol(l,smear_z,smear_phi,7.,hits_L2);//smearing on hit point
       phi2=ACos(hit_buffer2->GetX()/7.);
 
-      for(int m=0;m<mult_ev1;m++){
+      for(int m=0;m<mult_ev1;m++){//loop over total hits on layer #1
 
         Hit *hit_buffer1=(Hit*)cross_L1->At(m);
-        smeagol(m,smear_z,smear_phi,4.,hits_L1);
+        smeagol(m,smear_z,smear_phi,4.,hits_L1);//smearing on hit point
         phi1=ACos(hit_buffer1->GetX()/4.);
 
-        if(Abs(phi2-phi1)<0.01){
+        if(Abs(phi2-phi1)<0.01){//hit compatibility check
 
           x1=hit_buffer1->GetX();
           x2=hit_buffer2->GetX();
           z1=hit_buffer1->GetZ();
           z2=hit_buffer2->GetZ();
-          z_reco=z1+((z2-z1)/(x1-x2))*x1;
+          z_reco=z1+((z2-z1)/(x1-x2))*x1;//tracklet intersection with z-axis
 
           goodz++;
           h_zreco->Fill(z_reco);
@@ -170,32 +161,24 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
     //printf("\nnow z reco are ordered\n");
 
-    if(goodz!=0&&peakfinder(h_ROI,amplitude,width)){
-    //if(goodz!=0){
+    if(goodz!=0&&peakfinder(h_ROI,amplitude,width)){//event ambiguity check
       total_good++;
-      center_ROI=h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//cm
+      center_ROI=h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());
       left_ROI=center_ROI-delta;
-      right_ROI=center_ROI+delta;
-      //printf("\nevento %d left %f center %f right %f\n\n",i,left_ROI,center_ROI,right_ROI);
-      for(int k=0;k<(int)tracklet.size();k++){
-        //printf("\nevento %d %f %f",i,zgen,tracklet[k]);
+      right_ROI=center_ROI+delta;//define the region of interest in cm
+      for(int k=0;k<(int)tracklet.size();k++){//loop over tracklets
         if(tracklet[k]>=center_ROI-delta&&tracklet[k]<=center_ROI+delta){
-          //printf("reco %d %f\n",k+1,tracklet[k]);
           z_event+=tracklet[k];
           counter_tracklet++;
         }
-      }
+      }//end loop over tracklets
       z_event/=counter_tracklet;
-    }
-
-    if(goodz!=0){
       diffz=zgen-z_event;
-      //printf("\nevento %d %f %f %f\n",i,zgen,z_event, diffz);
       h_reso->Fill(diffz);
     }
 
-    h_ROI->Reset();
-    vector<double>().swap(tracklet);
+    h_ROI->Reset();//get the histogram ready for the next event
+    vector<double>().swap(tracklet);//freed tracklet
     z_event=0;
     goodz=0;
     center_ROI=0;
@@ -207,9 +190,9 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
   printf("\n\n+++ END reconstruction +++\n\nSaving files...\n\n");
 
-  if(printplot){
+  if(printplot){//draw and save plots
 
-    /*TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",1200,400);
+    TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",1200,400);
     c_zreco->Divide(2,1);
     c_zreco->cd(1);
     h_zreco->DrawCopy();
@@ -228,14 +211,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     pt_reso->Draw();
     c_zreco->SaveAs(dirplot+"c_zreco.eps");
 
-    delete c_zreco;
-    delete pt_reco;
-    delete pt_reso;*/
-
-    new TCanvas();
-    h_reso->DrawCopy();
-
-    /*TCanvas *c_reco_perform=new TCanvas("c_reco_perform","c_reco_perform",600,400);
+    TCanvas *c_reco_perform=new TCanvas("c_reco_perform","c_reco_perform",600,400);
     c_reco_perform->cd();
     c_reco_perform->SetLogx();
     c_reco_perform->SetLogy();
@@ -265,7 +241,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     legt->AddEntry(p_run,"RUN time","l");
     legt->Draw();
 
-    c_reco_perform->SaveAs(dirplot+"c_reco_perform.eps");*/
+    c_reco_perform->SaveAs(dirplot+"c_reco_perform.eps");
 
   }
 
@@ -278,11 +254,11 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   perform.reso=h_reso->GetRMS();
   perform.e_reso=h_reso->GetRMSError();
   perform.eff=total_good/(double)kExp;
-  perform.e_eff=Sqrt(perform.eff*(1-perform.eff)/(double)kExp);
+  perform.e_eff=Sqrt(perform.eff*(1-perform.eff)/(double)kExp);//calculate resolution and robustness
 
   h_gen.Close();
 
-  delete h_zreco;
+  delete h_zreco;//delete all objects
   delete h_ROI;
   delete h_reso;
 
