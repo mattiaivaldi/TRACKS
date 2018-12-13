@@ -27,12 +27,12 @@ void tracks(TString myopt="fast"){
   gSystem->CompileMacro("Tools.cxx",opt.Data());
   gSystem->CompileMacro("tracks_gen.C",opt.Data());
   gSystem->CompileMacro("tracks_reco.C",opt.Data());
-  gROOT->ProcessLine("tracks_gen(0,1,1,-2,0,10,2.65,30)");//perform generation
+  gROOT->ProcessLine("tracks_gen(0,1,1,-1,0,100000,2.65,30)");//perform generation
   gROOT->ProcessLine("tracks_reco(0,1,0.0012,0.0003,1,3)");//perform reconstruction
   //gROOT->ProcessLine(".x spit_perform.C");//reconstruction performance study
   //gROOT->ProcessLine(".x cluster_study.C");//peak finding performance study
 
-  timer.Stop();//end cpu monitoring
+  timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();
   double run_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/run_time)*100;

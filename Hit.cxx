@@ -85,3 +85,14 @@ int Hit::GetMult() const {
   //returns Mult, def2
   return fMult;
 }
+
+void Hit::Customize() {
+  if(custom==10){
+    fZ=z_custom;
+  }else if(custom==5){
+    fMult=mult_custom;
+  }else if(custom==15){
+    fZ=z_custom;
+    fMult=mult_custom;
+  }
+}

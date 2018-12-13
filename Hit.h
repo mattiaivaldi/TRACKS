@@ -29,6 +29,7 @@ public:
     void SetY(double ynew){fY=ynew;}
     void SetZ(double znew){fZ=znew;}
     void SetMult(int multnew){fMult=multnew;} //def2
+    void Customize(int custom, double z_custom, int mult_custom); //def2
 
 private:
 

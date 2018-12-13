@@ -173,7 +173,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   tree_gen->Branch("HITL1",&cross_L1);
   tree_gen->Branch("HITL2",&cross_L2);//branch booking
 
-  //start experiment
+  //start collision
 
   int percent=(int)kExp*0.01;
   double phib=0,phia=0;
@@ -181,15 +181,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   for(int i=0; i<kExp; i++){
 
     Hit *vgen=new Hit(0, 0.001, 5.3, multiplicity);
-
-    if(custom==10){
-      vgen->SetZ(z_custom);
-    }else if(custom==5){
-      vgen->SetMult(mult_custom);
-    }else if(custom==15){
-      vgen->SetZ(z_custom);
-      vgen->SetMult(mult_custom);
-    }
+    vgen->Customize(custom,z_custom,mult_custom);
 
     int mult = vgen->GetMult();
     z_gen->Fill((float)vgen->GetZ());
@@ -458,11 +450,11 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     delete h_L2[i];
   }
 
-  //cpu info
-  timer.Stop();
+  timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();
   double real_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/real_time)*100;
+
   printf("Generation info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,real_time, cpu_efficiency);
 
 }
