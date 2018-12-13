@@ -8,7 +8,6 @@
 
 void cluster_study(){
 
-  gROOT->Reset();
   gStyle->SetOptStat(0);
 
   TStopwatch timer;
@@ -38,7 +37,7 @@ void cluster_study(){
 
   printf("\n\nxxx START performances: amplitude xxx\n\n");
 
-  for(int i=0; i<kCluster;i++){
+  for(int i=0; i<kCluster;i++){//resolution vs vertex z for different amplitude
     for(int j=0; j<kTest;j++){
       z=Form("%f",z_custom[j]);
       exec="tracks_gen(0,0,1,1,15,500000,"+z+",20)";
@@ -46,11 +45,10 @@ void cluster_study(){
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
       resoz_ampli[i][j]=perform.reso;
       e_resoz_ampli[i][j]=perform.e_reso;
-      gROOT->Reset();
     }
   }
 
-  for(int i=0; i<kCluster;i++){
+  for(int i=0; i<kCluster;i++){//resolution vs vertex z for different width
     for(int j=0; j<kTest;j++){
       z=Form("%f",z_custom[j]);
       exec="tracks_gen(0,0,1,1,15,500000,"+z+",20)";
@@ -58,13 +56,12 @@ void cluster_study(){
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
       resoz_width[i][j]=perform.reso;
       e_resoz_width[i][j]=perform.e_reso;
-      gROOT->Reset();
     }
   }
 
   printf("\n\nxxx START performances: width xxx\n\n");
 
-  for(int i=0; i<kCluster;i++){
+  for(int i=0; i<kCluster;i++){//resolution vs multiplicity for different amplitude
     for(int j=0; j<kTest;j++){
       m=Form("%f",mult_custom[j]);
       exec="tracks_gen(0,0,1,1,15,500000,0,"+m+")";
@@ -72,11 +69,10 @@ void cluster_study(){
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
       resom_ampli[i][j]=perform.reso;
       e_resom_ampli[i][j]=perform.e_reso;
-      gROOT->Reset();
     }
-  }//resolution vs multiplicity for different amplitude
+  }
 
-  for(int i=0; i<kCluster;i++){
+  for(int i=0; i<kCluster;i++){//resolution vs multiplicity for different width
     for(int j=0; j<kTest;j++){
       m=Form("%f",mult_custom[j]);
       exec="tracks_gen(0,0,1,1,15,500000,0,"+m+")";
@@ -84,9 +80,8 @@ void cluster_study(){
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
       resom_width[i][j]=perform.reso;
       e_resom_width[i][j]=perform.e_reso;
-      gROOT->Reset();
     }
-  }//resolution vs multiplicity for different width
+  }
 
   TCanvas *c_study=new TCanvas("c_study","c_study",600,400);
   c_study->Divide(2,2);

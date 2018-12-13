@@ -103,6 +103,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   double left_ROI=0,right_ROI=0,center_ROI=0,z_event=0,total_good=0,counter_tracklet=0;
   double diffz=0,delta=0.25;//work variables
 
+  printf("Ready to reconstruct %d events!\n\n",kExp);
+
   for(int i=0;i<kExp;i++){//start loop over total events
 
     tree_gen->GetEvent(i);
@@ -185,7 +187,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     diffz=0;
   }
 
-  printf("\n\n+++ END reconstruction +++\n\nSaving files...\n\n");
+  printf("\n\n+++ END reconstruction +++\n\nThe plots are saved in .eps format in the tracksplot folder.\n\n");
 
   if(printplot){//draw and save plots
 
@@ -207,6 +209,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     pt_reso->AddText(Form("RMS = %f cm",h_reso->GetRMS()));
     pt_reso->Draw();
     c_zreco->SaveAs(dirplot+"c_zreco.eps");
+
+    delete c_zreco;
 
     TCanvas *c_reco_perform=new TCanvas("c_reco_perform","c_reco_perform",600,400);
     c_reco_perform->cd();
@@ -240,6 +244,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
     c_reco_perform->SaveAs(dirplot+"c_reco_perform.eps");
 
+    delete c_reco_perform;
+
   }
 
   //cpu info
@@ -259,7 +265,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   delete h_ROI;
   delete h_reso;
 
-  printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\n",cpu_time,run_time, cpu_efficiency);
+  printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %%",cpu_time,run_time, cpu_efficiency);
 
   return perform;
 

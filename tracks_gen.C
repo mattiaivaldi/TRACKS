@@ -56,6 +56,11 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   //z_custom is the imposed vertex z
   //mult_custom is the imposed vertex multiplicity
 
+  if(paolonoise<-1){
+    printf("> ERROR: invalid value of 'paolonoise' <\n\nAccepted values are:\n5 for custom vertex z\n10 for custom event multiplicity\n15 for both\n\n");
+    abort();//stop tracks and exit root
+  }
+
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
 
@@ -145,10 +150,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   TNtuple *z_gen=new TNtuple("z_gen","z_gen","z_gen");//containing MC truth
 
   int kNoise1=0, kNoise2=0;
-  if(paolonoise<-1){
-    printf("> ERROR: invalid value of 'paolonoise' <\n\nAccepted values are:\n5 for custom vertex z\n10 for custom event multiplicity\n15 for both\n\n");
-    abort();//stop tracks and exit root
-  }else if(paolonoise==-1){
+  if(paolonoise==-1){
     kNoise1=(int)gRandom->Integer(5);
     kNoise2=(int)gRandom->Integer(5);
   }else{
@@ -246,7 +248,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
   double Dphi_MAX=h_Dphi->GetBinCenter(h_Dphi->FindLastBinAbove());//maximum Dphi
 
-  printf("\n\n+++ END generation +++\n\nSaving files...\n\nYou will find gen.root containing the detection info in the current directory.\n\n");
+  printf("\n\n+++ END generation +++\n\nYou will find gen.root containing the detection info and the MC truth in the current directory.\n\n");
 
   if(printplot){//draw and save plots
 
@@ -268,6 +270,8 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     multiplicity->DrawCopy("SAME");
     legk->Draw();
     c_kinem->SaveAs(dirplot+"c_kinem.eps");
+
+    delete c_kinem;
 
     TCanvas *c_gen = new TCanvas("c_gen","c_gen",600,400);
     c_gen->Divide(2,2);
@@ -292,6 +296,8 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     h_phi->DrawCopy();
     c_gen->SaveAs(dirplot+"c_gen.eps");
 
+    delete c_gen;
+
     TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
     c_dphi->cd();
     h_Dphi->SetLineColor(kBlue+1);
@@ -304,6 +310,8 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     pt_dphi->Draw();
     c_dphi->SetLogy();
     c_dphi->SaveAs(dirplot+"c_dphi.eps");
+
+    delete c_dphi;
 
     TCanvas *c_hit = new TCanvas("c_hit","c_hit",600,400);
     c_hit->Divide(2,2);
@@ -425,6 +433,8 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
     c_hit->SaveAs(dirplot+"c_hit.eps");
 
+    delete c_hit;
+
   }//end of printing plots
 
   h_gen.Write();
@@ -451,7 +461,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   double real_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/real_time)*100;
 
-  printf("Generation info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\n",cpu_time,real_time, cpu_efficiency);
+  printf("Generation info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %%",cpu_time,real_time, cpu_efficiency);
 
 }
 

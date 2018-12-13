@@ -30,9 +30,9 @@ void spit_perform(){
 
   printf("\n\nxxx START performances: vertex z xxx\n\n");
 
-  for(int i=0; i<17;i++){//performances varying vertex z
+  /*for(int i=0; i<17;i++){//performances varying vertex z
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,-1,15,100000,"+z+",20)";
+    exec="tracks_gen(0,0,1,-1,15,10,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,1,0.0012,0.0003,1,5);
     resoz[i]=perform.reso;
@@ -45,7 +45,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){//performances varying vertex z
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,1,1,-1,15,100000,0,"+m+")";
+    exec="tracks_gen(0,1,1,-1,15,10,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,1,0.0012,0.0003,1,5);
     resom[i]=perform.reso;
@@ -106,17 +106,24 @@ void spit_perform(){
   m_effm->GetYaxis()->SetTitleOffset(0.5);
   m_effm->GetYaxis()->SetTitleSize(0.07);
 
-  c_perform->SaveAs(dirplot+"c_perform.eps");
+  c_perform->SaveAs(dirplot+"c_perform.eps");*/
 
-  /*for(int i=0; i<kTest;i++){
+  for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,5,1000000,0,"+m+")";
+    exec="tracks_gen(0,0,1,-1,15,1000000,0,"+m+")";
     gROOT->ProcessLine(exec);
-    reco_perform perform=tracks_reco(0,0,0.0012,0.0003);
+    reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     effz[i]=perform.eff;
-    e_effz[i]=TMath::Sqrt(effz[i]*(1-effz[i])/perform.kExp);
-    gROOT->Reset();
-  }*/
+    e_effz[i]=perform.e_eff;
+  }
+
+  for(int i=0; i<kTest;i++){
+    printf("%f,",effz[i]);
+  }
+  cout<<endl;
+  for(int i=0; i<kTest;i++){
+    printf("%f,",e_effz[i]);
+  }
 
   timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();

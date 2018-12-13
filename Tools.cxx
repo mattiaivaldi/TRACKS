@@ -19,11 +19,11 @@
 
 void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp){//general information about the simulation
 
-  printf("\n\n+++ TRACKS START - tracks generation +++\n\n");
+  printf("\n\n+++ START generation +++\n\n");
 
   if (b_verbose) {
     printf("Printing vertex and hit coordinates: ON\n\n");
-  }else{printf("Printing vertex and hit coordinates: OFF - only ten event displayed\n\n");}
+  }else{printf("Printing vertex and hit coordinates: OFF - only generation percentage shown\n\n");}
 
   if (b_multiscatter) {
     printf("Applying multiple scattering: ON\n\n");
@@ -33,7 +33,7 @@ void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp){//
     printf("Applying noise: ON\n\nAll distances are in cm, all angles are in rad.\n\n\n");
   }else{printf("Applying noise: OFF\n\nAll distances are in cm, all angles are in rad.\n\n\n");}
 
-  printf("Ready to generate %d events! The detection info will be stored in a .root file containing a TTree with two branches, respectively the hits' coordinates on the first and the second Si layer.\n\n\n",kExp);
+  printf("Ready to generate %d events! The detection info will be stored in a .root file containing a TTree with two branches, respectively the hits' coordinates on the first and the second Si layer. The MC truth is stored in a NTuple.\n\n\n",kExp);
 
 }
 
