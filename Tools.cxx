@@ -105,7 +105,7 @@ void pavestyler(TPaveText &pave, double textsize){//TPave makeup
   pave.SetTextSize(textsize);
 }
 
-void MSaveBigPNG(TString filename, double scale) {
+void MSaveBigPNG(TString filename, double scale) {//to scale up png resolution
     TCanvas* old_canv = gPad->GetCanvas();
 
     gROOT->SetBatch(kTRUE);
@@ -276,18 +276,20 @@ bool peakfinder(TH1D* histo, double ampli, int width){//tracklet ambiguity check
   int binC=histo->GetMaximumBin();//bin index of the first global maximum
   double Max=histo->GetBinContent(binC);//value of the first global maximum
   double ClusterSize=0;
+
   for(int i=fisrtbin;i<kBin-lastbin;i++){//loop over the check range
     for(int j=-lastbin;j<=lastbin;j++){//loop over width
       ClusterSize+=histo->GetBinContent(i-j);
-    }
-    if(ClusterSize>=ampli*Max&&((i<=binC-width)||(i>=binC+width))){
+    }//end loop over width
+    if(ClusterSize>=ampli*Max&&((i<=binC-width)||(i>=binC+width))){//this is the case in which we have ambiguity
       peakit=false;
       ClusterSize=0;
       break;
-    }else{
+    }else{//this is the case in which we don't have ambiguity - the event is good
       ClusterSize=0;
       peakit=true;
     }
   }//end loop over the check range
+
   return peakit;
 }

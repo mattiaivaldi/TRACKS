@@ -147,19 +147,16 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
           h_zreco->Fill(z_reco);
           h_ROI->Fill(z_reco);
           tracklet.push_back(z_reco);
-          //printf("\nevento %d %f %f #reco %d",i,zgen,z_reco,goodz);
 
         }
-      }
-    }
+      }//end loop over total hits on layer #1
+    }//loop over total hits on layer #2
+
+    //un-comment to display every roi histogram
     //new TCanvas();
     //h_ROI->DrawCopy();
-    //h_ROI->Print("all");
 
     sort(tracklet.begin(),tracklet.end());
-    //cout<<endl;
-
-    //printf("\nnow z reco are ordered\n");
 
     if(goodz!=0&&peakfinder(h_ROI,amplitude,width)){//event ambiguity check
       total_good++;
