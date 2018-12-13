@@ -27,7 +27,7 @@ private:
 
 	float fRap; //pseudorapidity
 	double fTheta;
-	double fPhi
+	double fPhi;
 
 	ClassDef(Particle,1)
 
