@@ -28,9 +28,9 @@ void spit_perform(){
 
   TString z, m, exec;//to vary vertex z and multiplicity during the study
 
-  printf("\n\nxxx START performances: vertex z xxx\n\n");
+  /*printf("\n\nxxx START performances: vertex z xxx\n\n");
 
-  /*for(int i=0; i<17;i++){//performances varying vertex z
+  for(int i=0; i<17;i++){//performances varying vertex z
     z=Form("%f",z_custom[i]);
     exec="tracks_gen(0,0,1,-1,15,10,"+z+",20)";
     gROOT->ProcessLine(exec);
@@ -54,6 +54,10 @@ void spit_perform(){
     e_effm[i]=perform.e_eff;
   }
 
+  TPaveText *pt_perform = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
+  pavestyler(*pt_perform,0.03);
+  pt_perform->AddText(Form("%d events",1000000));
+
   TCanvas *c_perform=new TCanvas("c_perform","c_perform",600,400);
   c_perform->Divide(2,2);
 
@@ -66,6 +70,7 @@ void spit_perform(){
   p_resoz->SetMarkerSize(0.4);
   p_resoz->SetMarkerColor(1);
   p_resoz->Draw("AP");
+  pt_perform->Draw();
 
   c_perform->cd(2);
   TGraphErrors *p_resom=new TGraphErrors(kTest,mult_custom,resom,NULL,e_resom);
@@ -76,6 +81,7 @@ void spit_perform(){
   p_resom->SetMarkerSize(0.4);
   p_resom->SetMarkerColor(1);
   p_resom->Draw("AP");
+  pt_perform->Draw();
 
   c_perform->cd(3);
   TGraphErrors *p_effz=new TGraphErrors(17,z_custom,effz,NULL,e_effz);
@@ -87,6 +93,7 @@ void spit_perform(){
   p_effz->SetMarkerSize(0.4);
   p_effz->SetMarkerColor(1);
   p_effz->Draw("AP");
+  pt_perform->Draw();
 
   c_perform->cd(4);
   TGraphErrors *p_effm=new TGraphErrors(kTest,mult_custom,effm,NULL,e_effm);
@@ -106,11 +113,19 @@ void spit_perform(){
   m_effm->GetYaxis()->SetTitleOffset(0.5);
   m_effm->GetYaxis()->SetTitleSize(0.07);
 
+  auto legt = new TLegend(0.15,0.65,0.3,0.85);
+  legt->SetHeader("#varepsilon_{CPU} > 96%","");
+  legt->AddEntry(p_effm,"z_{gen} = 0 cm","p");
+  legt->AddEntry(p_effm1s,"|Z_{gen}| < 1#sigma","p");
+  legt->Draw();
+
+  pt_perform->Draw();
+
   c_perform->SaveAs(dirplot+"c_perform.eps");*/
 
   for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,-1,15,1000000,0,"+m+")";
+    exec="tracks_gen(0,0,1,-1,10,1000000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     effz[i]=perform.eff;

@@ -33,6 +33,18 @@ void cluster_study(){
 
   double reso_buffer[kTest], e_reso_buffer[kTest];
 
+  auto leg_z_ampli = new TLegend(0.73,0.7,0.94,0.86);
+  leg_z_ampli->SetHeader("1000000 events - amplitude","");
+
+  auto leg_z_width = new TLegend(0.73,0.7,0.94,0.86);
+  leg_z_width->SetHeader("1000000 events - width","");
+
+  auto leg_m_ampli = new TLegend(0.73,0.7,0.94,0.86);
+  leg_m_ampli->SetHeader("1000000 events - amplitude","");
+
+  auto leg_m_width = new TLegend(0.73,0.7,0.94,0.86);
+  leg_m_width->SetHeader("1000000 events - width","");
+
   TString z, m, ampli, width, exec;//to vary vertex z, multiplicity, amplitude and width during the study
 
   printf("\n\nxxx START performances: amplitude xxx\n\n");
@@ -99,9 +111,11 @@ void cluster_study(){
     p_resoz_ampli[i]->SetMarkerColor(color[i]);
     p_resoz_ampli[i]->SetLineColor(color[i]);
     m_resoz_ampli->Add(p_resoz_ampli[i]);
+    leg_z_ampli->AddEntry(p_resoz_ampli[i],Form("%f",ampli_custom[i]),"p");
   }
   m_resoz_ampli->Draw("AP");
   m_resoz_ampli->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
+  leg_z_ampli->Draw();
 
   c_study->cd(2);
   TMultiGraph *m_resoz_width=new TMultiGraph();
@@ -116,9 +130,11 @@ void cluster_study(){
     p_resoz_width[i]->SetMarkerColor(color[i]);
     p_resoz_width[i]->SetLineColor(color[i]);
     m_resoz_width->Add(p_resoz_width[i]);
+    leg_z_width->AddEntry(p_resoz_width[i],Form("%f",width_custom[i]),"p");
   }
   m_resoz_width->Draw("AP");
   m_resoz_width->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
+  leg_z_width->Draw();
 
   c_study->cd(3);
   TMultiGraph *m_resom_ampli=new TMultiGraph();
@@ -133,9 +149,11 @@ void cluster_study(){
     p_resom_ampli[i]->SetMarkerColor(color[i]);
     p_resom_ampli[i]->SetLineColor(color[i]);
     m_resom_ampli->Add(p_resom_ampli[i]);
+    leg_m_ampli->AddEntry(p_resom_ampli[i],Form("%f",ampli_custom[i]),"p");
   }
   m_resom_ampli->Draw("AP");
   m_resom_ampli->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
+  leg_m_ampli->Draw();
 
   c_study->cd(4);
   TMultiGraph *m_resom_width=new TMultiGraph();
@@ -150,9 +168,11 @@ void cluster_study(){
     p_resom_width[i]->SetMarkerColor(color[i]);
     p_resom_width[i]->SetLineColor(color[i]);
     m_resom_width->Add(p_resom_width[i]);
+    leg_m_width->AddEntry(p_resom_width[i],Form("%f",width_custom[i]),"p");
   }
   m_resom_width->Draw("AP");
   m_resom_width->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
+  leg_m_width->Draw();
 
   c_study->SaveAs(dirplot+"c_study.eps");
 
