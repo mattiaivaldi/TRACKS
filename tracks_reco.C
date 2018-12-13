@@ -40,8 +40,6 @@
 #endif
 
 struct reco_perform{
-  double cputime;
-  double runtime;
   double reso;
   double e_reso;
   double eff;
@@ -77,8 +75,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   //TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex;z_{V} [cm];# [a.u.]",200,-13.5,13.5);
   histostyler(*h_zreco,2);
 
-  //TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",270,-13.5,13.5);
-  TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",161,-40.25,40.25); //---//
+  //TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",801,-40.55,40.55);
+  TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",161,-40.25,40.25);
 
   //TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",800001,-40.,40.);
   //TH1D *h_tracklet=new TH1D("h_tracklet","TRACKS reconstruction - tracklet",270000,-13.5,13.5);
@@ -112,7 +110,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   int goodz=0,percent=(int)kExp*0.01;
   double phi1=0,phi2=0,x1=0,x2=0,z1=0,z2=0,z_reco=0,z_reco_fin=0;
   double left_ROI=0,right_ROI=0,center_ROI=0,z_event=0,total_good=0,counter_tracklet=0;
-  double diffz=0,delta = 0.5;
+  double diffz=0,delta = 0.25;
 
   for(int i=0;i<kExp;i++){
 
@@ -173,6 +171,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     //printf("\nnow z reco are ordered\n");
 
     if(goodz!=0&&peakfinder(h_ROI,amplitude,width)){
+    //if(goodz!=0){
       total_good++;
       center_ROI=h_ROI->GetXaxis()->GetBinCenter(h_ROI->GetMaximumBin());//cm
       left_ROI=center_ROI-delta;
@@ -210,7 +209,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
   if(printplot){
 
-    TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",1200,400);
+    /*TCanvas *c_zreco=new TCanvas("c_zreco","c_zreco",1200,400);
     c_zreco->Divide(2,1);
     c_zreco->cd(1);
     h_zreco->DrawCopy();
@@ -228,6 +227,13 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     pt_reso->AddText(Form("RMS = %f cm",h_reso->GetRMS()));
     pt_reso->Draw();
     c_zreco->SaveAs(dirplot+"c_zreco.eps");
+
+    delete c_zreco;
+    delete pt_reco;
+    delete pt_reso;*/
+
+    new TCanvas();
+    h_reso->DrawCopy();
 
     /*TCanvas *c_reco_perform=new TCanvas("c_reco_perform","c_reco_perform",600,400);
     c_reco_perform->cd();
@@ -269,8 +275,6 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   double run_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/run_time)*100;
 
-  perform.cputime=cpu_time;
-  perform.runtime=run_time;
   perform.reso=h_reso->GetRMS();
   perform.e_reso=h_reso->GetRMSError();
   perform.eff=total_good/(double)kExp;

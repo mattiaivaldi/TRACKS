@@ -8,7 +8,7 @@
 
 void spit_perform(){
 
-  gROOT->Reset();
+  //gROOT->Reset();
   gStyle->SetOptStat(0);
 
   TStopwatch timer;
@@ -29,32 +29,32 @@ void spit_perform(){
 
   TString z, m, exec;
 
-  printf("+++ START resolution performances +++\n\n");
+  //printf("+++ START resolution performances +++\n\n");
 
   for(int i=0; i<17;i++){
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,1000000,"+z+",20)";
+    exec="tracks_gen(0,0,1,1,15,10000,"+z+",20)";
     gROOT->ProcessLine(exec);
-    reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,3);
+    reco_perform perform=tracks_reco(0,1,0.0012,0.0003,1,5);
     resoz[i]=perform.reso;
     e_resoz[i]=perform.e_reso;
     effz[i]=perform.eff;
     e_effz[i]=perform.e_eff;
-    gROOT->Reset();
+    //gROOT->Reset();
   }
 
-  printf("+++ START efficiency performances +++\n\n");
+  //printf("+++ START efficiency performances +++\n\n");
 
   for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,1,15,1000000,0,"+m+")";
+    exec="tracks_gen(0,1,1,1,15,100000,0,"+m+")";
     gROOT->ProcessLine(exec);
-    reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,3);
+    reco_perform perform=tracks_reco(0,1,0.0012,0.0003,1,5);
     resom[i]=perform.reso;
     e_resom[i]=perform.e_reso;
     effm[i]=perform.eff;
     e_effm[i]=perform.e_eff;
-    gROOT->Reset();
+    //gROOT->Reset();
   }
 
   TCanvas *c_perform=new TCanvas("c_perform","c_perform",600,400);
@@ -105,7 +105,7 @@ void spit_perform(){
   m_effm->Add(p_effm1s);
   m_effm->Draw("AP");
   m_effm->SetTitle("TRACKS performances - robustness vs multiplicity;multiplicity;#tilde{#varepsilon}");
-  graphstyler(*p_effz,4);
+  graphstyler(*p_effm,4);
   m_effm->GetYaxis()->SetTitleOffset(0.5);
   m_effm->GetYaxis()->SetTitleSize(0.07);
 

@@ -20,6 +20,8 @@ void cluster_study(){
 
   const int kTest=6, kCluster=4;
 
+  int color[kCluster]={2,4,6,9};
+
   double ampli_custom[kCluster]={0.7,1,1.3,1.5};
   double width_custom[kCluster]={1,3,5,7};
 
@@ -39,7 +41,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){
     for(int j=0; j<kTest;j++){
       z=Form("%f",z_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,10000,"+z+",20)";
+      exec="tracks_gen(0,0,1,1,15,1000000,"+z+",20)";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
       resoz_ampli[i][j]=perform.reso;
@@ -51,7 +53,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){
     for(int j=0; j<kTest;j++){
       z=Form("%f",z_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,10000,"+z+",20)";
+      exec="tracks_gen(0,0,1,1,15,1000000,"+z+",20)";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
       resoz_width[i][j]=perform.reso;
@@ -63,7 +65,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){
     for(int j=0; j<kTest;j++){
       m=Form("%f",mult_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,10000,0,"+m+")";
+      exec="tracks_gen(0,0,1,1,15,1000000,0,"+m+")";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
       resom_ampli[i][j]=perform.reso;
@@ -75,7 +77,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){
     for(int j=0; j<kTest;j++){
       m=Form("%f",mult_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,10000,0,"+m+")";
+      exec="tracks_gen(0,0,1,1,15,1000000,0,"+m+")";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
       resom_width[i][j]=perform.reso;
@@ -96,9 +98,9 @@ void cluster_study(){
     }
     p_resoz_ampli[i]=new TGraphErrors(kTest,z_custom,reso_buffer,NULL,e_reso_buffer);
     p_resoz_ampli[i]->SetMarkerStyle(20+i);
-    p_resoz_ampli[i]->SetMarkerSize(0.5);
-    p_resoz_ampli[i]->SetMarkerColor(kRed+i);
-    p_resoz_ampli[i]->SetLineColor(kRed+i);
+    p_resoz_ampli[i]->SetMarkerSize(0.4);
+    p_resoz_ampli[i]->SetMarkerColor(color[i]);
+    p_resoz_ampli[i]->SetLineColor(color[i]);
     m_resoz_ampli->Add(p_resoz_ampli[i]);
   }
   m_resoz_ampli->Draw("AP");
@@ -113,9 +115,9 @@ void cluster_study(){
     }
     p_resoz_width[i]=new TGraphErrors(kTest,z_custom,reso_buffer,NULL,e_reso_buffer);
     p_resoz_width[i]->SetMarkerStyle(20+i);
-    p_resoz_width[i]->SetMarkerSize(0.5);
-    p_resoz_width[i]->SetMarkerColor(kRed+i);
-    p_resoz_width[i]->SetLineColor(kRed+i);
+    p_resoz_width[i]->SetMarkerSize(0.4);
+    p_resoz_width[i]->SetMarkerColor(color[i]);
+    p_resoz_width[i]->SetLineColor(color[i]);
     m_resoz_width->Add(p_resoz_width[i]);
   }
   m_resoz_width->Draw("AP");
@@ -130,12 +132,12 @@ void cluster_study(){
     }
     p_resom_ampli[i]=new TGraphErrors(kTest,mult_custom,reso_buffer,NULL,e_reso_buffer);
     p_resom_ampli[i]->SetMarkerStyle(20+i);
-    p_resom_ampli[i]->SetMarkerSize(0.5);
-    p_resom_ampli[i]->SetMarkerColor(kRed+i);
-    p_resom_ampli[i]->SetLineColor(kRed+i);
+    p_resom_ampli[i]->SetMarkerSize(0.4);
+    p_resom_ampli[i]->SetMarkerColor(color[i]);
+    p_resom_ampli[i]->SetLineColor(color[i]);
     m_resom_ampli->Add(p_resom_ampli[i]);
   }
-  m_resom_ampli->Draw("AL");
+  m_resom_ampli->Draw("AP");
   m_resom_ampli->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
 
   c_study->cd(4);
@@ -147,12 +149,12 @@ void cluster_study(){
     }
     p_resom_width[i]=new TGraphErrors(kTest,mult_custom,reso_buffer,NULL,e_reso_buffer);
     p_resom_width[i]->SetMarkerStyle(20+i);
-    p_resom_width[i]->SetMarkerSize(0.5);
-    p_resom_width[i]->SetMarkerColor(kRed+i);
-    p_resom_width[i]->SetLineColor(kRed+i);
+    p_resom_width[i]->SetMarkerSize(0.4);
+    p_resom_width[i]->SetMarkerColor(color[i]);
+    p_resom_width[i]->SetLineColor(color[i]);
     m_resom_width->Add(p_resom_width[i]);
   }
-  m_resom_width->Draw("AL");
+  m_resom_width->Draw("AP");
   m_resom_width->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
 
   c_study->SaveAs(dirplot+"c_study.eps");
