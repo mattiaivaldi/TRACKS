@@ -10,9 +10,9 @@ class Layer : public TObject{
 
 public:
 
-    Layer();//default constructor
-    Layer(TString N, double W, double R, double T, double RMS);//custom contructor
-    virtual ~Layer();//destructor
+    Layer(); //default constructor
+    Layer(TString N, double W, double R, double T, double RMS); //standard contructor
+    virtual ~Layer(); //destructor
 
     //member function
 
@@ -30,7 +30,7 @@ private:
     double fWidth;
     double fRadius;
     double fThick;
-    double fRMS;
+    double fRMS; //theta rms
 
     ClassDef(Layer,1)
 

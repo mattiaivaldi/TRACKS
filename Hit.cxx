@@ -16,7 +16,7 @@ fX(0.),
 fY(0.),
 fZ(0.)
 {
-  //Default constructor
+  //default constructor, def1
 }
 
 Hit::Hit(double x, double y, double z): TObject(),
@@ -36,7 +36,7 @@ fZ(gRandom->Uniform(-H/2,H/2))
     fY=TMath::Sqrt(R*R-fX*fX);
   }else{fY=-1*TMath::Sqrt(R*R-fX*fX);}
 
-  //spurious hit constructor
+  //spurious hit constructor (noise), def1
 }
 
 Hit::Hit(double meanv, double sigmaxy, double sigmaz, TH1F *distr_mult): TObject(),
@@ -45,6 +45,7 @@ fY(gRandom->Gaus(meanv,sigmaxy)),
 fZ(gRandom->Gaus(meanv,sigmaz)),
 fMult((int)distr_mult->GetRandom())
 {
+  //un-comment to impose a z within a specific range
   /*double zgen;
   do{zgen=gRandom->Gaus(meanv,sigmaz);}
   while(TMath::Abs(zgen)>13.5);
@@ -62,7 +63,7 @@ fMult(mult_custom)
 }
 
 Hit::~Hit() {
-  //default destructor
+  //destructor
 }
 
 Double_t Hit::GetX() const {

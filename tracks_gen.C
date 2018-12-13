@@ -1,7 +1,5 @@
 //
-//TRACKS - MC generation of particle tracks in a detector
-//with multiple scattering and noise
-//developed by Luca Quaglia and Mattia Ivaldi, 2018
+//TRACKS - generation algorithm
 //
 //START
 
@@ -24,9 +22,7 @@
 #include "Riostream.h"
 #include "TRandom3.h"
 #include "TMath.h"
-#include "TF1.h"
 #include "TStopwatch.h"
-#include "TDirectory.h"
 #include "vector"
 #include "Tools.h"
 #include "Layer.h"
@@ -67,7 +63,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
   char cwd[FILENAME_MAX];
   GetCurrentDir(cwd,FILENAME_MAX);
-  TString dirplot=TString(cwd)+"/tracksplot/";
+  TString dirplot=TString(cwd)+"/tracksplot/";//define the path where the plots will be saved
 
   gRandom->SetSeed(0);
   gStyle->SetOptStat(0);
@@ -83,7 +79,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
   FILE *stream_data;
   char isopen;
-  stream_data = fopen("detector_info.txt","r");
+  stream_data = fopen("detector_info.txt","r");//access detector info
 
   while(1){
     isopen = fgetc(stream_data);
@@ -93,7 +89,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
       layer_name=buffer_name;
       layer.push_back(new Layer(layer_name,W_buffer,R_buffer,T_buffer,RMS_buffer));
     }
-  }
+  }//define a layer per detector, each with the respective info
 
   fclose (stream_data);
 
@@ -135,8 +131,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   TH1D *h_Dphi=new TH1D("h_Dphi","TRACKS generation - #Delta#varphi;#Delta#varphi [rad];# [a.u.]",20,-0.015,0.015);
   histostyler(*h_Dphi,1);
 
-  //verbosities
-  verbosities(printparticles, multiscatman, paolonoise, kExp);
+  verbosities(printparticles, multiscatman, paolonoise, kExp);//verbosities
 
   TString distr="kinem.root";//get starting kinematics
   TFile hfile(distr);
@@ -147,18 +142,21 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   multiplicity->SetLineWidth(1);
   multiplicity->SetLineColor(kRed);
 
-  TFile h_gen("gen.root","RECREATE");
-  TTree *tree_gen=new TTree("TG","tree_gen");
-  TNtuple *z_gen=new TNtuple("z_gen","z_gen","z_gen");//generation data
+  TFile h_gen("gen.root","RECREATE");//generation data
+  TTree *tree_gen=new TTree("TG","tree_gen");//containing hit information
+  TNtuple *z_gen=new TNtuple("z_gen","z_gen","z_gen");//containing MC truth
 
   int kNoise1=0, kNoise2=0;
-  if(paolonoise==1){
+  if(paolonoise<-1){
+    printf("\n\n> ERROR: invalid value of paolonoise <\n\n");
+    abort();
+  }else if(paolonoise==-1){
     kNoise1=(int)gRandom->Integer(5);
     kNoise2=(int)gRandom->Integer(5);
   }else{
     kNoise1=paolonoise;
     kNoise2=paolonoise;
-  }//number of spurious hits
+  }//define the number of noise hits
 
   int size0=multiplicity->FindLastBinAbove(0,1);
   int size1=multiplicity->FindLastBinAbove(0,1)+kNoise1;
@@ -467,4 +465,6 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   double cpu_efficiency = (cpu_time/real_time)*100;
   printf("Generation info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% \n\nScroll up for info and verbosities. Thanks for using TRACKS!\n\n-> DONATE <-\n\n",cpu_time,real_time, cpu_efficiency);
 
-} //END
+}
+
+//STOP

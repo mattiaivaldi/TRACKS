@@ -57,7 +57,7 @@ void Particle::Rotate(double rms){
   double thetap=gRandom->Gaus(0,theta0);//scattering angle theta
   double phip=gRandom->Uniform(2*Pi());//scattering angle phi
 
-  double mr[3][3], pol[3], rot[3], r;//rotation matrixes
+  double mr[3][3], pol[3], rot[3], r;//rotation matrices
 
   mr[0][0]=-Sin(fPhi);
   mr[1][0]=Cos(fPhi);
@@ -90,22 +90,6 @@ void Particle::Rotate(double rms){
     fPhi = ATan(rot[1]/rot[0])+Pi();
   }else if(rot[0]<0&&rot[1]<0){
     fPhi = ATan(rot[1]/rot[0])+Pi();
-  }
-
-  /*if(ATan(rot[1]/rot[0]) >= 0) {
-    if(double x = gRandom->Rndm() < 0.5){
-      fPhi = ATan(rot[1]/rot[0]);
-    }
-    else {
-      fPhi = ATan(rot[1]/rot[0])+Pi();
-    }
-  }else{
-    if(double x = gRandom->Rndm() < 0.5){
-      fPhi = ATan(rot[1]/rot[0]) + 2*Pi();
-    }
-    else {
-      fPhi = ATan(rot[1]/rot[0]) + Pi();
-    }
-  }*/
+  }//returns the REAL value of phi
 
 }

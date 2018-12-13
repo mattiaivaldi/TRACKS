@@ -27,11 +27,11 @@ fRMS(RMS)
 }
 
 Layer::~Layer() {
-  //default destructor
+  //destructor
 }
 
 TString Layer::GetLayerName() const {
-  //returns name
+  //returns Name
   return fName;
 }
 

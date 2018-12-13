@@ -9,25 +9,25 @@
 class Particle : public TObject {
 
 public:
-	
+
 	Particle(); //default constructor
-	Particle(TH1F *distr_rap); //custom constructors
+	Particle(TH1F *distr_rap); //custom constructor
 	virtual ~Particle(); //destructor
 
 	//member functions
 
-	double GetTheta() const; //getters
+	double GetTheta() const;
 	double GetPhi() const;
 	float GetRap() const;
-	void Rotate(double rms);//multiple scattering setter
+	void Rotate(double rms); //multiple scattering setter
 
 private:
 
 	//data members
 
 	float fRap; //pseudorapidity
-	double fTheta; //theta
-	double fPhi; //phi
+	double fTheta;
+	double fPhi
 
 	ClassDef(Particle,1)
 
