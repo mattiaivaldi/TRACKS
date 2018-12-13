@@ -9,6 +9,9 @@
 void spit_perform(){
 
   gStyle->SetOptStat(0);
+  gStyle->SetLegendBorderSize(0);
+  gStyle->SetLegendFillColor(0);
+  gStyle->SetFillStyle(0);
 
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
@@ -23,12 +26,12 @@ void spit_perform(){
   double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
   double resoz[17], e_resoz[17], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest], effz[17], e_effz[17];
 
-  double effm1s[kTest]={0.599157, 0.791143, 0.951297, 0.989414, 0.997564, 0.999472, 0.999870, 0.999968, 0.999991, 0.999999, 1.000000};
-  double e_effm1s[kTest]={0.000490, 0.000406, 0.000215, 0.000102, 0.000049, 0.000023, 0.000011, 0.000006, 0.000003, 0.000001, 0.000000};
+  double effm1s[kTest]={0.870975,0.878662,0.875956,0.875345,0.877736,0.875762,0.879214,0.870685,0.878893,0.868891,0.875211};
+  double e_effm1s[kTest]={0.000335,0.000327,0.000330,0.000330,0.000328,0.000330,0.000326,0.000336,0.000326,0.000338,0.000330};
 
   TString z, m, exec;//to vary vertex z and multiplicity during the study
 
-  /*printf("\n\nxxx START performances: vertex z xxx\n\n");
+  printf("\n\nxxx START performances: vertex z xxx\n\n");
 
   for(int i=0; i<17;i++){//performances varying vertex z
     z=Form("%f",z_custom[i]);
@@ -54,7 +57,7 @@ void spit_perform(){
     e_effm[i]=perform.e_eff;
   }
 
-  TPaveText *pt_perform = new TPaveText(0.15,0.7,0.35,0.85,"NDC");
+  TPaveText *pt_perform = new TPaveText(0.22,0.11,0.41,0.26,"NDC");
   pavestyler(*pt_perform,0.03);
   pt_perform->AddText(Form("%d events",1000000));
 
@@ -102,28 +105,29 @@ void spit_perform(){
   p_effm->SetMarkerColor(1);
   TGraphErrors *p_effm1s=new TGraphErrors(kTest,mult_custom,effm1s,NULL,e_effm1s);
   p_effm1s->SetMarkerStyle(22);
-  p_effm1s->SetMarkerSize(0.35);
+  p_effm1s->SetMarkerSize(0.4);
   p_effm1s->SetMarkerColor(2);
   TMultiGraph *m_effm=new TMultiGraph();
   m_effm->Add(p_effm);
   m_effm->Add(p_effm1s);
   m_effm->Draw("AP");
   m_effm->SetTitle("TRACKS performances - robustness vs multiplicity;multiplicity;#tilde{#varepsilon}");
-  graphstyler(*p_effm,4);
-  m_effm->GetYaxis()->SetTitleOffset(0.5);
+  m_effm->GetXaxis()->SetLabelSize(0.045);
+  m_effm->GetYaxis()->SetLabelSize(0.045);
+  m_effm->GetXaxis()->SetTitleSize(0.05);
   m_effm->GetYaxis()->SetTitleSize(0.07);
+  m_effm->GetXaxis()->SetTitleOffset(0.9);
+  m_effm->GetYaxis()->SetTitleOffset(0.5);
 
-  auto legt = new TLegend(0.15,0.65,0.3,0.85);
-  legt->SetHeader("#varepsilon_{CPU} > 96%","");
+  auto legt = new TLegend(0.68,0.17,0.83,0.40);
+  legt->SetHeader("1000000 events","");
   legt->AddEntry(p_effm,"z_{gen} = 0 cm","p");
   legt->AddEntry(p_effm1s,"|Z_{gen}| < 1#sigma","p");
   legt->Draw();
 
-  pt_perform->Draw();
+  c_perform->SaveAs(dirplot+"c_perform.eps");
 
-  c_perform->SaveAs(dirplot+"c_perform.eps");*/
-
-  for(int i=0; i<kTest;i++){
+  /*for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
     exec="tracks_gen(0,0,1,-1,10,1000000,0,"+m+")";
     gROOT->ProcessLine(exec);
@@ -138,7 +142,7 @@ void spit_perform(){
   cout<<endl;
   for(int i=0; i<kTest;i++){
     printf("%f,",e_effz[i]);
-  }
+  }*/
 
   timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();

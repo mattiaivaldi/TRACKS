@@ -9,6 +9,9 @@
 void cluster_study(){
 
   gStyle->SetOptStat(0);
+  gStyle->SetLegendBorderSize(0);
+  gStyle->SetLegendFillColor(0);
+  gStyle->SetFillStyle(0);
 
   TStopwatch timer;
   timer.Start(true);//start cpu monitor
@@ -33,17 +36,17 @@ void cluster_study(){
 
   double reso_buffer[kTest], e_reso_buffer[kTest];
 
-  auto leg_z_ampli = new TLegend(0.73,0.7,0.94,0.86);
-  leg_z_ampli->SetHeader("1000000 events - amplitude","");
+  auto leg_z_ampli = new TLegend(0.15,0.65,0.41,0.85);
+  leg_z_ampli->SetHeader("500000 events - amplitude","");
 
-  auto leg_z_width = new TLegend(0.73,0.7,0.94,0.86);
-  leg_z_width->SetHeader("1000000 events - width","");
+  auto leg_z_width = new TLegend(0.15,0.65,0.41,0.85);
+  leg_z_width->SetHeader("500000 events - width","");
 
-  auto leg_m_ampli = new TLegend(0.73,0.7,0.94,0.86);
-  leg_m_ampli->SetHeader("1000000 events - amplitude","");
+  auto leg_m_ampli = new TLegend(0.68,0.65,0.93,0.86);
+  leg_m_ampli->SetHeader("500000 events - amplitude","");
 
-  auto leg_m_width = new TLegend(0.73,0.7,0.94,0.86);
-  leg_m_width->SetHeader("1000000 events - width","");
+  auto leg_m_width = new TLegend(0.68,0.65,0.93,0.86);
+  leg_m_width->SetHeader("500000 events - width","");
 
   TString z, m, ampli, width, exec;//to vary vertex z, multiplicity, amplitude and width during the study
 
@@ -52,7 +55,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){//resolution vs vertex z for different amplitude
     for(int j=0; j<kTest;j++){
       z=Form("%f",z_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,500000,"+z+",20)";
+      exec="tracks_gen(0,0,1,1,15,5,"+z+",20)";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
       resoz_ampli[i][j]=perform.reso;
@@ -63,7 +66,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){//resolution vs vertex z for different width
     for(int j=0; j<kTest;j++){
       z=Form("%f",z_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,500000,"+z+",20)";
+      exec="tracks_gen(0,0,1,1,15,5,"+z+",20)";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
       resoz_width[i][j]=perform.reso;
@@ -76,7 +79,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){//resolution vs multiplicity for different amplitude
     for(int j=0; j<kTest;j++){
       m=Form("%f",mult_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,500000,0,"+m+")";
+      exec="tracks_gen(0,0,1,1,15,5,0,"+m+")";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
       resom_ampli[i][j]=perform.reso;
@@ -87,7 +90,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){//resolution vs multiplicity for different width
     for(int j=0; j<kTest;j++){
       m=Form("%f",mult_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,500000,0,"+m+")";
+      exec="tracks_gen(0,0,1,1,15,5,0,"+m+")";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
       resom_width[i][j]=perform.reso;
@@ -115,6 +118,12 @@ void cluster_study(){
   }
   m_resoz_ampli->Draw("AP");
   m_resoz_ampli->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
+  m_resoz_ampli->GetXaxis()->SetLabelSize(0.045);
+  m_resoz_ampli->GetYaxis()->SetLabelSize(0.045);
+  m_resoz_ampli->GetXaxis()->SetTitleSize(0.05);
+  m_resoz_ampli->GetYaxis()->SetTitleSize(0.05);
+  m_resoz_ampli->GetXaxis()->SetTitleOffset(0.9);
+  m_resoz_ampli->GetYaxis()->SetTitleOffset(0.7);
   leg_z_ampli->Draw();
 
   c_study->cd(2);
@@ -134,6 +143,12 @@ void cluster_study(){
   }
   m_resoz_width->Draw("AP");
   m_resoz_width->SetTitle("TRACKS performances - resolution vs Z_{gen};z_{gen} [cm];RMS [cm]");
+  m_resoz_width->GetXaxis()->SetLabelSize(0.045);
+  m_resoz_width->GetYaxis()->SetLabelSize(0.045);
+  m_resoz_width->GetXaxis()->SetTitleSize(0.05);
+  m_resoz_width->GetYaxis()->SetTitleSize(0.05);
+  m_resoz_width->GetXaxis()->SetTitleOffset(0.9);
+  m_resoz_width->GetYaxis()->SetTitleOffset(0.7);
   leg_z_width->Draw();
 
   c_study->cd(3);
@@ -153,6 +168,12 @@ void cluster_study(){
   }
   m_resom_ampli->Draw("AP");
   m_resom_ampli->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
+  m_resom_ampli->GetXaxis()->SetLabelSize(0.045);
+  m_resom_ampli->GetYaxis()->SetLabelSize(0.045);
+  m_resom_ampli->GetXaxis()->SetTitleSize(0.05);
+  m_resom_ampli->GetYaxis()->SetTitleSize(0.05);
+  m_resom_ampli->GetXaxis()->SetTitleOffset(0.9);
+  m_resom_ampli->GetYaxis()->SetTitleOffset(0.7);
   leg_m_ampli->Draw();
 
   c_study->cd(4);
@@ -172,6 +193,12 @@ void cluster_study(){
   }
   m_resom_width->Draw("AP");
   m_resom_width->SetTitle("TRACKS performances - resolution vs multiplicity;multiplicity;RMS [cm]");
+  m_resom_width->GetXaxis()->SetLabelSize(0.045);
+  m_resom_width->GetYaxis()->SetLabelSize(0.045);
+  m_resom_width->GetXaxis()->SetTitleSize(0.05);
+  m_resom_width->GetYaxis()->SetTitleSize(0.05);
+  m_resom_width->GetXaxis()->SetTitleOffset(0.9);
+  m_resom_width->GetYaxis()->SetTitleOffset(0.7);
   leg_m_width->Draw();
 
   c_study->SaveAs(dirplot+"c_study.eps");
