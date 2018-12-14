@@ -37,7 +37,7 @@ void spit_perform(){
 
   for(int i=0; i<17;i++){//performances varying vertex z
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,-1,15,1000000,"+z+",20)";
+    exec="tracks_gen(0,0,1,-1,15,10,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     resoz[i]=perform.reso;
@@ -50,7 +50,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){//performances varying multiplicity
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,-1,15,1000000,0,"+m+")";
+    exec="tracks_gen(0,0,1,-1,15,10,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     resom[i]=perform.reso;

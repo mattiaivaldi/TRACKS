@@ -220,8 +220,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     c_reco_perform->SetLogx();
     c_reco_perform->SetLogy();
     double exp[10]={100,500,1000,5000,10000,50000,100000,500000,1000000,5000000};
-    double cput[10]={0.25,0.33,0.37,0.88,1.6,6.01,14,64,124,680};
-    double runt[10]={0.26,0.35,0.39,0.92,1.65,6.08,14.1,66,125,694};
+    double cput[10]={0.08,0.09,0.11,0.31,0.44,2.27,3.19,14.1,23.69,142.42};
+    double runt[10]={0.15,0.16,0.18,0.46,0.52,2.40,3.31,14.21,23.79,142.59};
 
     TGraph *p_cpu=new TGraph(10,exp,cput);
     p_cpu->SetLineColor(kBlue);
