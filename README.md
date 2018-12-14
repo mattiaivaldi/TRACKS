@@ -6,7 +6,8 @@ TRACKS requires a working version of Root on your device. It has an easy 3-steps
 1. open and edit the file detector_info.txt with the format  
 `layer_name width radius thickness theta_rms`
 
-2. open and edit the macro tracks.C with your preferences  
+2. open and edit the macro tracks.C with your preferences
+  
 `gROOT->ProcessLine(“tracks_gen(a,b,c,d,e,f,g,h)”)` where  
 bool a = verbose mode ON/OFF  
 bool b = print and save plots ON/OFF  
