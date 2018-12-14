@@ -16,13 +16,13 @@ int e = 5 custom z, 10 custom multiplicity, 15 both custom
 int f = # of collisions performed  
 double g = custom vertex z  
 double h = custom event multiplicity  
-`gROOT->ProcessLine(“tracks_reco(a,b,c)”)` where  
+`gROOT->ProcessLine(“tracks_reco(a,b,c,d,e,f)”)` where  
 bool a = verbose mode ON/OFF  
 bool b = print and save plots ON/OFF  
 double c = smearing parameter on z  
 double d = smearing parameter on phi  
 double e = ambiguity check amplitude  
-int e = ambiguity check width
+int f = ambiguity check width
 
 3. open a ROOT session and interpret root [0] .x tracks.C
 
