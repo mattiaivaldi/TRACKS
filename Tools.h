@@ -22,8 +22,6 @@ void stackstyler(THStack &stack);//THStack makeup
 
 void pavestyler(TPaveText &pave, double textsize);//TPave makeup
 
-void MSaveBigPNG(TString filename, double scale);//to scale up png resolution
-
 double *hit_point(double x0, double y0, double z0, double theta, double phi, double R);//evaluate hit coordinates
 
 bool detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verbose, bool b_multiscatter, int &counter, TH1D** histo);//hit check

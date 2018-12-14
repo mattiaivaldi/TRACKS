@@ -3,6 +3,8 @@
 //
 //START
 
+#include <fstream>
+#include <stdio.h>
 #include <vector>
 #include "TNtuple.h"
 #include "TCanvas.h"
@@ -63,13 +65,32 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
 
+  char buffer_name[30];
+  double W_buffer=0,R_buffer=0,T_buffer=0,RMS_buffer=0;
+  vector<double> layer_radius;
+
+  FILE *detect_data;
+  char isopen;
+  detect_data = fopen("detector_info.txt","r");//access detector info
+
+  while(1){
+    isopen = fgetc(detect_data);
+    if(isopen==EOF){break;}//read detector info until file has content
+    else{
+      fscanf(detect_data,"%s %lf %lf %lf %lf\n",&buffer_name [0],&W_buffer,&R_buffer,&T_buffer,&RMS_buffer);
+      layer_radius.push_back(R_buffer);
+    }
+  }//define a layer per detector, each with the respective info
+
+  fclose (detect_data);
+
   //histogram booking
 
   TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex;z_{V} [cm];# [a.u.]",200,-40.,40.);
   histostyler(*h_zreco,2);
 
   //TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",801,-40.55,40.55);//old version with 1mm binning
-  TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",161,-40.25,40.25);
+  TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI;z [cm];# [a.u.]",161,-40.25,40.25);
 
   TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",201,-0.1,0.1);
   histostyler(*h_reso,2);
@@ -124,14 +145,14 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     for(int l=0;l<mult_ev2;l++){//loop over total hits on layer #2
 
       Hit *hit_buffer2=(Hit*)cross_L2->At(l);
-      smear(l,smear_z,smear_phi,7.,hits_L2);//smearing on hit point
-      phi2=ACos(hit_buffer2->GetX()/7.);
+      smear(l,smear_z,smear_phi,layer_radius[2],hits_L2);//smearing on hit point
+      phi2=ACos(hit_buffer2->GetX()/layer_radius[2]);
 
       for(int m=0;m<mult_ev1;m++){//loop over total hits on layer #1
 
         Hit *hit_buffer1=(Hit*)cross_L1->At(m);
-        smear(m,smear_z,smear_phi,4.,hits_L1);//smearing on hit point
-        phi1=ACos(hit_buffer1->GetX()/4.);
+        smear(m,smear_z,smear_phi,layer_radius[1],hits_L1);//smearing on hit point
+        phi1=ACos(hit_buffer1->GetX()/layer_radius[1]);
 
         if(Abs(phi2-phi1)<0.01){//hit compatibility check
 
@@ -220,8 +241,8 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     c_reco_perform->SetLogx();
     c_reco_perform->SetLogy();
     double exp[10]={100,500,1000,5000,10000,50000,100000,500000,1000000,5000000};
-    double cput[10]={0.08,0.09,0.11,0.31,0.44,2.27,3.19,14.1,23.69,142.42};
-    double runt[10]={0.15,0.16,0.18,0.46,0.52,2.40,3.31,14.21,23.79,142.59};
+    double cput[10]={0.3,0.37,0.32,0.4,0.57,1.71,3.82,13.01,24.5,183};
+    double runt[10]={0.32,0.41,0.34,0.43,0.6,1.76,3.85,13.05,24.6,186};
 
     TGraph *p_cpu=new TGraph(10,exp,cput);
     p_cpu->SetLineColor(kBlue);
@@ -251,8 +272,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
   }
 
-  //cpu info
-  timer.Stop();
+  timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();
   double run_time = timer.RealTime();
   double cpu_efficiency = (cpu_time/run_time)*100;
@@ -268,7 +288,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   delete h_ROI;
   delete h_reso;
 
-  printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %%",cpu_time,run_time, cpu_efficiency);
+  printf("Reconstruction info:\n\nCPU time = %f s\nRun time = %f s\nCPU efficiency = %f %% ",cpu_time,run_time, cpu_efficiency);
 
   return perform;
 

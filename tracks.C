@@ -27,8 +27,8 @@ void tracks(TString myopt="fast"){
   gSystem->CompileMacro("Tools.cxx",opt.Data());
   gSystem->CompileMacro("tracks_gen.C",opt.Data());
   gSystem->CompileMacro("tracks_reco.C",opt.Data());
-  gROOT->ProcessLine(".x spit_perform.C");//reconstruction performance study
-  gROOT->ProcessLine(".x cluster_study.C");//peak finding performance study
+  //gROOT->ProcessLine(".x spit_perform.C");//reconstruction performance study
+  //gROOT->ProcessLine(".x cluster_study.C");//peak finding performance study
   gROOT->ProcessLine("tracks_gen(0,1,1,-1,0,1000000,0,0)");//perform generation
   gROOT->ProcessLine("tracks_reco(0,1,0.0012,0.0003,1,5)");//perform reconstruction
 

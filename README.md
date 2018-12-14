@@ -29,7 +29,3 @@ int f = ambiguity check width
 By default the lines 30 and 31 of tracks.C are commented, if you want to perform a performances study you just need to uncomment these lines and edit the spit_perform.C and cluster_study.C macros.
 
 The generated data will be stored in the _gen.root_ file, the reconstruction plots will be stored in the _reco.root_ file, the performances plots will be stored in the _perform.root_file. All the plots are anyway saved in .eps format in the tracksplot folder.
-
-Caveat! When you use TRACKS do pay attention to time and CPU efficiency, the software operates with the following performances:
-
-<img src="https://github.com/mattiaivaldi/TRACKS/blob/TRACKSinprogress/c_perform.jpg" alt="alt text" width="400" height="250">

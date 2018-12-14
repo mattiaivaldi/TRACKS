@@ -232,9 +232,9 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
       printf("Out of %d generated particles\n%d crossed BP\n%d crossed L1\n%d crossed L2\n\n",mult,counter_BP, counter_L1, counter_L2);
     }
 
-    if(paolonoise){
-      noise(printparticles,kNoise[0],counter_L1,hits_L1, layer[1]);
-      noise(printparticles,kNoise[1],counter_L2,hits_L2, layer[2]);
+    if(kNoise[0]){
+      noise(printparticles,kNoise[0],counter_L1,hits_L1,layer[1]);
+      noise(printparticles,kNoise[1],counter_L2,hits_L2,layer[2]);
     }//add noise hits to the TCA
 
     tree_gen->Fill();
