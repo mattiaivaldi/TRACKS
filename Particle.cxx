@@ -13,7 +13,7 @@ ClassImp(Particle)
 
 Particle::Particle():TObject(),
 fRap(0.),
-fTheta(Pi()/4.),
+fTheta(0.),
 fPhi(0.)
 {
   //default constructor
