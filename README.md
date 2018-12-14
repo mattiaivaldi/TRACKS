@@ -2,7 +2,7 @@
 
 Monte Carlo particles' tracks generation and reconstruction with multiple scattering and noise. Developed by Luca Quaglia and Mattia Ivaldi - Torino, 2018.  
 
-TRACKS requires a working version of Root on your device. It has an easy 3-steps usage:
+TRACKS requires a working version of ROOT on your device. It has an easy 3-steps usage:
 1. open and edit the file _detector_info.txt_ with the format  
 `layer_name width radius thickness theta_rms`
 
