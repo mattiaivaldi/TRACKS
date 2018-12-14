@@ -46,10 +46,10 @@ fZ(gRandom->Gaus(meanv,sigmaz)),
 fMult((int)distr_mult->GetRandom())
 {
   //uncomment to impose a z within a specific range
-  double zgen;
+  /*double zgen;
   do{zgen=gRandom->Gaus(meanv,sigmaz);}
   while(Abs(zgen)>5.3);
-  fZ=zgen;
+  fZ=zgen;*/
   //event constructor, def2
 }
 
