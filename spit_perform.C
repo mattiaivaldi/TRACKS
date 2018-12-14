@@ -26,16 +26,18 @@ void spit_perform(){
   double mult_custom[kTest]={3,5,10,15,20,25,30,35,40,45,50};
   double resoz[17], e_resoz[17], resom[kTest], e_resom[kTest], effm[kTest], e_effm[kTest], effz[17], e_effz[17];
 
-  double effm1s[kTest]={0.870975,0.878662,0.875956,0.875345,0.877736,0.875762,0.879214,0.870685,0.878893,0.868891,0.875211};
-  double e_effm1s[kTest]={0.000335,0.000327,0.000330,0.000330,0.000328,0.000330,0.000326,0.000336,0.000326,0.000338,0.000330};
+  double effm1s[kTest]={0.585720,0.750220,0.943110,0.983350,0.996520,0.998780,0.999840,0.999910,1.000000,0.999990,1.000000};
+  double e_effm1s[kTest]={0.001558,0.001369,0.000732,0.000405,0.000186,0.000110,0.000040,0.000030,0.000000,0.000010,0.000000};
 
   TString z, m, exec;//to vary vertex z and multiplicity during the study
+
+  TFile f_perform("perform.root","RECREATE");//to store performance plots
 
   printf("\n\nxxx START performances: vertex z xxx\n\n");
 
   for(int i=0; i<17;i++){//performances varying vertex z
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,-1,15,100000,"+z+",20)";
+    exec="tracks_gen(0,0,1,-1,5,10,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     resoz[i]=perform.reso;
@@ -48,7 +50,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){//performances varying multiplicity
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,-1,15,100000,0,"+m+")";
+    exec="tracks_gen(0,0,1,-1,15,10,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     resom[i]=perform.reso;
@@ -56,8 +58,6 @@ void spit_perform(){
     effm[i]=perform.eff;
     e_effm[i]=perform.e_eff;
   }
-
-  TFile f_perform("perform.root","RECREATE");//to store performance plots
 
   TPaveText *pt_perform = new TPaveText(0.22,0.11,0.41,0.26,"NDC");
   pavestyler(*pt_perform,0.03);
@@ -135,7 +135,7 @@ void spit_perform(){
   //a change in the Hit event constructor is required
   /*for(int i=0; i<kTest;i++){
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,-1,10,1000000,0,"+m+")";
+    exec="tracks_gen(0,0,1,-1,10,100000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     effz[i]=perform.eff;
@@ -145,7 +145,7 @@ void spit_perform(){
   for(int i=0; i<kTest;i++){
     printf("%f,",effz[i]);
   }
-  cout<<endl;
+  cout<<endl<<endl;
   for(int i=0; i<kTest;i++){
     printf("%f,",e_effz[i]);
   }*/

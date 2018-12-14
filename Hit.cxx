@@ -45,11 +45,11 @@ fY(gRandom->Gaus(meanv,sigmaxy)),
 fZ(gRandom->Gaus(meanv,sigmaz)),
 fMult((int)distr_mult->GetRandom())
 {
-  //un-comment to impose a z within a specific range
-  /*double zgen;
+  //uncomment to impose a z within a specific range
+  double zgen;
   do{zgen=gRandom->Gaus(meanv,sigmaz);}
   while(Abs(zgen)>5.3);
-  fZ=zgen;*/
+  fZ=zgen;
   //event constructor, def2
 }
 
@@ -87,9 +87,9 @@ int Hit::GetMult() const {
 }
 
 void Hit::Customize(int custom, double z_custom, int mult_custom) {
-  if(custom==10){
+  if(custom==5){
     fZ=z_custom;
-  }else if(custom==5){
+  }else if(custom==10){
     fMult=mult_custom;
   }else if(custom==15){
     fZ=z_custom;
