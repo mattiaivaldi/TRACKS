@@ -2,17 +2,19 @@
 
 Monte Carlo particles' tracks generation and reconstruction with multiple scattering and noise. Developed by Luca Quaglia and Mattia Ivaldi - Torino, 2018.  
 
-TRACKS requires a working version of Root on your device. It has an easy 3-steps usage
+TRACKS requires a working version of Root on your device. It has an easy 3-steps usage:
 1. open and edit the file detector_info.txt with the format  
 `layer_name width radius thickness theta_rms`
 
-2. open and edit the macro tracks.C with your preferences
-~~gROOT->ProcessLine(“tracks_gen(a,b,c,d,"e",f,g,h)”)~~ where
-bool a = verbose mode ON/OFF
-bool b = multiple scattering ON/OFF bool c = noise ON/OFF
-bool d = custom event ON/OFF
-char e = detector datasheet
-int f = # of collisions performed double g= custom vertex z
+2. open and edit the macro tracks.C with your preferences  
+`gROOT->ProcessLine(“tracks_gen(a,b,c,d,"e",f,g,h)”)` where  
+bool a = verbose mode ON/OFF  
+bool b = multiple scattering  
+ON/OFF bool c = noise ON/OFF  
+bool d = custom event ON/OFF  
+char e = detector datasheet  
+int f = # of collisions performed double  
+g = custom vertex z  
 double h = custom event multiplicity
 
 3.
