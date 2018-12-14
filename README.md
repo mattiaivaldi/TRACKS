@@ -15,7 +15,7 @@ bool d = noise ON/OFF
 int e = 5 custom z, 10 custom multiplicity, 15 both custom  
 int f = # of collisions performed  
 double g = custom vertex z  
-double h = custom event multiplicity
+double h = custom event multiplicity  
 `gROOT->ProcessLine(“tracks_reco(a,b,c)”)` where  
 bool a = verbose mode ON/OFF  
 bool b = print and save plots ON/OFF  
@@ -26,10 +26,10 @@ int e = ambiguity check width
 
 3. open a ROOT session and interpret root [0] .x tracks.C
 
-The generated data will be stored in the _gen.root_ file, the reconstruction plots will be stored in the 
+By default the lines 30 and 31 of tracks.C are commented, if you want to perform a performances study you just need to 
+
+The generated data will be stored in the _gen.root_ file, the reconstruction plots will be stored in the _reco.root_ file, the performances plots will be stored in the _perform.root_file. All the plots are anyway saved in .eps format in the tracksplot folder.
 
 Caveat! When you use TRACKS do pay attention to time and CPU efficiency, the software operates with the following performances:
 
 <img src="https://github.com/mattiaivaldi/TRACKS/blob/TRACKSinprogress/c_perform.jpg" alt="alt text" width="400" height="250">
-
--_reconstruction and wiki under development_-
