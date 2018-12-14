@@ -15,7 +15,7 @@
 #include "THStack.h"
 #include "Riostream.h"
 
-//using namespace TMath;
+using namespace TMath;
 
 void verbosities(bool b_verbose, bool b_multiscatter, bool b_noise, int kExp){//general information about the simulation
 
@@ -150,10 +150,10 @@ void MSaveBigPNG(TString filename, double scale) {//to scale up png resolution
 double *hit_point(double x0, double y0, double z0, double theta, double phi, double R) {//evaluate hit coordinates
 
   static double hit[3];
-  double c1=TMath::Sin(theta)*TMath::Cos(phi), c2=TMath::Sin(theta)*TMath::Sin(phi), c3=TMath::Cos(theta);//direction cosines
+  double c1=Sin(theta)*Cos(phi), c2=Sin(theta)*Sin(phi), c3=Cos(theta);//direction cosines
   double delta=2*x0*y0*c1*c2-c1*c1*y0*y0+c1*c1*R*R-c2*c2*x0*x0+c2*c2*R*R;//delta of II degree equation (>= 0 by construction)
-  double t_p=(-(x0*c1-y0*c2)+TMath::Sqrt(delta))/(c1*c1+c2*c2);//+ solution
-  double t_m=(-(x0*c1-y0*c2)-TMath::Sqrt(delta))/(c1*c1+c2*c2);//- solution
+  double t_p=(-(x0*c1-y0*c2)+Sqrt(delta))/(c1*c1+c2*c2);//+ solution
+  double t_m=(-(x0*c1-y0*c2)-Sqrt(delta))/(c1*c1+c2*c2);//- solution
 
   //calculate the intersection coordinates (x,y,z)
   if (t_p >= 0) {
@@ -181,11 +181,10 @@ bool detect(Hit* vtx, Layer* L, Particle &part, TClonesArray &cross, bool b_verb
   if(*(hit_buffer+2) >= -(L->GetWidth()/2.) && *(hit_buffer+2) <= (L->GetWidth()/2.)) {
 
     b_cross = true;//yes we have detection
-    //gSystem->Beep(440,1);
 
     new(cross[counter])Hit(*(hit_buffer+0),*(hit_buffer+1),*(hit_buffer+2));//fill the TCA with Hit object
 
-    for(int i=0;i<=2;i++){histo[i]->Fill(*(hit_buffer+i));}//fill the histogram with hist coordinates
+    for(int i=0;i<=2;i++){histo[i]->Fill(*(hit_buffer+i));}//fill the histogram with hit coordinates
 
     if (b_cross&&b_multiscatter) {
       part.Rotate(L->GetRMS());//if multiscattering ON set new angles
@@ -234,21 +233,21 @@ void smear(int index, double sigmaz, double sigmarf, double R, TClonesArray &cro
   double y=hit_buffer->GetY();
   double z=hit_buffer->GetZ();
 
-  double phi=TMath::ACos(x/R);
-  double theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));//angles before the smearing
+  double phi=ACos(x/R);
+  double theta=ACos(z/Sqrt(x*x+y*y+z*z));//angles before the smearing
 
   if (gRandom->Rndm()<0.5) {
     phi+=dphi;
-    x=R*TMath::Cos(phi);
-    y=R*TMath::Sin(phi);
+    x=R*Cos(phi);
+    y=R*Sin(phi);
     z+=dz;
-    theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
+    theta=ACos(z/Sqrt(x*x+y*y+z*z));
   } else {
     phi+=dphi;
-    x=R*TMath::Cos(phi);
-    y=R*TMath::Sin(phi);
+    x=R*Cos(phi);
+    y=R*Sin(phi);
     z-=dz;
-    theta=TMath::ACos(z/TMath::Sqrt(x*x+y*y+z*z));
+    theta=ACos(z/Sqrt(x*x+y*y+z*z));
   }//new angles and coordinates after gaussian smearing
 
   hit_buffer->SetX(x);

@@ -7,7 +7,7 @@
 #include "TRandom3.h"
 #include "TH1F.h"
 
-//using namespace TMath;
+using namespace TMath;
 
 ClassImp(Hit)
 
@@ -33,8 +33,8 @@ fY(0.),
 fZ(gRandom->Uniform(-H/2,H/2))
 {
   if(gRandom->Rndm()<0.5){
-    fY=TMath::Sqrt(R*R-fX*fX);
-  }else{fY=-1*TMath::Sqrt(R*R-fX*fX);}
+    fY=Sqrt(R*R-fX*fX);
+  }else{fY=-1*Sqrt(R*R-fX*fX);}
 
   //spurious hit constructor (noise), def1
 }
@@ -48,7 +48,7 @@ fMult((int)distr_mult->GetRandom())
   //un-comment to impose a z within a specific range
   /*double zgen;
   do{zgen=gRandom->Gaus(meanv,sigmaz);}
-  while(TMath::Abs(zgen)>5.3);
+  while(Abs(zgen)>5.3);
   fZ=zgen;*/
   //event constructor, def2
 }

@@ -3,6 +3,9 @@
 //
 //START
 
+#include <fstream>
+#include <stdio.h>
+#include <vector>
 #include "TCanvas.h"
 #include "TPad.h"
 #include "TNtuple.h"
@@ -23,15 +26,10 @@
 #include "TRandom3.h"
 #include "TMath.h"
 #include "TStopwatch.h"
-#include "vector"
 #include "Tools.h"
 #include "Layer.h"
 #include "Hit.h"
 #include "Particle.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdio.h>
 
 #ifdef WINDOWS
 #include <direct.h>
@@ -41,9 +39,8 @@
 #define GetCurrentDir getcwd
 #endif //needed to get current working directory
 
-bool war1=true;//declaring war
-
 using namespace TMath;
+using namespace std;
 
 void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paolonoise, int custom, int kExp, double z_custom, int mult_custom) {
 
@@ -57,7 +54,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   //mult_custom is the imposed vertex multiplicity
 
   if(paolonoise<-1){
-    printf("> ERROR: invalid value of 'paolonoise' <\n\nAccepted values are:\n5 for custom vertex z\n10 for custom event multiplicity\n15 for both\n\n");
+    printf("\n> ERROR: invalid value of 'paolonoise' <\n\nAccepted values are:\n* -1 for random noise hits whithin user range\n* positive integer for exact noise hits\n\nPlease insert valid value in tracks.C\n\n");
     abort();//stop tracks and exit root
   }
 
@@ -86,7 +83,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
   while(1){
     isopen = fgetc(detect_data);
-    if(isopen==EOF){break;}//read detector info file until has content
+    if(isopen==EOF){break;}//read detector info until file has content
     else{
       fscanf(detect_data,"%s %lf %lf %lf %lf\n",&buffer_name [0],&W_buffer,&R_buffer,&T_buffer,&RMS_buffer);
       layer_name=buffer_name;
@@ -98,7 +95,9 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
   double R_range=layer[2]->GetRadius(),width=layer[0]->GetWidth();
 
-  TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex;z [cm];# [a.u.]",100,-width/2,width/2);
+  //histogram booking
+
+  TH1D *h_vgen=new TH1D("h_vgen","TRACKS generation - Z Vertex;z [cm];# [a.u.]",200,-40,40);
   histostyler(*h_vgen,4);
 
   TH1D *h_theta=new TH1D("h_theta","TRACKS generation - #theta;#theta [rad];# [a.u.]",100,0,Pi());
@@ -131,7 +130,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   h_L2[2] = new TH1D("hL2_z","TRACKS generation - Z hit;z [cm];# [a.u.]",100,-width/2,width/2);
   histostyler(*h_L2[2],4);
 
-  TH1D *h_Dphi=new TH1D("h_Dphi","TRACKS generation - #Delta#varphi;#Delta#varphi [rad];# [a.u.]",20,-0.015,0.015);
+  TH1D *h_Dphi=new TH1D("h_Dphi","TRACKS generation - #Delta#varphi;#Delta#varphi [rad];# [a.u.]",31,-0.0155,0.0155);
   histostyler(*h_Dphi,1);
 
   verbosities(printparticles, multiscatman, paolonoise, kExp);//verbosities
@@ -145,22 +144,24 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   multiplicity->SetLineWidth(1);
   multiplicity->SetLineColor(kRed);
 
-  TFile h_gen("gen.root","RECREATE");//generation data
+  TFile f_gen("gen.root","RECREATE");//generation data
   TTree *tree_gen=new TTree("TG","tree_gen");//containing hit information
   TNtuple *z_gen=new TNtuple("z_gen","z_gen","z_gen");//containing MC truth
 
-  int kNoise1=0, kNoise2=0;
+  vector<int> kNoise;
   if(paolonoise==-1){
-    kNoise1=(int)gRandom->Integer(5);
-    kNoise2=(int)gRandom->Integer(5);
+    for(int i=0;i<(int)layer.size();i++){
+      kNoise.push_back((int)gRandom->Integer(5));
+    }
   }else{
-    kNoise1=paolonoise;
-    kNoise2=paolonoise;
+    for(int i=0;i<(int)layer.size();i++){
+      kNoise.push_back(paolonoise);
+    }
   }//define the number of noise hits
 
   int size0=multiplicity->FindLastBinAbove(0,1);
-  int size1=multiplicity->FindLastBinAbove(0,1)+kNoise1;
-  int size2=multiplicity->FindLastBinAbove(0,1)+kNoise2;//size of TCA with hit info
+  int size1=multiplicity->FindLastBinAbove(0,1)+kNoise[0];
+  int size2=multiplicity->FindLastBinAbove(0,1)+kNoise[1];//size of TCA with hit info
 
   TClonesArray *cross_BP=new TClonesArray("Hit",size0);
   TClonesArray *cross_L1=new TClonesArray("Hit",size1);
@@ -181,7 +182,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
   for(int i=0; i<kExp; i++){//loop over total events
 
     Hit *vgen=new Hit(0, 0.001, 5.3, multiplicity);//new event
-    vgen->Customize(custom,z_custom,mult_custom);
+    vgen->Customize(custom,z_custom,mult_custom);//custom z and/or multiplicity if needed
 
     int mult = vgen->GetMult();
     z_gen->Fill((float)vgen->GetZ());
@@ -189,7 +190,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     h_mult->Fill(mult);
 
     bool flag, flag1=false;
-    int counter_BP=0,counter_L1=0,counter_L2=0;
+    int counter_BP=0,counter_L1=0,counter_L2=0;//will be ++ if detection happens
 
     if(printparticles){
       printf("> EVENT %d <\n\nGenerated vertex with coordinates (%f, %f, %f)\nand multiplicity %d\n\n",i+1,vgen->GetX(),vgen->GetY(),vgen->GetZ(),mult);
@@ -214,14 +215,14 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
         printf(">>> Particle %i: theta %f - phi %f <<<\n\n",j+1,part->GetTheta(),part->GetPhi());
       }
 
-      //if particle hits the layer the TCA is filled, otherwhise gets flag is false
+      //if particle hits the layer the TCA is filled and flag is true, otherwhise flag is false
       flag=detect(vgen, layer[0], *part, hits_BP, printparticles, multiscatman, counter_BP,h_BP);
       phib=part->GetPhi();
       flag=detect(vgen, layer[1], *part, hits_L1, printparticles, multiscatman, counter_L1,h_L1);
       phia=part->GetPhi();
       if(flag){flag1=true;}
       flag=detect(vgen, layer[2], *part, hits_L2, printparticles, multiscatman, counter_L2,h_L2);
-      if(flag&&flag1){h_Dphi->Fill(phia-phib);}
+      if(flag&&flag1){h_Dphi->Fill(phia-phib);}//if particle crossed L1, Dphi is evaluated
 
       delete part;
 
@@ -232,8 +233,8 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     }
 
     if(paolonoise){
-      noise(printparticles,kNoise1,counter_L1,hits_L1, layer[1]);
-      noise(printparticles,kNoise2,counter_L2,hits_L2, layer[2]);
+      noise(printparticles,kNoise[0],counter_L1,hits_L1, layer[1]);
+      noise(printparticles,kNoise[1],counter_L2,hits_L2, layer[2]);
     }//add noise hits to the TCA
 
     tree_gen->Fill();
@@ -246,7 +247,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
   }//end loop over total events
 
-  double Dphi_MAX=h_Dphi->GetBinCenter(h_Dphi->FindLastBinAbove());//maximum Dphi
+  double Dphi_MAX=h_Dphi->GetBinCenter(h_Dphi->FindLastBinAbove());//maximum Dphi - used in reconstruction
 
   printf("\n\n+++ END generation +++\n\nYou will find gen.root containing the detection info and the MC truth in the current directory.\n\n");
 
@@ -257,7 +258,6 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     c_kinem->cd(1);
     h_rap->SetLineColor(kBlue+1);
     h_rap->DrawCopy();
-    pseudorap->DrawCopy("SAME");
     auto legk = new TLegend(0.73,0.7,0.94,0.86);
     legk->SetHeader("10^{5} events","");
     legk->AddEntry(pseudorap,"theo","l");
@@ -267,9 +267,11 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     gPad->SetLogy();
     h_mult->SetLineColor(kBlue+1);
     h_mult->DrawCopy();
-    multiplicity->DrawCopy("SAME");
     legk->Draw();
     c_kinem->SaveAs(dirplot+"c_kinem.eps");
+
+    h_rap->Write();
+    h_mult->Write();
 
     delete c_kinem;
 
@@ -296,6 +298,10 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     h_phi->DrawCopy();
     c_gen->SaveAs(dirplot+"c_gen.eps");
 
+    h_vgen->Write();
+    h_theta->Write();
+    h_phi->Write();
+
     delete c_gen;
 
     TCanvas *c_dphi = new TCanvas("c_dphi","c_dphi",600,400);
@@ -310,6 +316,8 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     pt_dphi->Draw();
     c_dphi->SetLogy();
     c_dphi->SaveAs(dirplot+"c_dphi.eps");
+
+    h_Dphi->Write();
 
     delete c_dphi;
 
@@ -433,14 +441,16 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
     c_hit->SaveAs(dirplot+"c_hit.eps");
 
+    c_hit->Write();
+
     delete c_hit;
 
   }//end of printing plots
 
-  h_gen.Write();
-  h_gen.Close();
+  f_gen.Write();
+  f_gen.Close();
 
-  delete h_vgen;//delete all objects
+  delete h_vgen;//delete and free all objects
   delete h_theta;
   delete h_phi;
   delete h_mult;
@@ -455,6 +465,8 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     delete h_L1[i];
     delete h_L2[i];
   }
+  vector<Layer*>().swap(layer);
+  vector<int>().swap(kNoise);
 
   timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();

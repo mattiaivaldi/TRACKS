@@ -3,6 +3,7 @@
 //
 //START
 
+#include <vector>
 #include "TNtuple.h"
 #include "TCanvas.h"
 #include "TStyle.h"
@@ -19,13 +20,11 @@
 #include "Riostream.h"
 #include "TRandom3.h"
 #include "TMath.h"
-#include "TF1.h"
 #include "TStopwatch.h"
 #include "Tools.h"
 #include "Layer.h"
 #include "Hit.h"
 #include "Particle.h"
-#include <vector>
 
 #ifdef WINDOWS
 #include <direct.h>
@@ -40,12 +39,9 @@ struct reco_perform{
   double e_reso;
   double eff;
   double e_eff;
-};
-
-bool war2=true;//declaring war
+};//an issue of reco_perform will contain resolution, efficiency and respective errors
 
 using namespace TMath;
-using namespace std;
 
 reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, double smear_phi, double amplitude, int width){
 
@@ -67,21 +63,23 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   gStyle->SetOptStat(0);
   gStyle->SetLegendBorderSize(0);
 
+  //histogram booking
+
   TH1D *h_zreco=new TH1D("h_zreco","TRACKS reconstruction - Z Vertex;z_{V} [cm];# [a.u.]",200,-40.,40.);
   histostyler(*h_zreco,2);
 
-  //TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",801,-40.55,40.55);
+  //TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",801,-40.55,40.55);//old version with 1mm binning
   TH1D *h_ROI=new TH1D("h_ROI","TRACKS reconstruction - ROI",161,-40.25,40.25);
 
   TH1F *h_reso=new TH1F("h_reso","TRACKS reconstruction - resolution;z_{gen} - z_{reco} [cm];# [a.u.]",201,-0.1,0.1);
   histostyler(*h_reso,2);
 
-  vector<double> tracklet;
+  vector<double> tracklet;//reconstructed vertexes
 
-  TFile h_gen("gen.root","READ");//accessing hit information
-  TTree *tree_gen=(TTree*)h_gen.Get("TG");
+  TFile f_gen("gen.root","READ");//accessing hit information
+  TTree *tree_gen=(TTree*)f_gen.Get("TG");
 
-  TNtuple *z_gen=(TNtuple*)h_gen.Get("z_gen");//accessing MC truth
+  TNtuple *z_gen=(TNtuple*)f_gen.Get("z_gen");//accessing MC truth
   float zgen;
   z_gen->SetBranchAddress("z_gen",&zgen);
 
@@ -123,8 +121,6 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
       fflush(stdout);
     }
 
-    //printf("\nlist of z reco produced\n");
-
     for(int l=0;l<mult_ev2;l++){//loop over total hits on layer #2
 
       Hit *hit_buffer2=(Hit*)cross_L2->At(l);
@@ -154,7 +150,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
       }//end loop over total hits on layer #1
     }//loop over total hits on layer #2
 
-    //un-comment to display every roi histogram
+    //un-comment to TCanvas-gun every roi histogram
     //new TCanvas();
     //h_ROI->DrawCopy();
 
@@ -171,9 +167,9 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
           counter_tracklet++;
         }
       }//end loop over tracklets
-      z_event/=counter_tracklet;
+      z_event/=counter_tracklet;//mean reconstructed z
       diffz=zgen-z_event;
-      h_reso->Fill(diffz);
+      h_reso->Fill(diffz);//resolution histogram
     }
 
     h_ROI->Reset();//get the histogram ready for the next event
@@ -188,6 +184,10 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   }
 
   printf("\n\n+++ END reconstruction +++\n\nThe plots are saved in .eps format in the tracksplot folder.\n\n");
+
+  f_gen.Close();
+
+  TFile f_reco("reco.root","RECREATE");
 
   if(printplot){//draw and save plots
 
@@ -209,6 +209,9 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     pt_reso->AddText(Form("RMS = %f cm",h_reso->GetRMS()));
     pt_reso->Draw();
     c_zreco->SaveAs(dirplot+"c_zreco.eps");
+
+    h_zreco->Write();
+    h_reso->Write();
 
     delete c_zreco;
 
@@ -259,7 +262,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
   perform.eff=total_good/(double)kExp;
   perform.e_eff=Sqrt(perform.eff*(1-perform.eff)/(double)kExp);//calculate resolution and robustness
 
-  h_gen.Close();
+  f_reco.Close();
 
   delete h_zreco;//delete all objects
   delete h_ROI;
