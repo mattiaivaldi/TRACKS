@@ -249,7 +249,7 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
 
   double Dphi_MAX=h_Dphi->GetBinCenter(h_Dphi->FindLastBinAbove());//maximum Dphi - used in reconstruction
 
-  printf("\n\n+++ END generation +++\n\nYou will find gen.root containing the detection info and the MC truth in the current directory.\n\n");
+  printf("\n\n+++ END generation +++\n\nYou will find gen.root containing the detection info, the MC truth in the current directory, and the plots. The plots are also saved in .eps format in the tracksplot folder.\n\n");
 
   if(printplot){//draw and save plots
 
@@ -258,16 +258,15 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     c_kinem->cd(1);
     h_rap->SetLineColor(kBlue+1);
     h_rap->DrawCopy();
-    auto legk = new TLegend(0.73,0.7,0.94,0.86);
-    legk->SetHeader("10^{5} events","");
-    legk->AddEntry(pseudorap,"theo","l");
-    legk->AddEntry(h_rap,"extracted","l");
-    legk->Draw();
+    TPaveText *pt_kinem = new TPaveText(0.75,0.7,0.95,0.85,"NDC");
+    pavestyler(*pt_kinem,0.03);
+    pt_kinem->AddText(Form("%d events",kExp));
+    pt_kinem->Draw();
     c_kinem->cd(2);
     gPad->SetLogy();
     h_mult->SetLineColor(kBlue+1);
     h_mult->DrawCopy();
-    legk->Draw();
+    pt_kinem->Draw();
     c_kinem->SaveAs(dirplot+"c_kinem.eps");
 
     h_rap->Write();
@@ -291,11 +290,13 @@ void tracks_gen(bool printparticles, bool printplot, bool multiscatman, int paol
     gPad->SetLogy();
     h_theta->SetLineColor(kBlue+1);
     h_theta->DrawCopy();
+    pt_kinem->Draw();
     c_gen->cd(4);
     h_phi->SetLineColor(kBlue+1);
     h_phi->SetAxisRange(h_phi->GetBinContent(h_phi->GetMaximumBin())+5000, h_phi->GetBinContent(h_phi->GetMaximumBin())-5000,"Y");
     h_phi->GetYaxis()->SetNdivisions(506);
     h_phi->DrawCopy();
+    pt_kinem->Draw();
     c_gen->SaveAs(dirplot+"c_gen.eps");
 
     h_vgen->Write();

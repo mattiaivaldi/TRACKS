@@ -183,7 +183,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
     diffz=0;
   }
 
-  printf("\n\n+++ END reconstruction +++\n\nThe plots are saved in .eps format in the tracksplot folder.\n\n");
+  printf("\n\n+++ END reconstruction +++\n\nThe plots are saved in the reco.root file and also in .eps format in the tracksplot folder.\n\n");
 
   f_gen.Close();
 
