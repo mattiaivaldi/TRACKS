@@ -55,7 +55,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){//resolution vs vertex z for different amplitude
     for(int j=0; j<kTest;j++){
       z=Form("%f",z_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,5,"+z+",20)";
+      exec="tracks_gen(0,0,1,1,15,1,"+z+",20)";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
       resoz_ampli[i][j]=perform.reso;
@@ -66,7 +66,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){//resolution vs vertex z for different width
     for(int j=0; j<kTest;j++){
       z=Form("%f",z_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,5,"+z+",20)";
+      exec="tracks_gen(0,0,1,1,15,1,"+z+",20)";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
       resoz_width[i][j]=perform.reso;
@@ -79,7 +79,7 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){//resolution vs multiplicity for different amplitude
     for(int j=0; j<kTest;j++){
       m=Form("%f",mult_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,5,0,"+m+")";
+      exec="tracks_gen(0,0,1,1,15,1,0,"+m+")";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,ampli_custom[i],3);
       resom_ampli[i][j]=perform.reso;
@@ -90,13 +90,15 @@ void cluster_study(){
   for(int i=0; i<kCluster;i++){//resolution vs multiplicity for different width
     for(int j=0; j<kTest;j++){
       m=Form("%f",mult_custom[j]);
-      exec="tracks_gen(0,0,1,1,15,5,0,"+m+")";
+      exec="tracks_gen(0,0,1,1,15,1,0,"+m+")";
       gROOT->ProcessLine(exec);
       reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,width_custom[i]);
       resom_width[i][j]=perform.reso;
       e_resom_width[i][j]=perform.e_reso;
     }
   }
+
+  TFile f_perform("perform.root","UPDATE");//to store performance plots
 
   TCanvas *c_study=new TCanvas("c_study","c_study",600,400);
   c_study->Divide(2,2);
@@ -202,6 +204,10 @@ void cluster_study(){
   leg_m_width->Draw();
 
   c_study->SaveAs(dirplot+"c_study.eps");
+
+  c_study->Write();
+
+  f_perform.Close();
 
   timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();

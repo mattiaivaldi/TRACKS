@@ -187,7 +187,7 @@ reco_perform tracks_reco(bool printparticles, bool printplot, double smear_z, do
 
   f_gen.Close();
 
-  TFile f_reco("reco.root","RECREATE");
+  TFile f_reco("reco.root","RECREATE");//to store reconstruction plots
 
   if(printplot){//draw and save plots
 

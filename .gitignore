@@ -1,5 +1,6 @@
 /gen.root
 /reco.root
+/perform.root
 
 *.d
 *.so

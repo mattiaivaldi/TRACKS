@@ -35,7 +35,7 @@ void spit_perform(){
 
   for(int i=0; i<17;i++){//performances varying vertex z
     z=Form("%f",z_custom[i]);
-    exec="tracks_gen(0,0,1,-1,15,10,"+z+",20)";
+    exec="tracks_gen(0,0,1,-1,15,100000,"+z+",20)";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     resoz[i]=perform.reso;
@@ -48,7 +48,7 @@ void spit_perform(){
 
   for(int i=0; i<kTest;i++){//performances varying multiplicity
     m=Form("%f",mult_custom[i]);
-    exec="tracks_gen(0,0,1,-1,15,10,0,"+m+")";
+    exec="tracks_gen(0,0,1,-1,15,100000,0,"+m+")";
     gROOT->ProcessLine(exec);
     reco_perform perform=tracks_reco(0,0,0.0012,0.0003,1,5);
     resom[i]=perform.reso;
@@ -56,6 +56,8 @@ void spit_perform(){
     effm[i]=perform.eff;
     e_effm[i]=perform.e_eff;
   }
+
+  TFile f_perform("perform.root","RECREATE");//to store performance plots
 
   TPaveText *pt_perform = new TPaveText(0.22,0.11,0.41,0.26,"NDC");
   pavestyler(*pt_perform,0.03);
@@ -119,13 +121,15 @@ void spit_perform(){
   m_effm->GetXaxis()->SetTitleOffset(0.9);
   m_effm->GetYaxis()->SetTitleOffset(0.5);
 
-  auto legt = new TLegend(0.68,0.17,0.83,0.40);
+  auto legt = new TLegend(0.63,0.17,0.82,0.43);
   legt->SetHeader("1000000 events","");
   legt->AddEntry(p_effm,"z_{gen} = 0 cm","p");
   legt->AddEntry(p_effm1s,"|Z_{gen}| < 1#sigma","p");
   legt->Draw();
 
   c_perform->SaveAs(dirplot+"c_perform.eps");
+
+  c_perform->Write();
 
   //uncomment to study the efficienciency for generated z whithin 1 sigma
   //a change in the Hit event constructor is required
@@ -145,6 +149,8 @@ void spit_perform(){
   for(int i=0; i<kTest;i++){
     printf("%f,",e_effz[i]);
   }*/
+
+  f_perform.Close();
 
   timer.Stop();//stop cpu monitoring
   double cpu_time = timer.CpuTime();
