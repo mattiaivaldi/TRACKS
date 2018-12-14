@@ -7,14 +7,14 @@ TRACKS requires a working version of Root on your device. It has an easy 3-steps
 `layer_name width radius thickness theta_rms`
 
 2. open and edit the macro tracks.C with your preferences  
-`gROOT->ProcessLine(“tracks_gen(a,b,c,d,"e",f,g,h)”)` where  
+`gROOT->ProcessLine(“tracks_gen(a,b,c,d,e,f,g,h)”)` where  
 bool a = verbose mode ON/OFF  
-bool b = multiple scattering  
-ON/OFF bool c = noise ON/OFF  
-bool d = custom event ON/OFF  
-char e = detector datasheet  
-int f = # of collisions performed double  
-g = custom vertex z  
+bool b = print and save plots ON/OFF  
+bool c = multiple scattering ON/OFF    
+bool d = noise ON/OFF  
+int e = 5 custom z, 10 custom multiplicity, 15 both custom  
+int f = # of collisions performed  
+double g = custom vertex z  
 double h = custom event multiplicity
 
 3.
